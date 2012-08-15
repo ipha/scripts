@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ ! $(pgrep nzbget) ]
+then
+	nzbget -D
+	sleep 1
+fi
+
+nzbget -A "$1"
