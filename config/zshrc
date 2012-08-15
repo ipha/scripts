@@ -1,0 +1,111 @@
+PATH=/home/mitch/Dropbox/Public/scripts:$PATH
+
+###########################################################        
+# Options for Zsh
+
+export HISTFILE=~/.zsh_history
+export HISTSIZE=2000
+export SAVEHIST=2000
+
+setopt HIST_IGNORE_SPACE
+setopt HISTIGNOREDUPS
+setopt correct
+#################################################################
+# Completition
+
+autoload -U compinit && compinit
+
+### If you want zsh's completion to pick up new commands in $path automatically
+### comment out the next line and un-comment the following 5 lines
+#zstyle ':completion:::::' completer _complete _approximate
+_force_rehash() {
+  (( CURRENT == 1 )) && rehash
+  return 1	# Because we didn't really complete anything
+}
+zstyle ':completion:::::' completer _force_rehash _complete _approximate
+zstyle -e ':completion:*:approximate:*' max-errors 'reply=( $(( ($#PREFIX + $#SUFFIX) / 3 )) )'
+zstyle ':completion:*:descriptions' format "- %d -"
+zstyle ':completion:*:corrections' format "- %d - (errors %e})"
+zstyle ':completion:*:default' list-prompt '%S%M matches%s'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*:manuals' separate-sections true
+zstyle ':completion:*:manuals.(^1*)' insert-sections true
+zstyle ':completion:*' menu select
+zstyle ':completion:*' verbose yes
+
+##################################################################
+# Gentoo prompt
+
+prompt_gentoo_setup () {
+	prompt_gentoo_prompt=${1:-'blue'}
+	prompt_gentoo_user=${2:-'green'}
+	prompt_gentoo_root=${3:-'red'}
+
+	if [ "$USER" = 'root' ]
+	then
+		base_prompt="%B%F{$prompt_gentoo_root}%m%k "
+	else
+		base_prompt="%B%F{$prompt_gentoo_user}%n@%m%k "
+	fi
+
+	post_prompt="%b%f%k"
+
+	#setopt noxtrace localoptions
+
+	path_prompt="%B%F{$prompt_gentoo_prompt}%1~"
+	PS1="$base_prompt$path_prompt %# $post_prompt"
+	PS2="$base_prompt$path_prompt %_> $post_prompt"
+	PS3="$base_prompt$path_prompt ?# $post_prompt"
+}
+
+prompt_gentoo_setup "$@"
+
+##################################################################
+# Key bindings
+
+eval "$(sed -n 's/^/bindkey /; s/: / /p' /etc/inputrc)"
+
+##################################################################
+# Terminal title
+
+case $TERM in
+	rxvt|*term)
+	precmd() { print -Pn "\e]0;%m:%~\a" }
+	preexec () { print -Pn "\e]0;$1\a" }
+	;;
+esac
+##################################################################
+# My aliases
+
+alias ..='cd ..'
+alias ...='cd ../..'
+
+alias sudo='sudo '
+
+alias ls='ls --color=auto'
+alias grep='grep --colour=auto'
+
+alias la='ls -a'
+alias ll='ls -lh'
+alias l='ls -lh'
+alias lla='ls -lah'
+alias lal='lla'
+
+alias rr='rm -r'
+
+alias tmux='tmux a || tmux'
+
+alias y='yaourt'
+alias ys='yaourt -S'
+alias yu='yaourt -Syua'
+alias yr='yaourt -Rs'
+alias ync='yaourt --noconfirm'
+
+alias nzc='nzbget -C'
+#alias nza='nzbget -A'
+
+alias dst='cd ~/Downloads/usenet/dst'
+
+alias yt='youtube-viewer -C'
+alias yts='yt -S'
+alias ytd='yt -D'

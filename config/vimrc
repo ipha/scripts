@@ -1,0 +1,22 @@
+filetype plugin indent on
+syntax on
+color desert
+
+"so autoclose.vim 
+
+"Tabs and indent
+set tabstop=4
+set shiftwidth=4
+set smarttab
+set autoindent
+set smartindent
+
+"other
+set showcmd
+set number
+set showmatch
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+set ruler
