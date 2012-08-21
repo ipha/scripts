@@ -1,0 +1,9 @@
+#!/bin/bash
+
+archive=$(find -name "*.rar")
+
+file=$(unrar lb "$archive")
+
+unrar x "$archive"
+
+mplayer "$file"
