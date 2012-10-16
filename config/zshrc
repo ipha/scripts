@@ -1,5 +1,7 @@
 PATH=/home/mitch/Documents/scripts:$PATH
 
+TERMINAL=terminal
+
 ###########################################################        
 # Options for Zsh
 
