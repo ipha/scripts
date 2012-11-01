@@ -1,0 +1,7 @@
+#!/bin/bash
+
+cd ~/Downloads
+rm *.nzb
+rm *.torrent
+
+rm -r usenet
