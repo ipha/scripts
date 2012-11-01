@@ -107,7 +107,10 @@ alias nzc='nzbget -C'
 #alias nza='nzbget -A'
 
 alias dst='cd ~/Downloads/usenet/dst'
+alias dst-new='dst && cd $(ls -td */ | head -n1)'
 
 alias yt='youtube-viewer -C'
 alias yts='yt -S'
 alias ytd='yt -D'
+
+alias ht='htop'
