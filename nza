@@ -6,4 +6,5 @@ then
 	sleep 1
 fi
 
+nzb_sorter "$1"
 nzbget -A "$1"
