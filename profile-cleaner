@@ -13,6 +13,6 @@ export -f do_clean
 
 cd ~/.config/chromium
 
-find -type f -print0 | xargs -0 file | grep SQLite | \
+find -type f -print0 | xargs -0 file | grep SQLite | grep -v "Local Storage" | \
 	awk -F: 'BEGIN { ORS = "\0" } ; { print $1 }' | \
 	xargs -0 -n 1 -I {} bash -c "do_clean '{}' 2>/dev/null"
