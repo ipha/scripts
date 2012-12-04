@@ -3,7 +3,9 @@
 archive=$(find -name "*.rar")
 
 file=$(unrar lb "$archive")
-
-unrar x "$archive"
+if [ ! -f "$file" ];
+then
+	unrar x "$archive"
+fi
 
 mplayer "$file"
