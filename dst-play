@@ -4,6 +4,6 @@ cd ~/Downloads/usenet/dst
 
 newest=$(ls -td */ | head -n1)
 
-cd $newest
+cd "$newest"
 
 play

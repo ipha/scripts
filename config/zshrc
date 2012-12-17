@@ -35,6 +35,12 @@ zstyle ':completion:*:manuals.(^1*)' insert-sections true
 zstyle ':completion:*' menu select
 zstyle ':completion:*' verbose yes
 
+#################################################################
+# Custom completions
+
+compdef '_files -g "*.nzb"' nza nzb_sorter
+compdef '_files -g "*.tar *.tar.* *.bz2 *.gz *.zip *.rar *.7z"' x t
+
 ##################################################################
 # Gentoo prompt
 

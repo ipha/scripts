@@ -1,6 +1,6 @@
 #!/bin/bash
 
-archive=$(find -name "*.rar")
+archive=$(find -name "*.rar" | sort | head -n1)
 
 file=$(unrar lb "$archive")
 if [ ! -f "$file" ];
