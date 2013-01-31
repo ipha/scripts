@@ -40,6 +40,7 @@ zstyle ':completion:*' verbose yes
 
 compdef '_files -g "*.nzb"' nza nzb_sorter
 compdef '_files -g "*.tar *.tar.* *.bz2 *.gz *.zip *.rar *.7z"' x t
+compdef '_files -g "*.par2"' par2verify par2repair
 
 ##################################################################
 # Gentoo prompt
