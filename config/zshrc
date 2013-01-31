@@ -49,8 +49,12 @@ prompt_gentoo_setup () {
 	prompt_gentoo_prompt=${1:-'blue'}
 	prompt_gentoo_user=${2:-'green'}
 	prompt_gentoo_root=${3:-'red'}
+	prompt_gentoo_ssh=${4:-'yellow'}
 
-	if [ "$USER" = 'root' ]
+	if [ -n "$SSH_CLIENT" ]
+	then
+		base_prompt="%B%F{$prompt_gentoo_ssh}%n@%m%k "
+	elif [ "$USER" = 'root' ]
 	then
 		base_prompt="%B%F{$prompt_gentoo_root}%m%k "
 	else
