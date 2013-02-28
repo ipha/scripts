@@ -142,3 +142,10 @@ alias yts='yt -S'
 alias ytd='yt -D'
 
 alias ht='htop'
+
+alias sstop='sudo systemctl stop'
+alias sstart='sudo systemctl start'
+alias srestart='sudo systemctl restart'
+alias sstatus='sudo systemctl status'
+alias senable='sudo systemctl enable'
+alias sdisable='sudo systemctl disable'
