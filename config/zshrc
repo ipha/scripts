@@ -115,10 +115,10 @@ alias sudo='sudo '
 alias ls='ls --color=auto'
 alias grep='grep --colour=auto'
 
-alias la='ls -a'
+alias la='ls -A'
 alias ll='ls -lh'
 alias l='ls -lh'
-alias lla='ls -lah'
+alias lla='ls -lAh'
 alias lal='lla'
 
 alias rr='rm -r'
@@ -149,3 +149,6 @@ alias srestart='sudo systemctl restart'
 alias sstatus='sudo systemctl status'
 alias senable='sudo systemctl enable'
 alias sdisable='sudo systemctl disable'
+
+# Auto add ssh key to agent
+alias ssh='ssh-add -l >> /dev/null || ssh-add; ssh'
