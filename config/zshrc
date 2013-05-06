@@ -152,3 +152,6 @@ alias sdisable='sudo systemctl disable'
 
 # Auto add ssh key to agent
 alias ssh='ssh-add -l >> /dev/null || ssh-add; ssh'
+
+# Rsync sync
+alias zero-sync='rsync -rtP --delete --exclude={Videos/,VirtualBox\ VMs/,openwrt/,.\*} ~/ zero:GingerBak/'
