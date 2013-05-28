@@ -108,7 +108,6 @@ esac
 # My aliases
 
 alias ..='cd ..'
-alias ...='cd ../..'
 
 alias sudo='sudo '
 
@@ -119,27 +118,16 @@ alias la='ls -A'
 alias ll='ls -lh'
 alias l='ls -lh'
 alias lla='ls -lAh'
-alias lal='lla'
 
 alias rr='rm -r'
 
 alias tmux='tmux a || tmux'
 
-alias y='yaourt'
-alias ys='yaourt -S'
 alias yu='yaourt -Syua'
-alias yr='yaourt -Rs'
 alias ync='yaourt --noconfirm'
-
-alias nzc='nzbget -C'
-#alias nza='nzbget -A'
-
-alias dst='cd ~/Downloads/usenet/dst'
-alias dst-new='dst && cd "$(ls -td */ | head -n1)"'
 
 alias yt='youtube-viewer -C'
 alias yts='yt -S'
-alias ytd='yt -D'
 
 alias ht='htop'
 
@@ -151,7 +139,17 @@ alias senable='sudo systemctl enable'
 alias sdisable='sudo systemctl disable'
 
 # Auto add ssh key to agent
-alias ssh='ssh-add -l >> /dev/null || ssh-add; ssh'
+# alias ssh='ssh-add -l >> /dev/null || ssh-add; ssh'
 
 # Rsync sync
 alias zero-sync='rsync -rtP --delete --exclude={Videos/,VirtualBox\ VMs/,openwrt/,.\*} ~/ zero:GingerBak/'
+
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+
+# bind UP and DOWN arrow keys
+for keycode in '[' '0'; do
+  bindkey "^[${keycode}A" history-substring-search-up
+  bindkey "^[${keycode}B" history-substring-search-down
+done
+unset keycode
