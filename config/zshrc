@@ -1,7 +1,5 @@
 PATH=/home/mitch/Documents/scripts:$PATH
 
-TERMINAL=terminal
-
 ###########################################################        
 # Options for Zsh
 
@@ -16,33 +14,13 @@ setopt correct
 # Completition
 
 autoload -U compinit && compinit
-
-### If you want zsh's completion to pick up new commands in $path automatically
-### comment out the next line and un-comment the following 5 lines
-#zstyle ':completion:::::' completer _complete _approximate
-_force_rehash() {
-  (( CURRENT == 1 )) && rehash
-  return 1	# Because we didn't really complete anything
-}
-zstyle ':completion:::::' completer _force_rehash _complete _approximate
-zstyle -e ':completion:*:approximate:*' max-errors 'reply=( $(( ($#PREFIX + $#SUFFIX) / 3 )) )'
-zstyle ':completion:*:descriptions' format "- %d -"
-zstyle ':completion:*:corrections' format "- %d - (errors %e})"
-zstyle ':completion:*:default' list-prompt '%S%M matches%s'
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*:manuals' separate-sections true
-zstyle ':completion:*:manuals.(^1*)' insert-sections true
 zstyle ':completion:*' menu select
-zstyle ':completion:*' verbose yes
-
-#################################################################
-# Custom completions
 
 compdef '_files -g "*.nzb"' nza nzb_sorter
 compdef '_files -g "*.tar *.tar.* *.bz2 *.gz *.zip *.rar *.7z"' x t
 compdef '_files -g "*.par2"' par2verify par2repair
 
-##################################################################
+#################################################################
 # Gentoo prompt
 
 prompt_gentoo_setup () {
@@ -62,8 +40,6 @@ prompt_gentoo_setup () {
 	fi
 
 	post_prompt="%b%f%k"
-
-	#setopt noxtrace localoptions
 
 	path_prompt="%B%F{$prompt_gentoo_prompt}%1~"
 	PS1="$base_prompt$path_prompt %# $post_prompt"
