@@ -9,15 +9,16 @@ export SAVEHIST=2000
 
 setopt HIST_IGNORE_SPACE
 setopt HISTIGNOREDUPS
-setopt correct
+# setopt correct
 #################################################################
 # Completition
 
 autoload -U compinit && compinit
 zstyle ':completion:*' menu select
 
-compdef '_files -g "*.nzb"' nza nzb_sorter
-compdef '_files -g "*.tar *.tar.* *.bz2 *.gz *.zip *.rar *.7z"' x t
+# compdef '_files -g "*.nzb"' nza nzb_sorter
+compdef '_files -g "*.tar *.tar.* *.zip *.rar *.7z' t
+compdef '_files -g "*.tar *.tar.* *.bz2 *.gz *.xz *.zip *.rar *.7z"' x
 compdef '_files -g "*.par2"' par2verify par2repair
 
 #################################################################
@@ -105,8 +106,6 @@ alias ync='yaourt --noconfirm'
 alias yt='youtube-viewer -C'
 alias yts='yt -S'
 
-alias ht='htop'
-
 alias sstop='sudo systemctl stop'
 alias sstart='sudo systemctl start'
 alias srestart='sudo systemctl restart'
@@ -114,7 +113,7 @@ alias sstatus='sudo systemctl status'
 alias senable='sudo systemctl enable'
 alias sdisable='sudo systemctl disable'
 
-# Auto add ssh key to agent
+# Auto add ssh key to agent (for kde)
 # alias ssh='ssh-add -l >> /dev/null || ssh-add; ssh'
 
 # Rsync sync
