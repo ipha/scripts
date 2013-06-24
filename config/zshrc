@@ -17,7 +17,7 @@ autoload -U compinit && compinit
 zstyle ':completion:*' menu select
 
 # compdef '_files -g "*.nzb"' nza nzb_sorter
-compdef '_files -g "*.tar *.tar.* *.zip *.rar *.7z' t
+compdef '_files -g "*.tar *.tar.* *.zip *.rar *.7z"' t
 compdef '_files -g "*.tar *.tar.* *.bz2 *.gz *.xz *.zip *.rar *.7z"' x
 compdef '_files -g "*.par2"' par2verify par2repair
 
@@ -117,7 +117,7 @@ alias sdisable='sudo systemctl disable'
 # alias ssh='ssh-add -l >> /dev/null || ssh-add; ssh'
 
 # Rsync sync
-alias zero-sync='rsync -rtP --delete --exclude={Videos/,VirtualBox\ VMs/,openwrt/,.\*} ~/ zero:GingerBak/'
+alias zero-sync='rsync -rtlP --delete --exclude={/Videos/,/VirtualBox\ VMs/,openwrt/,/.\*} ~/ zero:GingerBak/'
 
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh

@@ -1,0 +1,2 @@
+/usr/bin/setxkbmap -option caps:ctrl_modifier
+startxfce4
