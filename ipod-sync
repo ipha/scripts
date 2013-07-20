@@ -4,11 +4,11 @@ if lsusb | grep -q Apple
 then
 	tcprelay.py -t 22:2222 &
 	sleep 1
-	rsync -rtP --delete --exclude={/Music/,/Videos/,/VirtualBox\ VMs/,openwrt/,/.\*} ~/ localipod:GingerBak/
-	rsync -rtP --delete ~/Music/* localipod:Music/
+	rsync -rtlP --delete --exclude={/Music/,/Videos/,/VirtualBox\ VMs/,openwrt/,/.\*} ~/ localipod:GingerBak/
+	rsync -rtlP --delete ~/Music/* localipod:Music/
 	sleep 1
 	pkill tcprelay.py
 else
-	rsync -rtP --delete --exclude={/Music/,/Videos/,/VirtualBox\ VMs/,openwrt/,/.\*} ~/ ipod:GingerBak/
-	rsync -rtP --delete ~/Music/* ipod:Music/
+	rsync -rtlP --delete --exclude={/Music/,/Videos/,/VirtualBox\ VMs/,openwrt/,/.\*} ~/ ipod:GingerBak/
+	rsync -rtlP --delete ~/Music/* ipod:Music/
 fi
