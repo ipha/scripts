@@ -21,6 +21,8 @@ compdef '_files -g "*.tar *.tar.* *.zip *.rar *.7z"' t
 compdef '_files -g "*.tar *.tar.* *.bz2 *.gz *.xz *.zip *.rar *.7z"' x
 compdef '_files -g "*.par2"' par2verify par2repair
 
+compdef '_files -g "*.(asf|asx|avi|flac|flv|m1v|m2p|m2v|m4v|mjpg|mka|mkv|mov|mp3|mp4|mpe|mpeg|mpg|ogg|ogm|qt|rm|vob|wav|webm|wma|wmv)"' mpv
+
 #################################################################
 # Gentoo prompt
 
@@ -113,13 +115,16 @@ alias sstatus='sudo systemctl status'
 alias senable='sudo systemctl enable'
 alias sdisable='sudo systemctl disable'
 
+alias gpgcat='gpg -o -'
+
+
 # Auto add ssh key to agent (for kde)
 # alias ssh='ssh-add -l >> /dev/null || ssh-add; ssh'
 
 # Rsync sync
 alias zero-sync='rsync -rtlP --delete --exclude={/Videos/,/VirtualBox\ VMs/,openwrt/,/.\*} ~/ zero:GingerBak/'
 
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /usr/share/zsh/plugins/zsh-syntax-highlight/zsh-syntax-highlighting.zsh
 source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
 
 # bind UP and DOWN arrow keys
