@@ -1,5 +1,5 @@
-PATH=/home/mitch/Documents/scripts:$PATH
-
+PATH=/home/mitch/Projects/scripts:$PATH
+CDPATH=.:~
 ###########################################################        
 # Options for Zsh
 
@@ -117,6 +117,7 @@ alias sdisable='sudo systemctl disable'
 
 alias gpgcat='gpg -o -'
 
+alias poweroff='DISPLAY=":0.0" numlockx off && poweroff'
 
 # Auto add ssh key to agent (for kde)
 # alias ssh='ssh-add -l >> /dev/null || ssh-add; ssh'
