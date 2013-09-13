@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+transmission-remote http://zero:9091 -a "$1"
+xdg-open "http://zero/transmission"
