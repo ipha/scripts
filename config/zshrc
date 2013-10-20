@@ -123,9 +123,9 @@ alias poweroff='DISPLAY=":0.0" numlockx off && poweroff'
 # alias ssh='ssh-add -l >> /dev/null || ssh-add; ssh'
 
 # Rsync sync
-alias zero-sync='rsync -rtlP --delete --exclude={/Videos/,/VirtualBox\ VMs/,openwrt/,/.\*} ~/ zero:GingerBak/'
+alias zero-sync='rsync -rtlP --delete --exclude={/nosync/,/Videos/,/VirtualBox\ VMs/,openwrt/,/.\*} ~/ zero:GingerBak/'
 
-source /usr/share/zsh/plugins/zsh-syntax-highlight/zsh-syntax-highlighting.zsh
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
 
 # bind UP and DOWN arrow keys
