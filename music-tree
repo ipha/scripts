@@ -1,0 +1,57 @@
+#!/bin/bash
+musicdir="/home/mitch/Music"
+
+shopt -s extglob
+IFS=$'\n'
+
+bold="\033[1m"
+blue=$(tput setaf 2)
+normal=$(tput sgr0)
+
+cd "$musicdir"
+
+play_folder() {
+	ls -1 *(*.mp3|*.flac|*.mp4|*.m4a|*.wma)
+	echo
+	mpv --no-video *(*.mp3|*.flac|*.mp4|*.m4a|*.wma)
+}
+
+while true; do
+	list=($(ls -d */ | sed 's|/$||'))
+
+	f=0
+
+	printf "${bold} 0. ${blue}..${normal}\n"
+
+	for dir in "${list[@]}"; do
+		printf "${bold}%2i. ${blue}%s${normal}\n" $((++f)) "$dir"
+	done
+	
+	if ls *(*.mp3|*.flac|*.mp4|*.m4a|*.wma) &> /dev/null; then
+		printf "${bold} p. ${blue}Play ${normal}${bold}./%s${normal}\n" "$(pwd | cut -d '/' -f4-)"
+	fi
+
+	echo -ne "> " 
+	read selection
+
+	case $selection in
+		"0" | "..")
+			if [ "`pwd`" != "$musicdir" ]; then 
+				cd ..
+			fi
+			;;
+		"p")
+			if ls *(*.mp3|*.flac|*.mp4|*.m4a|*.wma) &> /dev/null; then
+				play_folder
+				break
+			fi
+			;;
+		*)
+			cd "${list[(selection-1)]}"
+			if [ `find . -maxdepth 1 -type d | wc -l` -eq 1 ]; then
+				play_folder
+				break
+			fi
+			;;
+	esac
+done

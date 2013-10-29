@@ -117,13 +117,15 @@ alias sdisable='sudo systemctl disable'
 
 alias gpgcat='gpg -o -'
 
-alias poweroff='DISPLAY=":0.0" numlockx off && poweroff'
+
+[ `hostname` \=\= "Ginger" ] && \
+	alias poweroff='DISPLAY=":0.0" numlockx off && poweroff'
 
 # Auto add ssh key to agent (for kde)
 # alias ssh='ssh-add -l >> /dev/null || ssh-add; ssh'
 
 # Rsync sync
-alias zero-sync='rsync -rtlP --delete --exclude={/nosync/,/Videos/,/VirtualBox\ VMs/,openwrt/,/.\*} ~/ zero:GingerBak/'
+alias zero-sync='rsync -rtlP --delete --exclude={/nosync/,/Videos/,/VirtualBox\ VMs/,openwrt/,/.\*} ~/ zero:backups/ginger-current'
 
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
