@@ -1,5 +1,9 @@
 PATH=/home/mitch/Projects/scripts:$PATH
 CDPATH=.:~
+##########################################################
+# Set dircolors
+eval $(dircolors)
+
 ###########################################################        
 # Options for Zsh
 

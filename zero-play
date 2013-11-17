@@ -6,15 +6,21 @@ normal=$(tput sgr0)
 IFS=$'\n' 
 cd /mnt/zero
 files=($(find . -iname "*.avi" -o -iname "*.mkv" -o -iname "*.flv" -o -iname "*.mp4" -o -iname "*.m4v" | sort))
-
-f=0
-
-for file in "${files[@]}"; do
-	printf "${bold}%2i. ${blue}%s${normal}\n" $((++f)) "$file"
+last=0
+while true; do
+	f=0
+	for file in "${files[@]}"; do
+		printf "${bold}%2i. ${blue}%s${normal}\n" $((++f)) "$file"
+	done
+	echo -ne "> "
+	read selection
+	case $selection in
+		"n")
+			mpv "${files[(last++)]}"
+			;;
+		*)
+			last=$selection
+			mpv "${files[(selection-1)]}"
+			;;
+	esac
 done
-
-echo -ne "> "
-
-read selection
-
-exec mpv "${files[(selection-1)]}"
