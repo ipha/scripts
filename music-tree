@@ -1,37 +1,49 @@
 #!/bin/bash
-musicdir="/home/mitch/Music"
 
+# 
+# User options
+musicdir="/home/mitch/Music"
+playercmd="mpv"
+playerargs="--no-video"
+filetypes="(*.mp3|*.flac|*.mp4|*.m4a|*.wma|*.wav)"
+
+# 
+# 
 shopt -s extglob
 IFS=$'\n'
 
-bold="\033[1m"
-blue=$(tput setaf 2)
+bold=$(tput bold)
+green=$(tput setaf 2)
+blue=$(tput setaf 4)
+white=$(tput setaf 7)
 normal=$(tput sgr0)
 
 cd "$musicdir"
 
 play_folder() {
-	ls -1 *(*.mp3|*.flac|*.mp4|*.m4a|*.wma)
-	echo
-	mpv --no-video *(*.mp3|*.flac|*.mp4|*.m4a|*.wma)
+	files=($(ls -v *$filetypes 2> /dev/null))
+	if [ ! -z $files ]; then
+		for file in ${files[@]}; do
+			printf "${bold}${green}%s\n" "$file"
+		done
+		$playercmd $playerargs ${files[@]}
+	fi
 }
 
 while true; do
-	list=($(ls -d */ | sed 's|/$||'))
-
+	list=($(ls -vd */ 2> /dev/null | sed 's|/$||'))
+	digits=`echo -n ${#list[@]} | wc -m`
 	f=0
+	printf "${bold}----(${blue}%s${white})----${normal}\n" "`pwd | awk -F/ '{print $NF}'`"
 
-	printf "${bold} 0. ${blue}..${normal}\n"
-
+	printf "${bold}%${digits}i. ${blue}%s${normal}\n" 0 ".."
 	for dir in "${list[@]}"; do
-		printf "${bold}%2i. ${blue}%s${normal}\n" $((++f)) "$dir"
+		printf "${bold}%${digits}i. ${blue}%s${normal}\n" $((++f)) "$dir"
 	done
-	
-	if ls *(*.mp3|*.flac|*.mp4|*.m4a|*.wma) &> /dev/null; then
-		printf "${bold} p. ${blue}Play ${normal}${bold}./%s${normal}\n" "$(pwd | cut -d '/' -f4-)"
+	if ls *$filetypes &> /dev/null; then
+		printf "${bold}%${digits}s. ${green}Play all in ${white}%s${normal}\n" "p" $(pwd)
 	fi
-
-	echo -ne "> " 
+	echo -ne "> "
 	read selection
 
 	case $selection in
@@ -41,16 +53,13 @@ while true; do
 			fi
 			;;
 		"p")
-			if ls *(*.mp3|*.flac|*.mp4|*.m4a|*.wma) &> /dev/null; then
-				play_folder
-				break
-			fi
+			play_folder
 			;;
 		*)
 			cd "${list[(selection-1)]}"
 			if [ `find . -maxdepth 1 -type d | wc -l` -eq 1 ]; then
 				play_folder
-				break
+				cd ..
 			fi
 			;;
 	esac

@@ -94,7 +94,7 @@ alias ..='cd ..'
 
 alias sudo='sudo '
 
-alias ls='ls --color=auto'
+alias ls='ls -v --color=auto'
 alias grep='grep --colour=auto'
 
 alias la='ls -A'

@@ -1,0 +1,66 @@
+#!/bin/bash
+
+# 
+# User options
+mediadir="/mnt/zero"
+playercmd="mpv"
+playerargs=""
+filetypes="(*.avi|*.mkv|*.flv|*.mp4|*.m4v)"
+
+# 
+# 
+shopt -s extglob
+IFS=$'\n'
+
+bold="\033[1m"
+green=$(tput setaf 2)
+blue=$(tput setaf 4)
+white=$(tput setaf 7)
+normal=$(tput sgr0)
+
+cd "$mediadir"
+last=0
+
+while true; do
+	list_dirs=($(ls -vd */ 2> /dev/null | sed 's|/$||'))
+	list_files=($(ls -v *$filetypes 2> /dev/null))
+	list_merged=("${list_dirs[@]}" "${list_files[@]}")
+	digits=`echo -n ${#list_merged[@]} | wc -m`
+	f=0
+	printf "${bold}----(${blue}%s${white})----${normal}\n" "`pwd | awk -F/ '{print $NF}'`"
+
+	printf "${bold}%${digits}i. ${blue}%s${normal}\n" 0 ".."
+	for dir in "${list_dirs[@]}"; do
+		printf "${bold}%${digits}i. ${blue}%s${normal}\n" $((++f)) "$dir"
+	done
+	for file in "${list_files[@]}"; do
+		printf "${bold}%${digits}i. ${green}%s${normal}\n" $((++f)) "$file"
+	done
+	echo -ne "> "
+	read selection
+
+	case $selection in
+		"0" | "..")
+			if [ "`pwd`" != "$mediadir" ]; then 
+				cd ..
+			fi
+			;;
+		*)
+			if [ "$selection" == "n" ]; then
+				selection=$last
+				((selection++))
+			fi
+			if [ -d "${list_merged[(selection-1)]}" ]; then
+				cd "${list_merged[(selection-1)]}"
+				last=0
+				if [ `ls *$filetypes 2> /dev/null | wc -l` -eq 1 ]; then
+					${playercmd} ${playerargs} *$filetypes
+					cd ..
+				fi
+			else
+				${playercmd} ${playerargs} "${list_merged[(selection-1)]}"
+				last=$selection
+			fi
+			;;
+	esac
+done
