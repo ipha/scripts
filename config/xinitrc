@@ -1,4 +1,3 @@
 /usr/bin/setxkbmap -option caps:ctrl_modifier
 (sleep 10 && pasystray)&
 startxfce4
-#razor-session

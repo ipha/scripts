@@ -7,7 +7,7 @@ then
 	if `mount | grep -q '/mnt/bigdrive/ginger'`
 	then
 		echo "encfs opened"
-		rsync -rtP --delete --exclude={/Videos/,/Music/,/VirtualBox\ VMs/,openwrt/,/.\*} ~/ /mnt/bigdrive/ginger/
+		rsync -rtP --delete --exclude={/Videos/,/Music/,/VirtualBox\ VMs/,/mxe/,openwrt/,/.\*} ~/ /mnt/bigdrive/ginger/
 		find ~/Music | sort > /mnt/bigdrive/ginger/music-list
 		sleep 2
 		fusermount -u /mnt/bigdrive/ginger
