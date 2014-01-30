@@ -1,4 +1,4 @@
-PATH=/home/mitch/Projects/scripts:$PATH
+PATH=/home/mitch/.bin:$PATH
 CDPATH=.:~
 ##########################################################
 # Set dircolors
