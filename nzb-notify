@@ -1,8 +1,0 @@
-#!/bin/bash
-
-if pgrep knotify4
-	then
-		kdialog --title "NZBGet" --passivepopup "$NZBPP_NZBFILENAME\nHas finished downloading" 10
-	else
-		notify-send -t 10000 "$NZBPP_NZBFILENAME" "Has finished downloading"
-fi
