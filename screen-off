@@ -1,0 +1,15 @@
+#!/bin/bash
+
+while true; do
+	if derp=$(pidof mpv) ; then
+		echo $derp
+		while kill -0 $derp; do
+			sleep .5
+		done
+		sleep .5
+		if ! pgrep mpv; then
+			xset dpms force off
+		fi
+	fi
+	sleep 1
+done

@@ -3,7 +3,7 @@
 backup_zero() {
 	if ping -c1 zero > /dev/null; then
 		echo "doing zero"
-		rsync -rtlP --delete --exclude={/.\*,/VirtualBox\ VMs/} ~/ zero:ginger-backup
+		rsync -rtlP --info=progress2 --delete --exclude={/.\*,/VirtualBox\ VMs/} ~/ zero:ginger-backup
 	else
 		echo "zero not connected, skipping"
 	fi
@@ -31,7 +31,7 @@ backup_bigdrive() {
 		if `mount | grep -q '/mnt/bigdrive/ginger'`
 		then
 			echo "encfs opened"
-			rsync -rtP --delete --exclude={/.\*,/VirtualBox\ VMs/} ~/ /mnt/bigdrive/ginger/
+			rsync -rtP --delete --exclude={/.\*,/VirtualBox\ VMs/,/Music/,/Downloads/} ~/ /mnt/bigdrive/ginger/
 			find ~/Music | sort > /mnt/bigdrive/ginger/music-list
 			sleep 2
 			fusermount -u /mnt/bigdrive/ginger

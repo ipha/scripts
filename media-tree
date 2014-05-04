@@ -23,7 +23,7 @@ last=0
 
 while true; do
 	list_dirs=($(ls -vd */ 2> /dev/null | sed 's|/$||'))
-	list_files=($(ls -v *$filetypes 2> /dev/null))
+	list_files=($(ls -vdp *$filetypes 2> /dev/null | grep -v "/$"))
 	list_merged=("${list_dirs[@]}" "${list_files[@]}")
 	digits=`echo -n ${#list_merged[@]} | wc -m`
 	f=0
