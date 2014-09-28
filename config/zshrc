@@ -4,6 +4,8 @@ CDPATH=.:~
 # Set dircolors
 eval $(dircolors)
 
+export LESS='-R '
+
 ###########################################################        
 # Options for Zsh
 
@@ -112,12 +114,16 @@ alias ync='yaourt --noconfirm'
 alias yt='youtube-viewer -C'
 alias yts='yt -S'
 
+alias live='livestreamer -p mpv'
+
 alias sstop='sudo systemctl stop'
 alias sstart='sudo systemctl start'
 alias srestart='sudo systemctl restart'
 alias sstatus='sudo systemctl status'
 alias senable='sudo systemctl enable'
 alias sdisable='sudo systemctl disable'
+
+alias bai='systemctl suspend'
 
 alias gpgcat='gpg -o -'
 
