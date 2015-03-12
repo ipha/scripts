@@ -1,4 +1,5 @@
 PATH=/home/mitch/.bin:$PATH
+export EDITOR=nano
 CDPATH=.:~
 ##########################################################
 # Set dircolors

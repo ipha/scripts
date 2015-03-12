@@ -31,7 +31,7 @@ backup_bigdrive() {
 		if `mount | grep -q '/mnt/bigdrive/ginger'`
 		then
 			echo "encfs opened"
-			rsync -rtP --delete --exclude={/.\*,/VirtualBox\ VMs/,/Music/,/Downloads/} ~/ /mnt/bigdrive/ginger/
+			rsync -rtP --delete --exclude={/.\*,/VirtualBox\ VMs/,/Music/,/Downloads/,/gw2/} ~/ /mnt/bigdrive/ginger/
 			find ~/Music | sort > /mnt/bigdrive/ginger/music-list
 			sleep 2
 			fusermount -u /mnt/bigdrive/ginger
