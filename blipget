@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo $1
+
+wget $(curl http://blip.tv/rss/$(curl $(curl "$1" | grep og:video\" | sed 's|.*content="||' | sed 's|?p=1">||') | grep rss | sed 's|&amp.*||' | sed 's|.*%2F||') | grep "Source" | sed 's|.*url="||' | sed 's|".*||')

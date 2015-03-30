@@ -1,0 +1,14 @@
+#!/bin/sh
+
+blue='\e[0;34m'
+red='\e[0;31m'
+NC='\e[0m'
+
+sudo btrfs fi show
+echo -e "${blue}archRoot${NC}"
+btrfs fi df /
+echo -e "${blue}archRaid${NC}"
+btrfs fi df /mnt/storage
+echo -e "${blue}archFoo${NC}"
+df -h | grep --color=no foo
+
