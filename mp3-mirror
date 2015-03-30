@@ -1,0 +1,105 @@
+#!/bin/bash
+INPUT_DIR="/home/mitch/Music/"
+DEST="/mnt/foo/music-mp3/"
+QUALITY=1
+SYNC_CMD="rsync -rtlP --delete --modify-window=2 \"$DEST\"/* flatline-wifi:/external_sd/Music/"
+
+IFS=$'\n'
+
+cd "$INPUT_DIR"
+
+FILES=($(find . -type f | grep -v zOther | sort))
+
+TOCONVERT=()
+
+for f in ${FILES[@]}; do
+	EXT="${f##*.}"
+	BASE="${f%.*}"
+	DESTDIR="$DEST$(dirname $f)"
+	[ -d "$DESTDIR" ] || mkdir -p "$DESTDIR"
+
+	if [ "$f" -nt "$DEST/$f" ]; then
+		case $EXT in
+			"jpg" | "jpeg" | "png" )
+				echo "Copying image: $f"
+				cp "$f" "$DEST/$f"
+			;;
+			"mp3" )
+				echo "Copying mp3: $f"
+				cp "$f" "$DEST/$f"
+			;;
+			"flac" )
+				if [ "$f" -nt "$DEST/$BASE.mp3" ]; then
+					echo "Converting: $f"
+					TOCONVERT[${#TOCONVERT[*]}]="$f"
+				fi
+			;;
+			* )
+				echo "Unknown file: $f"
+			;;
+		esac
+
+
+
+		# if [ "$EXT" = "jpg" ]; then
+		# 	echo "Copying: $f"
+		# 	cp "$f" "$DEST/$f"
+		# elif [ "$EXT" = "jpeg" ]; then
+		# 	echo "Copying: $f"
+		# 	cp "$f" "$DEST/$f"
+		# elif [ "$EXT" = "png" ]; then
+		# 	echo "Copying: $f"
+		# 	cp "$f" "$DEST/$f"
+		# elif [ "$EXT" = "mp3" ]; then
+		# 	echo "Copying: $f"
+		# 	cp "$f" "$DEST/$f"
+		# elif [ "$EXT" = "flac" ]; then
+		# 	if [ "$f" -nt "$DEST/$BASE.mp3" ]; then
+		# 		echo "Converting: $f"
+		# 		TOCONVERT[${#TOCONVERT[*]}]="$f"
+		# 	fi
+		# else
+		# 	echo "Unknown file: $f"
+		# fi
+	fi
+done
+
+if [ ${#TOCONVERT[@]} -gt 0 ]; then
+	echo ""
+	echo ""
+	export INPUT_DIR
+	export DEST
+	export QUALITY
+	parallel --bar --no-notice --env INPUT_DIR --env DEST -j4 \
+		'ffmpeg -hide_banner -v warning -y -i $INPUT_DIR/{} -vn -c:a libmp3lame -q:a "$QUALITY" $DEST{.}.mp3' \
+		::: ${TOCONVERT[@]}
+fi
+
+# Remove old files from DEST
+cd "$DEST"
+FILES=($(find . -type f | sort))
+for f in ${FILES[@]}; do
+	EXT="${f##*.}"
+	BASE="${f%.*}"
+	if [ ! -f "$INPUT_DIR/$f" ]; then
+		if [ ! -f "$INPUT_DIR/$BASE.flac" ]; then
+			echo "Removing: $f"
+			rm "$DEST/$f"
+		fi
+	fi
+done
+DIRS=($(find . -type d | sort -r))
+for d in ${DIRS[@]}; do
+	if [ ! -d "$INPUT_DIR/$d" ]; then
+		echo "Removing: $d"
+		rmdir "$DEST/$d"
+	fi
+done
+
+echo -ne "Sync to flatline-wifi? (y/N)? "
+read do_sync
+case $do_sync in
+	"y" | "Y" | "yes" | "Yes" | "YES" )
+		eval $SYNC_CMD
+	;;
+esac
