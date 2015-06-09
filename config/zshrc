@@ -24,11 +24,10 @@ autoload -U compinit && compinit
 zstyle ':completion:*' menu select
 
 # compdef '_files -g "*.nzb"' nza nzb_sorter
-compdef '_files -g "*.tar *.tar.* *.zip *.rar *.7z"' t
-compdef '_files -g "*.tar *.tar.* *.bz2 *.gz *.xz *.zip *.rar *.7z"' x
+compdef '_files -g "*.tar *.tar.* *.tgz *.zip *.rar *.7z"' t
+compdef '_files -g "*.tar *.tar.* *.tgz *.bz2 *.gz *.xz *.lz4 *.lzo *.zip *.rar *.7z"' x
 compdef '_files -g "*.par2"' par2verify par2repair
-
-compdef '_files -g "*.(asf|asx|avi|flac|flv|m1v|m2p|m2v|m4v|mjpg|mka|mkv|mov|mp3|mp4|mpe|mpeg|mpg|ogg|ogm|qt|rm|vob|wav|webm|wma|wmv)"' mpv
+# compdef '_files -g "*.(asf|asx|avi|flac|flv|m1v|m2p|m2v|m4v|mjpg|mka|mkv|mov|mp3|mp4|mpe|mpeg|mpg|ogg|ogm|qt|rm|vob|wav|webm|wma|wmv)"' mpv
 
 #################################################################
 # Gentoo prompt
@@ -39,11 +38,9 @@ prompt_gentoo_setup () {
 	prompt_gentoo_root=${3:-'red'}
 	prompt_gentoo_ssh=${4:-'yellow'}
 
-	if [ -n "$SSH_CLIENT" ]
-	then
+	if [ -n "$SSH_CLIENT" ]; then
 		base_prompt="%B%F{$prompt_gentoo_ssh}%n@%m%k "
-	elif [ "$USER" = 'root' ]
-	then
+	elif [ "$USER" = 'root' ]; then
 		base_prompt="%B%F{$prompt_gentoo_root}%m%k "
 	else
 		base_prompt="%B%F{$prompt_gentoo_user}%n@%m%k "
