@@ -1,5 +1,6 @@
 PATH=/home/mitch/.bin:$PATH
 export EDITOR=nano
+export WINEDLLOVERRIDES=winemenubuilder.exe=d
 CDPATH=.:~
 ##########################################################
 # Set dircolors

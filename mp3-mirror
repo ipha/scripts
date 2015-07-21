@@ -1,8 +1,8 @@
 #!/bin/bash
 INPUT_DIR="/home/mitch/Music/"
 DEST="/mnt/foo/music-mp3/"
-QUALITY=1
-SYNC_CMD="rsync -rtlP --delete --modify-window=2 \"$DEST\"/* flatline-wifi:/external_sd/Music/"
+QUALITY=0
+SYNC_CMD="rsync -rtlP --delete --modify-window=2 \"$DEST\"/* flatline-wifi:/sdcard2/Music/"
 
 IFS=$'\n'
 
@@ -38,29 +38,6 @@ for f in ${FILES[@]}; do
 				echo "Unknown file: $f"
 			;;
 		esac
-
-
-
-		# if [ "$EXT" = "jpg" ]; then
-		# 	echo "Copying: $f"
-		# 	cp "$f" "$DEST/$f"
-		# elif [ "$EXT" = "jpeg" ]; then
-		# 	echo "Copying: $f"
-		# 	cp "$f" "$DEST/$f"
-		# elif [ "$EXT" = "png" ]; then
-		# 	echo "Copying: $f"
-		# 	cp "$f" "$DEST/$f"
-		# elif [ "$EXT" = "mp3" ]; then
-		# 	echo "Copying: $f"
-		# 	cp "$f" "$DEST/$f"
-		# elif [ "$EXT" = "flac" ]; then
-		# 	if [ "$f" -nt "$DEST/$BASE.mp3" ]; then
-		# 		echo "Converting: $f"
-		# 		TOCONVERT[${#TOCONVERT[*]}]="$f"
-		# 	fi
-		# else
-		# 	echo "Unknown file: $f"
-		# fi
 	fi
 done
 

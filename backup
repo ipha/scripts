@@ -3,7 +3,7 @@
 backup_zero() {
 	if ping -c1 zero > /dev/null; then
 		echo "doing zero"
-		rsync -rtlP --info=progress2 --delete --exclude={/.\*,/VirtualBox\ VMs/} ~/ zero:ginger-backup
+		rsync -rtlP --info=progress2 --delete --exclude={/.\*,/VirtualBox\ VMs/,/gw2/} ~/ zero:ginger-backup
 	else
 		echo "zero not connected, skipping"
 	fi
@@ -41,6 +41,8 @@ backup_bigdrive() {
 	else
 		echo "bigdrive not connected, skipping"
 	fi
+	
+	mount | grep -q '/mnt/bigdrive' && sleep 3s && umount /mnt/bigdrive 2> /dev/null
 }
 
 backup_local() {
