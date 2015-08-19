@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if pgrep kdeinit4; then
+	DISPLAY=:0 /usr/lib/qt4/bin/qdbus org.kde.ksmserver /KSMServer org.kde.KSMServerInterface.logout 0 1 1
+else
+	/sbin/reboot
+fi
