@@ -140,14 +140,17 @@ alias fuck='$(thefuck $(fc -ln -1))'
 [ -f /usr/bin/apt ] && alias yr='sudo apt-get remove'
 
 for ext in  '/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' \
-			'/usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh' \
 			'/usr/share/doc/pkgfile/command-not-found.zsh'; do
 	[ -f $ext ] && source $ext
 done
 
-# bind UP and DOWN arrow keys
-for keycode in '[' '0'; do
-  bindkey "^[${keycode}A" history-substring-search-up
-  bindkey "^[${keycode}B" history-substring-search-down
-done
-unset keycode
+if [ -f /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh ]; then
+	source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+
+	# bind UP and DOWN arrow keys
+	for keycode in '[' '0'; do
+		bindkey "^[${keycode}A" history-substring-search-up
+		bindkey "^[${keycode}B" history-substring-search-down
+	done
+	unset keycode
+fi
