@@ -13,5 +13,9 @@ if [ -f "$1" ] ; then
 		*.zip)		7z x	"$1";;
 		*.rar)		7z x	"$1";;
 		*.7z)		7z x	"$1";;
+		*)
+			echo "WTF is this? Lets try 7zip"
+			7z x "$1"
+		;;
 	esac
 fi
