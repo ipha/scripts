@@ -6,7 +6,8 @@ import os
 
 latest_url    = "http://horriblesubs.info/lib/latest.php?nextid={0}"
 search_url    = "http://horriblesubs.info/lib/search.php?value={0}&nextid={1}"
-extract_regex = "<div class=\"episode\".+?>(.+?)<.+?id=720p.+?<i>(.+?)</i>.+?\"(magnet.+?)\""
+# extract_regex = "<div class=\"episode\".+?>(.+?)<.+?id=720p.+?<i>(.+?)</i>.+?\"(magnet.+?)\""
+extract_regex = "<i>([^<]+?\[720p\])<\/i>.+?\"(magnet:.+?)\""
 add_command   = "transmission-remote zero:9091 -a '{0}' > /dev/null"
 
 class MODE:
@@ -51,12 +52,12 @@ if __name__ == "__main__":
 			toget = s.split(' ')
 			for x in toget:
 				if x.isdigit() and int(x) >= 1 and int(x) <= len(results):
-					add_magnet(results[int(x)-1][2])
+					add_magnet(results[int(x)-1][1])
 		elif s.split('-')[0].isdigit() and s.split('-')[1].isdigit():
 			toget = s.split('-')
 			for x in range(int(toget[0]), int(toget[1]), 1 if int(toget[0]) < int(toget[1]) else -1):
-				add_magnet(results[int(x)-1][2])
-			add_magnet(results[int(toget[1])-1][2])
+				add_magnet(results[int(x)-1][1])
+			add_magnet(results[int(toget[1])-1][1])
 		else:
 			search = s
 			mode = MODE.SEARCH
