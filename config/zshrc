@@ -1,28 +1,28 @@
-PATH=/home/mitch/.bin:$PATH
-export EDITOR=nano
-export WINEDLLOVERRIDES=winemenubuilder.exe=d
-CDPATH=.:~
-##########################################################
+################################################################################
+# Path
+typeset -U path
+path=(~/.bin $path[@])
+
+################################################################################
+# ZSH Opts
+export HISTFILE=~/.zsh_history
+export HISTSIZE=4000
+export SAVEHIST=2000
+
+setopt INC_APPEND_HISTORY
+setopt HIST_IGNORE_SPACE
+setopt HIST_IGNORE_DUPS
+setopt COMPLETE_ALIASES
+
+################################################################################
 # Set dircolors
 eval $(dircolors)
 
-export LESS='-R '
-
-###########################################################        
-# Options for Zsh
-
-export HISTFILE=~/.zsh_history
-export HISTSIZE=2000
-export SAVEHIST=2000
-
-setopt HIST_IGNORE_SPACE
-setopt HISTIGNOREDUPS
-# setopt correct
-#################################################################
-# Completition
-
+################################################################################
+# Completion
 autoload -U compinit && compinit
 zstyle ':completion:*' menu select
+zstyle ':completion:*' rehash true
 
 # compdef '_files -g "*.nzb"' nza nzb_sorter
 compdef '_files -g "*.tar *.tar.* *.tgz *.zip *.rar *.7z"' t
@@ -30,36 +30,19 @@ compdef '_files -g "*.tar *.tar.* *.tgz *.bz2 *.gz *.xz *.lz4 *.lzo *.zip *.rar 
 compdef '_files -g "*.par2"' par2verify par2repair
 # compdef '_files -g "*.(asf|asx|avi|flac|flv|m1v|m2p|m2v|m4v|mjpg|mka|mkv|mov|mp3|mp4|mpe|mpeg|mpg|ogg|ogm|qt|rm|vob|wav|webm|wma|wmv)"' mpv
 
-#################################################################
-# Gentoo prompt
+################################################################################
+# Prompt
+autoload -U colors && colors
+if [ -n "$SSH_CLIENT" ]; then
+    PROMPT="%{$fg_bold[yellow]%}%n@%m%{$fg_bold[blue]%} %1~ %# %{$reset_color%}"
+elif [ "$USER" = 'root' ]; then
+    PROMPT="%{$fg_bold[red]%}%n@%m%{$fg_bold[blue]%} %1~ %# %{$reset_color%}"
+else 
+    PROMPT="%{$fg_bold[green]%}%n@%m%{$fg_bold[blue]%} %1~ %# %{$reset_color%}"
+fi
 
-prompt_gentoo_setup () {
-	prompt_gentoo_prompt=${1:-'blue'}
-	prompt_gentoo_user=${2:-'green'}
-	prompt_gentoo_root=${3:-'red'}
-	prompt_gentoo_ssh=${4:-'yellow'}
-
-	if [ -n "$SSH_CLIENT" ]; then
-		base_prompt="%B%F{$prompt_gentoo_ssh}%n@%m%k "
-	elif [ "$USER" = 'root' ]; then
-		base_prompt="%B%F{$prompt_gentoo_root}%m%k "
-	else
-		base_prompt="%B%F{$prompt_gentoo_user}%n@%m%k "
-	fi
-
-	post_prompt="%b%f%k"
-
-	path_prompt="%B%F{$prompt_gentoo_prompt}%1~"
-	PS1="$base_prompt$path_prompt %# $post_prompt"
-	PS2="$base_prompt$path_prompt %_> $post_prompt"
-	PS3="$base_prompt$path_prompt ?# $post_prompt"
-}
-
-prompt_gentoo_setup "$@"
-
-##################################################################
-# Key bindings
-
+################################################################################
+# Key binds
 bindkey "\e[1~" beginning-of-line
 bindkey "\e[4~" end-of-line
 bindkey "\e[5~" beginning-of-history
@@ -79,24 +62,31 @@ bindkey "\eOF" end-of-line
 bindkey "\e[H" beginning-of-line
 bindkey "\e[F" end-of-line
 
-##################################################################
-# Terminal title
+################################################################################
+# Extensions
+for ext in  '/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' \
+            '/usr/share/doc/pkgfile/command-not-found.zsh'; do
+    [ -f $ext ] && source $ext
+done
 
-case $TERM in
-	rxvt|*term)
-	precmd() { print -Pn "\e]0;%m:%~\a" }
-	preexec () { print -Pn "\e]0;$1\a" }
-	;;
-esac
-##################################################################
-# My aliases
+if [ -f /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh ]; then
+    source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
 
+    # bind UP and DOWN arrow keys
+    bindkey "^[[A" history-substring-search-up
+    bindkey "^[[B" history-substring-search-down
+fi
+
+################################################################################
+# Aliases
 alias ..='cd ..'
 
 alias sudo='sudo '
 
 alias ls='ls -v --color=auto'
 alias grep='grep --colour=auto'
+alias grepa='grep --color=auto -r'
+alias grepia='grep --color=auto -r -i'
 
 alias la='ls -A'
 alias ll='ls -lh'
@@ -106,9 +96,6 @@ alias lla='ls -lAh'
 alias rr='rm -r'
 
 alias tmux='tmux a || tmux'
-
-alias yt='youtube-viewer -C'
-alias yts='yt -S'
 
 alias live='livestreamer -p mpv'
 
@@ -124,9 +111,14 @@ alias bai='systemctl suspend'
 alias gpgcat='gpg -o -'
 
 alias gz='cd /mnt/zero'
+alias gza='cd /mnt/zero/Anime'
 alias gzd='cd /mnt/zero/Downloads'
+alias gf='cd /mnt/foo'
+alias gfa='cd /mnt/foo/Anime'
 
 alias fuck='$(thefuck $(fc -ln -1))'
+
+alias winboot='sudo efibootmgr -n $(efibootmgr | grep Windows | cut -c 5-8) && reboot'
 
 # Package manager for Arch
 [ -f /usr/bin/yaourt ] && alias yu='yaourt -Syua'
@@ -138,19 +130,3 @@ alias fuck='$(thefuck $(fc -ln -1))'
 [ -f /usr/bin/apt ] && alias yu='sudo apt-get update && sudo apt-get upgrade'
 [ -f /usr/bin/apt ] && alias yi='sudo apt-get install'
 [ -f /usr/bin/apt ] && alias yr='sudo apt-get remove'
-
-for ext in  '/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' \
-			'/usr/share/doc/pkgfile/command-not-found.zsh'; do
-	[ -f $ext ] && source $ext
-done
-
-if [ -f /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh ]; then
-	source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
-
-	# bind UP and DOWN arrow keys
-	for keycode in '[' '0'; do
-		bindkey "^[${keycode}A" history-substring-search-up
-		bindkey "^[${keycode}B" history-substring-search-down
-	done
-	unset keycode
-fi
