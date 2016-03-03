@@ -16,6 +16,7 @@ setopt HIST_IGNORE_DUPS
 ################################################################################
 # Env
 export SYSTEMD_LESS="FRSMK"
+export EDITOR="nano"
 
 ################################################################################
 # Set dircolors
@@ -96,6 +97,7 @@ alias ll='ls -lh'
 alias l='ls -lh'
 alias lla='ls -lAh'
 
+alias rm='rm -I'
 alias rr='rm -r'
 
 alias tmux='tmux a || tmux'
