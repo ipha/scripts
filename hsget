@@ -4,6 +4,9 @@ import urllib.request
 import re
 import os
 
+user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
+headers = {'User-Agent': user_agent}
+
 latest_url = "http://horriblesubs.info/lib/latest.php?nextid={0}"
 search_url = "http://horriblesubs.info/lib/search.php?value={0}&nextid={1}"
 # extract_regex = "<div class=\"episode\".+?>(.+?)<.+?id=720p.+?<i>(.+?)</i>.+?\"(magnet.+?)\""
@@ -17,13 +20,15 @@ class MODE:
 
 
 def get_latest(page=0):
-    data = urllib.request.urlopen(latest_url.format(page))
+    request = urllib.request.Request(latest_url.format(page), None, headers)
+    data = urllib.request.urlopen(request)
     html = str(data.read())
     return re.findall(extract_regex, html)
 
 
 def get_search(search, page=0):
-    data = urllib.request.urlopen(search_url.format(search, page))
+    request = urllib.request.Request(search_url.format(page), None, headers)
+    data = urllib.request.urlopen(request)
     html = str(data.read())
     return re.findall(extract_regex, html)
 
