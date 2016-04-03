@@ -131,6 +131,10 @@ alias winboot='sudo efibootmgr -n $(efibootmgr | grep Windows | cut -c 5-8) && r
 [ -f /usr/bin/yaourt ] && alias yr='yaourt -Rs'
 [ -f /usr/bin/yaourt ] && alias ync='yaourt --noconfirm'
 
+[ -f /usr/bin/pacaur ] && alias yu='pacaur -Syu'
+[ -f /usr/bin/pacaur ] && alias yi='pacaur -S'
+[ -f /usr/bin/pacaur ] && alias yr='pacaur -Rs'
+
 # Package manager for Ubuntu/Debian
 [ -f /usr/bin/apt ] && alias yu='sudo apt-get update && sudo apt-get upgrade'
 [ -f /usr/bin/apt ] && alias yi='sudo apt-get install'
