@@ -27,7 +27,7 @@ def get_latest(page=0):
 
 
 def get_search(search, page=0):
-    request = urllib.request.Request(search_url.format(page), None, headers)
+    request = urllib.request.Request(search_url.format(search, page), None, headers)
     data = urllib.request.urlopen(request)
     html = str(data.read())
     return re.findall(extract_regex, html)
