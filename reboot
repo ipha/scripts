@@ -8,5 +8,5 @@ if pgrep kdeinit5; then
 elif pgrep kdeinit4; then
 	DISPLAY=:0 qdbus-qt4 org.kde.ksmserver /KSMServer org.kde.KSMServerInterface.logout 0 1 1
 else
-	/sbin/reboot
+	sudo /sbin/reboot
 fi
