@@ -1,0 +1,20 @@
+#!/bin/bash
+
+borg prune -P home -d 7 -w -1 -m -1 -v -s --list backup:ginger -n
+printf "Prune home? (y/N) "
+read -n 1 confirm
+echo
+case $confirm in
+	y|Y) borg prune -P home -d 7 -w -1 -m -1 -v -s --list backup:ginger ;;
+	*) echo home prune skipped ;;
+esac
+
+borg prune -P winhome -d 7 -w -1 -m -1 -v -s --list backup:ginger -n
+printf "Prune winhome? (y/N) "
+read -n 1 confirm
+echo
+case $confirm in
+	y|Y) borg prune -P winhome -d 7 -w -1 -m -1 -v -s --list backup:ginger ;;
+	*) echo winhome prune skipped ;;
+esac
+
