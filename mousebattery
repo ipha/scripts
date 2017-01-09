@@ -1,0 +1,11 @@
+#!/bin/bash
+
+DEVICE=$(upower -d | grep -B 3 G700s | head -n 1 | cut -c 9-)
+
+while true; do
+    PCT=$(upower -i $DEVICE | grep percentage | awk '{ print $2 }' | sed 's|%||')
+    if [ $PCT -lt 20 ]; then
+        notify-send -t 60000 -i battery-low-symbolic "Change Battery Now" "Battery at $PCT%\n"
+    fi
+    sleep 5m
+done

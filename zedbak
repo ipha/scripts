@@ -1,0 +1,27 @@
+#!/bin/bash
+
+if [ ! -b /dev/disk/by-partlabel/backup ]; then
+	echo "Backup drive not connected"
+	exit
+fi
+
+case "$1" in
+	"open")
+		sudo cryptsetup open /dev/disk/by-partlabel/backup backup
+		sudo zpool import backup
+		;;
+	"close")
+		sudo zpool export backup
+		sudo cryptsetup close backup
+		;;
+	"rsync")
+		if [[ $EUID -ne 0 ]]; then
+			echo "rsync as user"
+			rsync -Pa --delete /mnt/zed/ /mnt/backup/
+		else
+			echo "rsync as root"
+			sudo -u $SUDO_USER rsync -Pa --delete /mnt/zed/ /mnt/backup/
+		fi
+		;;
+esac
+

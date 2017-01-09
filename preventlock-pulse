@@ -1,0 +1,9 @@
+#!/bin/bash
+
+while true; do
+	if pacmd list-sink-inputs | grep -q index ; then
+		qdbus org.freedesktop.ScreenSaver /ScreenSaver SimulateUserActivity
+		echo "Found audio, preventing lock"
+	fi
+	sleep 1m
+done

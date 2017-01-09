@@ -1,0 +1,14 @@
+#!/bin/sh
+
+btrfs scrub start /
+btrfs scrub start /mnt/storage
+
+if grep -qs '/mnt/bar' /proc/mounts; then
+	btrfs scrub start /mnt/bar
+	watch -n 5 "btrfs scrub status -d /; btrfs scrub status -d /mnt/storage; btrfs scrub status -d /mnt/bar"
+else
+	watch -n 5 "btrfs scrub status -d /; btrfs scrub status -d /mnt/storage"
+fi
+
+
+

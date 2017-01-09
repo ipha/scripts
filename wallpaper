@@ -1,0 +1,85 @@
+#!/bin/bash
+
+wallpaperdir="/home/mitch/Pictures/bg"
+enableddir="/home/mitch/Pictures/bg/__current"
+
+shopt -s extglob
+IFS=$'\n'
+
+bold=$(tput bold)
+green=$(tput setaf 2)
+blue=$(tput setaf 4)
+white=$(tput setaf 7)
+normal=$(tput sgr0)
+
+mode="all"
+
+
+while true; do
+    cd "$wallpaperdir"
+    list_orig=($(find -type f | grep -v "\\.svg" | sort))
+    list=()
+
+    lastfile="${list_orig[0]}"
+    # Remove duplicate resolutions
+    for file in "${list_orig[@]}"; do
+        if [ "$(basename ${lastfile%.*})" != "$(basename ${file%.*})_1080" ]; then
+            if ([ $mode = "all" ] || [ $mode = "eo" ]) && [ -e "${enableddir}/$(basename $file)" ]; then
+                list+=($file)
+            fi
+            if ([ $mode = "all" ] || [ $mode = "do" ]) && ! [ -e "${enableddir}/$(basename $file)" ]; then
+                list+=($file)
+            fi
+        fi
+        lastfile=$file
+    done
+
+    digits=`echo -n ${#list[@]} | wc -m`
+    f=0
+    printf "${bold}----(${blue}%s${white})----${normal}\n" "`pwd | awk -F/ '{print $NF}'`"
+
+    for file in "${list[@]}"; do
+        if [ -e "${enableddir}/$(basename $file)" ]; then
+            printf "${bold}%${digits}i. ${green}%s${normal}\n" $((++f)) "✓$file"
+        else
+            printf "${bold}%${digits}i. ${blue}%s${normal}\n" $((++f)) "$file"
+        fi
+    done
+
+    echo -ne "> "
+    read selection
+
+    case $selection in
+        "all")
+            mode="all"
+            ;;
+        "eo")
+            mode="eo"
+            ;;
+        "do")
+            mode="do"
+            ;;
+        p[0-9]*)
+            # Preview file
+            snum=${selection#"p"}
+            sfile=${list[snum-1]}
+            feh -. "$sfile"
+            ;;
+        [0-9]*)
+            # Process selection
+            sfile=${list[selection-1]}
+
+            if [ -e "${enableddir}/$(basename $sfile)" ]; then
+                # File exists, disable it
+                echo "Disabling $sfile"
+                rm "${enableddir}/$(basename $sfile)"
+            else
+                # Enable bg
+                echo "Enabling $sfile"
+                cd "$enableddir"
+                ln -s ".$sfile" .
+            fi
+            sleep 1
+            ;;
+    esac
+done

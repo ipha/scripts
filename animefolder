@@ -1,0 +1,38 @@
+#!/bin/bash
+IFS="\n"
+
+getimage() {
+    name=$(pwd | sed 's|/.*/||')
+    html=$(curl -s -G --data-urlencode "q=$name" https://myanimelist.net/anime.php)
+
+    echo "$name"
+    # Check for exact match
+    if echo "$html" | grep -q "<strong>$name</strong>"; then
+        echo "Exact name found"
+        image=$(echo "$html" | grep -B 10 "<strong>$name</strong>" | grep 100x140 | \
+            sed 's|.*https://|https://|' | sed 's|?.*||' | sed 's|/r/100x140||')
+    else
+        echo "Using first search result"
+        image=$(echo "$html" | grep 100x140 | grep -v Special | grep -v OVA | head -n1 | \
+            sed 's|.*https://|https://|' | sed 's|?.*||' | sed 's|/r/100x140||')
+    fi
+    # echo "$image"
+
+    convert "$image" .folder.png
+
+    printf "[Desktop Entry]\nIcon=./.folder.png\n" > .directory
+    echo ""
+}
+
+
+base=$(pwd)
+if [ "$1" == "all" ]; then
+    for x in *; do
+        if [ ! -f "$base/$x"/.directory ]; then
+            cd "$base/$x"
+            getimage
+        fi
+    done
+else
+    getimage
+fi

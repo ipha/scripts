@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Prevent running borg as root
+if [[ $EUID -eq 0 ]]; then
+    echo "Don't do that"
+else
+    /usr/bin/borg "$@"
+fi

@@ -1,0 +1,31 @@
+#!/bin/bash
+
+BACKUP_DIR="/mnt/storage/backup"
+
+bold=$(tput bold)
+green=$(tput setaf 2)
+blue=$(tput setaf 4)
+white=$(tput setaf 7)
+normal=$(tput sgr0)
+
+cd $BACKUP_DIR
+
+while true; do
+	list=($(ls -vd */ 2> /dev/null | sed 's|/$||'))
+	digits=`echo -n ${#list[@]} | wc -m`
+	f=0
+	printf "${bold}----(${blue}%s${white})----${normal}\n" "`pwd | awk -F/ '{print $NF}'`"
+	for dir in "${list[@]}"; do
+		printf "${bold}%${digits}i. ${blue}%s${normal}\n" $((++f)) "$dir"
+	done
+	echo -ne "> "
+	read selection
+	printf "${bold}Remove ${green}${list[(selection-1)]}? ${normal}(y/N) "
+	read -n 1 confirm
+	echo
+	case $confirm in
+		y|Y ) btrfs subvolume delete "${list[(selection-1)]}" ;;
+		* ) echo "Remove canceled" ;;
+	esac
+done
+

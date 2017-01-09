@@ -1,0 +1,9 @@
+#!/bin/bash
+
+while true; do
+	if ! pacmd list-sink-inputs | grep -q chromium ; then
+		xset dpms force off
+		break
+	fi
+	sleep 2
+done

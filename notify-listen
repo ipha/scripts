@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+PORT=14955
+DURATION=30000
+
+while true; do
+    echo "start listen"
+    nc -l -p $PORT | while read msg; do
+        echo "$msg"
+        notify-send -t $DURATION "${msg%;*}" "${msg#*;}"
+    done
+done
