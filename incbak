@@ -4,14 +4,14 @@ blue='\e[0;34m'
 red='\e[0;31m'
 NC='\e[0m'
 
-old_name=$(ls /var/btrfs | grep ^home | grep -v "^home$" | sort | tail -1)
+old_name=$(ls /mnt/btrfs | grep ^home | grep -v "^home$" | sort | tail -1)
 new_name=$(date +home_%Y-%m-%d_%T)
 
 if [ -z ${old_name} ]; then
 	echo -e "${blue}No old snapshot detected. Bootstraping new backup ${new_name}${NC}"
 	
-	btrfs subvolume snapshot -r /var/btrfs/home /var/btrfs/${new_name}
-	btrfs send /var/btrfs/${new_name} | pv | btrfs receive /mnt/storage/backup/
+	btrfs subvolume snapshot -r /mnt/btrfs/home /mnt/btrfs/${new_name}
+	btrfs send /mnt/btrfs/${new_name} | pv | btrfs receive /mnt/storage/backup/
 	
 	if [ -d /mnt/storage/backup/${new_name} ]; then
 		echo -e "${blue}Bootstrap complete. ${new_name} mirrored to storage.${NC}"
@@ -22,12 +22,12 @@ if [ -z ${old_name} ]; then
 elif [ -d /mnt/storage/backup/${old_name} ]; then
 	echo -e "${blue}Doing incremental backup from ${old_name} to ${new_name}${NC}"
 
-	btrfs subvolume snapshot -r /var/btrfs/home /var/btrfs/${new_name}
-	btrfs send -p /var/btrfs/${old_name} /var/btrfs/${new_name} | pv | btrfs receive /mnt/storage/backup/
+	btrfs subvolume snapshot -r /mnt/btrfs/home /mnt/btrfs/${new_name}
+	btrfs send -p /mnt/btrfs/${old_name} /mnt/btrfs/${new_name} | pv | btrfs receive /mnt/storage/backup/
 
 	if [ -d /mnt/storage/backup/${new_name} ]; then
 		echo -e "${blue}Send complete. Deleting ${old_name} from SSD.${NC}"
-		btrfs subvolume delete /var/btrfs/${old_name}
+		btrfs subvolume delete /mnt/btrfs/${old_name}
 	else
 		echo -e "${red}Snapshot made but ${new_name} failed to transfer. ABORTING${NC}"
 	fi

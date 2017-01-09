@@ -2,7 +2,7 @@
 INPUT_DIR="/home/mitch/Music/"
 DEST="/mnt/foo/music-mp3/"
 QUALITY=0
-SYNC_CMD="rsync -rtlP --delete --modify-window=60 \"$DEST\"/* flatline-wifi:/storage/sdcard1/Music/"
+SYNC_CMD="rsync -rtlP --delete --modify-window=60 \"$DEST\"/* flatline:/storage/ext_sd/Music/"
 
 IFS=$'\n'
 

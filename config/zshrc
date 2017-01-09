@@ -17,6 +17,7 @@ setopt HIST_IGNORE_DUPS
 # Env
 export SYSTEMD_LESS="FRSMK"
 export EDITOR="nano"
+export CHROOT="/mnt/btrfs/chroot"
 
 ################################################################################
 # Set dircolors
@@ -32,7 +33,6 @@ zstyle ':completion:*' rehash true
 compdef '_files -g "*.tar *.tar.* *.tgz *.zip *.rar *.7z"' t
 compdef '_files -g "*.tar *.tar.* *.tgz *.bz2 *.gz *.xz *.lz4 *.lzo *.zip *.rar *.7z"' x
 compdef '_files -g "*.par2"' par2verify par2repair
-# compdef '_files -g "*.(asf|asx|avi|flac|flv|m1v|m2p|m2v|m4v|mjpg|mka|mkv|mov|mp3|mp4|mpe|mpeg|mpg|ogg|ogm|qt|rm|vob|wav|webm|wma|wmv)"' mpv
 
 ################################################################################
 # Prompt
@@ -81,6 +81,14 @@ if [ -f /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substrin
     bindkey "^[[B" history-substring-search-down
 fi
 
+if [ -f /usr/bin/thefuck ]; then
+    eval $(thefuck --alias)
+fi
+
+if [ -f /etc/profile.d/autojump.zsh ]; then
+    source /etc/profile.d/autojump.zsh
+fi
+
 ################################################################################
 # Aliases
 alias ..='cd ..'
@@ -99,6 +107,8 @@ alias lla='ls -lAh'
 
 alias rm='rm -I'
 alias rr='rm -r'
+
+alias cp='cp --reflink=auto'
 
 alias tmux='tmux a || tmux'
 
@@ -120,8 +130,6 @@ alias gza='cd /mnt/zero/Anime'
 alias gzd='cd /mnt/zero/Downloads'
 alias gf='cd /mnt/foo'
 alias gfa='cd /mnt/foo/Anime'
-
-alias fuck='$(thefuck $(fc -ln -1))'
 
 alias winboot='sudo efibootmgr -n $(efibootmgr | grep Windows | cut -c 5-8) && reboot'
 

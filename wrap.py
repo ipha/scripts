@@ -17,7 +17,8 @@ for line in sys.stdin:
         last_newline += 1
     else:
         if last_newline > 1:
-            print("\n" * (last_newline - 1), end="")
+            # print("\n" * (last_newline - 1), end="")
+            print("\n", end="")
         last_newline = 0
 
         words = sline.split(' ')
