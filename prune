@@ -1,11 +1,11 @@
 #!/bin/bash
 
-borg prune -P home -d 7 -w -1 -m -1 -v -s --list backup:ginger -n
+borg prune -P home -d 7 -w 3 -m -1 -v -s --list backup:ginger -n
 printf "Prune home? (y/N) "
 read -n 1 confirm
 echo
 case $confirm in
-	y|Y) borg prune -P home -d 7 -w -1 -m -1 -v -s --list backup:ginger ;;
+	y|Y) borg prune -P home -d 7 -w 3 -m -1 -v -s --list backup:ginger ;;
 	*) echo home prune skipped ;;
 esac
 

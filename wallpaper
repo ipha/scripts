@@ -3,6 +3,9 @@
 wallpaperdir="/home/mitch/Pictures/bg"
 enableddir="/home/mitch/Pictures/bg/__current"
 
+# Ensure concistant sorting
+LC_COLLATE="C"
+
 shopt -s extglob
 IFS=$'\n'
 
@@ -18,21 +21,24 @@ mode="all"
 while true; do
     cd "$wallpaperdir"
     list_orig=($(find -type f | grep -v "\\.svg" | sort))
+    list_num=${#list_orig[@]}
     list=()
 
-    lastfile="${list_orig[0]}"
     # Remove duplicate resolutions
-    for file in "${list_orig[@]}"; do
-        if [ "$(basename ${lastfile%.*})" != "$(basename ${file%.*})_1080" ]; then
-            if ([ $mode = "all" ] || [ $mode = "eo" ]) && [ -e "${enableddir}/$(basename $file)" ]; then
-                list+=($file)
+    for (( i = 0; i < $list_num; i++ )); do
+        # Next item has a 1080 suffix, skip this one
+        if ([ $(($i+1)) -lt $list_num ] && [ "$(basename ${list_orig[$i]%.*})_1080" = "$(basename ${list_orig[$i+1]%.*})" ]); then
+            continue
+        else
+            if ([ $mode = "all" ] || [ $mode = "enabled_only" ]) && [ -e "${enableddir}/$(basename ${list_orig[$i]})" ]; then
+                list+=(${list_orig[$i]})
             fi
-            if ([ $mode = "all" ] || [ $mode = "do" ]) && ! [ -e "${enableddir}/$(basename $file)" ]; then
-                list+=($file)
+            if ([ $mode = "all" ] || [ $mode = "disabled_only" ]) && ! [ -e "${enableddir}/$(basename ${list_orig[$i]})" ]; then
+                list+=(${list_orig[$i]})
             fi
         fi
-        lastfile=$file
     done
+
 
     digits=`echo -n ${#list[@]} | wc -m`
     f=0
@@ -54,10 +60,10 @@ while true; do
             mode="all"
             ;;
         "eo")
-            mode="eo"
+            mode="enabled_only"
             ;;
         "do")
-            mode="do"
+            mode="disabled_only"
             ;;
         p[0-9]*)
             # Preview file

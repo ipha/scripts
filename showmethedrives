@@ -9,8 +9,10 @@ sudo btrfs fi show
 echo -e "${blue}archRoot${NC}"
 btrfs fi df /
 
-echo -e "${blue}archRaid${NC}"
-btrfs fi df /mnt/storage
+echo -e "${blue}archHome${NC}"
+sudo zpool list archHome
+echo ""
+sudo zfs list -r archHome
 
 echo -e "${blue}zed${NC}"
 sudo zpool list zed

@@ -2,7 +2,12 @@
 IFS="\n"
 
 getimage() {
-    name=$(pwd | sed 's|/.*/||')
+    name=$(pwd | awk -F/ '{ print $(NF) }')
+
+    if [[ $name == Season* ]]; then
+        name=$(pwd | awk -F/ '{ print $(NF-1) " " $(NF) }')
+    fi
+
     html=$(curl -s -G --data-urlencode "q=$name" https://myanimelist.net/anime.php)
 
     echo "$name"

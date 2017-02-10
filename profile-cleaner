@@ -11,7 +11,7 @@ do_clean() {
 
 export -f do_clean
 
-cd ~/.config/chromium
+cd ~/.config/google-chrome
 
 find -type f -print0 | xargs -0 file | grep SQLite | grep -v "Local Storage" | \
 	awk -F: 'BEGIN { ORS = "\0" } ; { print $1 }' | \
