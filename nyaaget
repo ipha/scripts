@@ -1,0 +1,100 @@
+#!/usr/bin/env python3
+
+import feedparser
+import sys
+import re
+import os
+
+search_url = "https://www.nyaa.se/?page=rss&term={0}&sort={1}&offset={2}"
+add_command = "transmission-remote zero:9091 -a '{0}' > /dev/null"
+
+def get_search(search, sort=1, page=1):
+    feed = feedparser.parse(search_url.format(search, sort, page))
+    result = list()
+    for entry in feed['entries']:
+        title   = entry['title']
+        link    = entry['link']
+        seeders = entry['summary'].split(',')[0]
+        size    = entry['summary'].split(' - ')[1]
+        result.append((title, link, seeders, size))
+    return result
+
+class Pager:
+    page = 1
+    sort = 1
+    search = ""
+    results_buf = []
+
+    class SORT_MODE:
+        DATE = 1
+        SEEDERS = 2
+
+    def __init__(self, results_per_page):
+        self.results_per_page = results_per_page
+
+    def __reset(self):
+        self.page = 1
+        self.results_buf = []
+    def __refill(self):
+        self.results_buf.extend(get_search(self.search, self.sort, self.page))
+        self.page = self.page + 1
+
+    def set_search(self, search, sort=0):
+        self.__reset()
+        self.search = search
+        if sort:
+            self.sort = sort;
+    def set_sort(self, sort):
+        self.__reset()
+        self.sort = sort;
+
+    def next_page(self):
+        if(len(self.results_buf) < self.results_per_page):
+            self.__refill()
+        ret_list = self.results_buf[:self.results_per_page]
+        self.results_buf = self.results_buf[self.results_per_page:]
+        return ret_list
+
+def add_magnet(magnet):
+    os.system(add_command.format(magnet))
+
+if __name__ == "__main__":
+    page = 0
+    search = ""
+    search_pager = Pager(20)
+
+    if len(sys.argv) > 1:
+        search = " ".join(sys.argv[1:])
+        search_pager.set_search(search)
+
+    while True:
+        results = search_pager.next_page()
+        page = page + 1
+        print("--- {0} --- Page {1} ---".format(search, page))
+        for i in range(0, len(results)):
+            print("{0:02d}) {1:80} [{2:14} :: {3:9}]".format(i+1, results[i][0], results[i][2], results[i][3]))
+        try:
+            s = input('--> ')
+            print(s)
+        except:
+            break
+        if s == "":
+            continue
+        elif s == "date":
+            search_pager.set_sort(Pager.SORT_MODE.DATE)
+        elif s == "seed":
+            search_pager.set_sort(Pager.SORT_MODE.SEEDERS)
+        elif s.split(' ')[0].isdigit():
+            toget = s.split(' ')
+            for x in toget:
+                if x.isdigit() and int(x) >= 1 and int(x) <= len(results):
+                    add_magnet(results[int(x)-1][1])
+        elif s.split('-')[0].isdigit() and s.split('-')[1].isdigit():
+            toget = s.split('-')
+            for x in range(int(toget[0]), int(toget[1]), 1 if int(toget[0]) < int(toget[1]) else -1):
+                add_magnet(results[int(x)-1][1])
+            add_magnet(results[int(toget[1])-1][1])
+        else:
+            page = 0
+            search = s
+            search_pager.set_search(search)
