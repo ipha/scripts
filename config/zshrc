@@ -17,7 +17,6 @@ setopt HIST_IGNORE_DUPS
 # Env
 export SYSTEMD_LESS="FRSMK"
 export EDITOR="nano"
-export CHROOT="/mnt/btrfs/chroot"
 
 ################################################################################
 # Set dircolors
@@ -81,10 +80,6 @@ if [ -f /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substrin
     bindkey "^[[B" history-substring-search-down
 fi
 
-if [ -f /usr/bin/thefuck ]; then
-    eval $(thefuck --alias)
-fi
-
 if [ -f /etc/profile.d/autojump.zsh ]; then
     source /etc/profile.d/autojump.zsh
 fi
@@ -133,6 +128,8 @@ alias gfa='cd /mnt/foo/Anime'
 
 alias winboot='sudo efibootmgr -n $(efibootmgr | grep Windows | cut -c 5-8) && reboot'
 
+alias zlist='sudo zfs list -t filesystem,snapshot,volume | grep -v storage\@'
+
 # Package manager for Arch
 [ -f /usr/bin/yaourt ] && alias yu='yaourt -Syua'
 [ -f /usr/bin/yaourt ] && alias yi='yaourt -S'
@@ -147,3 +144,5 @@ alias winboot='sudo efibootmgr -n $(efibootmgr | grep Windows | cut -c 5-8) && r
 [ -f /usr/bin/apt ] && alias yu='sudo apt-get update && sudo apt-get upgrade'
 [ -f /usr/bin/apt ] && alias yi='sudo apt-get install'
 [ -f /usr/bin/apt ] && alias yr='sudo apt-get remove'
+
+[ -f /usr/bin/fortune ] && fortune -a -s
