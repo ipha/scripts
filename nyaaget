@@ -59,7 +59,7 @@ def add_magnet(magnet):
     os.system(add_command.format(magnet))
 
 if __name__ == "__main__":
-    page = 0
+    page = 1
     search = ""
     search_pager = Pager(20)
 
@@ -67,9 +67,8 @@ if __name__ == "__main__":
         search = " ".join(sys.argv[1:])
         search_pager.set_search(search)
 
+    results = search_pager.next_page()
     while True:
-        results = search_pager.next_page()
-        page = page + 1
         print("--- {0} --- Page {1} ---".format(search, page))
         for i in range(0, len(results)):
             print("{0:02d}) {1:80} [{2:14} :: {3:9}]".format(i+1, results[i][0], results[i][2], results[i][3]))
@@ -79,6 +78,8 @@ if __name__ == "__main__":
         except:
             break
         if s == "":
+            page = page + 1
+            results = search_pager.next_page()
             continue
         elif s == "date":
             search_pager.set_sort(Pager.SORT_MODE.DATE)
