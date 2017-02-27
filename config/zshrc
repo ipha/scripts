@@ -28,6 +28,9 @@ autoload -U compinit && compinit
 zstyle ':completion:*' menu select
 zstyle ':completion:*' rehash true
 
+# disable pacaur AUR completion
+zstyle ':completion:*:pacaur:*' remote-access false
+
 # compdef '_files -g "*.nzb"' nza nzb_sorter
 compdef '_files -g "*.tar *.tar.* *.tgz *.zip *.rar *.7z"' t
 compdef '_files -g "*.tar *.tar.* *.tgz *.bz2 *.gz *.xz *.lz4 *.lzo *.zip *.rar *.7z"' x
@@ -82,6 +85,10 @@ fi
 
 if [ -f /etc/profile.d/autojump.zsh ]; then
     source /etc/profile.d/autojump.zsh
+fi
+
+if [ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+    source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
 
 ################################################################################
