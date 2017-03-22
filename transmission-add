@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
 transmission-remote zero.local -a "$1"
+
 [ -f "$1" ] && rm "$1"
 xdg-open "http://zero/transmission"
-return 0
