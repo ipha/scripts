@@ -137,6 +137,8 @@ alias winboot='sudo efibootmgr -n $(efibootmgr | grep Windows | cut -c 5-8) && r
 
 alias zlist='sudo zfs list -t filesystem,snapshot,volume | grep -v storage\@'
 
+alias youtube-dl='youtube-dl --merge-output-format=mkv'
+
 # Package manager for Arch
 [ -f /usr/bin/yaourt ] && alias yu='yaourt -Syua'
 [ -f /usr/bin/yaourt ] && alias yi='yaourt -S'
