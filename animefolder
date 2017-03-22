@@ -2,7 +2,12 @@
 IFS="\n"
 
 getimage() {
-    name=$(pwd | awk -F/ '{ print $(NF) }')
+
+    if [ -f .realname ]; then
+        name=$(cat .realname)
+    else
+        name=$(pwd | awk -F/ '{ print $(NF) }')
+    fi
 
     if [[ $name == Season* ]]; then
         name=$(pwd | awk -F/ '{ print $(NF-1) " " $(NF) }')
