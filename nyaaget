@@ -82,9 +82,13 @@ if __name__ == "__main__":
             results = search_pager.next_page()
             continue
         elif s == "date":
+            page = 1
             search_pager.set_sort(Pager.SORT_MODE.DATE)
+            results = search_pager.next_page()
         elif s == "seed":
+            page = 1
             search_pager.set_sort(Pager.SORT_MODE.SEEDERS)
+            results = search_pager.next_page()
         elif s.split(' ')[0].isdigit():
             toget = s.split(' ')
             for x in toget:
@@ -96,6 +100,7 @@ if __name__ == "__main__":
                 add_magnet(results[int(x)-1][1])
             add_magnet(results[int(toget[1])-1][1])
         else:
-            page = 0
+            page = 1
             search = s
             search_pager.set_search(search)
+            results = search_pager.next_page()
