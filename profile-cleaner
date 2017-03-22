@@ -1,18 +1,28 @@
 #!/bin/bash
 
 do_clean() {
-	bsize=$(ls -l "$1" | awk {'print $5'})
-	sqlite3 "$1" vacuum &>/dev/null
-	sqlite3 "$1" reindex &>/dev/null
-	asize=$(ls -l "$1" | awk {'print $5'})
-	dsize=$(echo "scale=2; ($bsize-$asize)/1048576" | bc)
-	echo "$1" reduced by $dsize Mbytes
+    bsize=$(ls -l "$1" | awk {'print $5'})
+    sqlite3 "$1" vacuum &>/dev/null
+    sqlite3 "$1" reindex &>/dev/null
+    asize=$(ls -l "$1" | awk {'print $5'})
+    dsize=$(echo "scale=2; ($bsize-$asize)/1048576" | bc)
+    echo "$1" reduced by $dsize Mbytes
 }
 
 export -f do_clean
 
-cd ~/.config/google-chrome
+cd ~/.config
 
-find -type f -print0 | xargs -0 file | grep SQLite | grep -v "Local Storage" | \
-	awk -F: 'BEGIN { ORS = "\0" } ; { print $1 }' | \
-	xargs -0 -n 1 -I {} bash -c "do_clean '{}' 2>/dev/null"
+profiles=()
+
+[ -d google-chrome ]  && profiles+=("google-chrome")
+[ -d chromium ]       && profiles+=("chromium")
+
+if [ ${#profiles[@]} -eq 0 ]; then
+    echo "No profiles found" 1>&2
+    exit 1
+fi
+
+find ${profiles[@]} -type f -print0 | xargs -0 file | grep SQLite | grep -v "Local Storage" | \
+    awk -F: 'BEGIN { ORS = "\0" } ; { print $1 }' | \
+    xargs -0 -n 1 -I {} bash -c "do_clean '{}' 2>/dev/null"
