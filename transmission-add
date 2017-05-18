@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-transmission-remote zero.local -a "$1"
+transmission-remote localhost -a "$1"
 
 [ -f "$1" ] && rm "$1"
-xdg-open "http://zero/transmission"
+xdg-open "http://localhost:9091/transmission/web/"
