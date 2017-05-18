@@ -12,10 +12,11 @@ export SAVEHIST=2000
 setopt INC_APPEND_HISTORY
 setopt HIST_IGNORE_SPACE
 setopt HIST_IGNORE_DUPS
+setopt correct
 
 ################################################################################
 # Env
-export SYSTEMD_LESS="FRSMK"
+#export SYSTEMD_LESS="FRSMK"
 export EDITOR="nano"
 
 ################################################################################
@@ -30,6 +31,9 @@ zstyle ':completion:*' rehash true
 
 # disable pacaur AUR completion
 zstyle ':completion:*:pacaur:*' remote-access false
+
+# case insensitive search
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
 # compdef '_files -g "*.nzb"' nza nzb_sorter
 compdef '_files -g "*.tar *.tar.* *.tgz *.zip *.rar *.7z"' t
@@ -127,11 +131,14 @@ alias bai='systemctl suspend'
 
 alias gpgcat='gpg -o -'
 
-alias gz='cd /mnt/zero'
-alias gza='cd /mnt/zero/Anime'
-alias gzd='cd /mnt/zero/Downloads'
-alias gf='cd /mnt/foo'
-alias gfa='cd /mnt/foo/Anime'
+#alias gz='cd /mnt/zero'
+#alias gza='cd /mnt/zero/Anime'
+#alias gzd='cd /mnt/zero/Downloads'
+#alias gf='cd /mnt/foo'
+#alias gfa='cd /mnt/foo/Anime'
+
+alias gm='cd /mnt/zed/media'
+alias gma='cd /mnt/zed/media/anime'
 
 alias winboot='sudo efibootmgr -n $(efibootmgr | grep Windows | cut -c 5-8) && reboot'
 
