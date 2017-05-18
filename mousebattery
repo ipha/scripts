@@ -7,5 +7,5 @@ while true; do
     if [ $PCT -lt 20 ]; then
         notify-send -t 60000 -i battery-low-symbolic "Change Battery Now" "Battery at $PCT%\n"
     fi
-    sleep 5m
+    sleep 45m
 done
