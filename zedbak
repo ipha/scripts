@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [[ $EUID -eq 0 ]]; then
+	echo "Don't run me as root"
+	exit
+fi
+
 if [ ! -b /dev/disk/by-partlabel/backup ]; then
 	echo "Backup drive not connected"
 	exit
@@ -15,13 +20,11 @@ case "$1" in
 		sudo cryptsetup close backup
 		;;
 	"rsync")
-		if [[ $EUID -ne 0 ]]; then
-			echo "rsync as user"
-			rsync -Pa --delete /mnt/zed/ /mnt/backup/
-		else
-			echo "rsync as root"
-			sudo -u $SUDO_USER rsync -Pa --delete /mnt/zed/ /mnt/backup/
-		fi
+		rsync -Pa --delete --delete-excluded \
+			--exclude=media/movies \
+			--exclude=media/tv \
+			--exclude=working/android/sdk \
+			/mnt/zed/ /mnt/backup/
 		;;
 esac
 
