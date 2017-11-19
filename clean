@@ -1,12 +1,11 @@
 #!/bin/bash
 
 CACHE_EXCLUDE=".*/\(borg\|thumbnails\|pacaur\|ccache\)"
-WEBKIT_TIME=$((($(date +%s) * 1000000) + 11644473600000000))
 
 # Kill browsers
 echo "Closing browsers"
-pgrep chromium      && pkill chromium      > /dev/null
-pgrep google-chrome && pkill google-chrome > /dev/null
+pgrep chromium && pkill --oldest chromium > /dev/null
+pgrep chrome   && pkill --oldest chrome   > /dev/null
 sleep 1
 
 # Clean downloads folder
@@ -19,16 +18,8 @@ echo "Clearing cache"
 find ~/.cache -maxdepth 1 -not -path ~/.cache -not -regex "$CACHE_EXCLUDE" -print0 | xargs -0 rm -r
 [ -f ~/compose-cache/* ] && rm ~/.compose-cache/*
 
-
-# Clear browser history
-#echo "Clearing old browser history"
-#sqlite3 ~/.config/chromium/Default/History "DELETE FROM urls WHERE last_visit_time < $((WEBKIT_TIME - (60*60*24*14*1000000)))"
-#sqlite3 ~/.config/chromium/Default/History "DELETE FROM visits WHERE visit_time < $((WEBKIT_TIME - (60*60*24*14*1000000)))"
-#sqlite3 ~/.config/chromium/Default/History "DELETE FROM downloads"
-#sqlite3 ~/.config/chromium/Default/History "DELETE FROM downloads_url_chains"
-
 # Compact browser databases
 echo "Compacting browser databases"
-profile-cleaner > /dev/null
+profile-cleaner
 
 
