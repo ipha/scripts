@@ -2,6 +2,8 @@
 
 DEVICE=$(upower -d | grep -B 3 G700s | head -n 1 | cut -c 9-)
 
+sleep 5m
+
 while true; do
     PCT=$(upower -i $DEVICE | grep percentage | awk '{ print $2 }' | sed 's|%||')
     if [ $PCT -lt 20 ]; then
