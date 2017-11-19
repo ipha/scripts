@@ -3,8 +3,8 @@
 wallpaperdir="/home/mitch/Pictures/bg"
 enableddir="/home/mitch/Pictures/bg/__current"
 
-# Ensure concistant sorting
-LC_COLLATE="C"
+# Ensure consistant sorting
+export LC_COLLATE="C"
 
 shopt -s extglob
 IFS=$'\n'
