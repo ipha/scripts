@@ -1,8 +1,14 @@
 #!/bin/bash
 
+# Close chrome nicely
+pgrep chromium && wmctrl -c "chromium"
+
+sleep .5
+
 if pgrep steam; then
 	kill -9 $(pgrep steam)
 fi
+
 if pgrep kdeinit5; then
 	DISPLAY=:0 qdbus-qt5 org.kde.ksmserver /KSMServer org.kde.KSMServerInterface.logout 0 1 1
 elif pgrep kdeinit4; then
