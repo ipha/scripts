@@ -10,6 +10,13 @@ echo -e "${blue}archRoot${NC}"
 btrfs fi df /
 
 echo -e "${blue}zed${NC}"
-sudo zpool list zed
+zpool list zed
 echo ""
-sudo zfs list -r zed
+zfs list -r zed
+
+if zpool list backup > /dev/null 2>&1; then
+	echo -e "${blue}backup${NC}"
+	zpool list backup
+	echo ""
+	zfs list -r backup
+fi
