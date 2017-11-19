@@ -45,6 +45,8 @@ compdef '_files -g "*.par2"' par2verify par2repair
 
 if [ -f /usr/lib/python3.6/site-packages/powerline/bindings/zsh/powerline.zsh ]; then
     source /usr/lib/python3.6/site-packages/powerline/bindings/zsh/powerline.zsh
+if [ -f /usr/share/powerline/bindings/zsh/powerline.zsh ]; then
+    source /usr/share/powerline/bindings/zsh/powerline.zsh
 else
     autoload -U colors && colors
     if [ -n "$SSH_CLIENT" ]; then
