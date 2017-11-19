@@ -42,13 +42,18 @@ compdef '_files -g "*.par2"' par2verify par2repair
 
 ################################################################################
 # Prompt
-autoload -U colors && colors
-if [ -n "$SSH_CLIENT" ]; then
-    PROMPT="%{$fg_bold[yellow]%}%n@%m%{$fg_bold[blue]%} %1~ %# %{$reset_color%}"
-elif [ "$USER" = 'root' ]; then
-    PROMPT="%{$fg_bold[red]%}%n@%m%{$fg_bold[blue]%} %1~ %# %{$reset_color%}"
-else 
-    PROMPT="%{$fg_bold[green]%}%n@%m%{$fg_bold[blue]%} %1~ %# %{$reset_color%}"
+
+if [ -f /usr/lib/python3.6/site-packages/powerline/bindings/zsh/powerline.zsh ]; then
+    source /usr/lib/python3.6/site-packages/powerline/bindings/zsh/powerline.zsh
+else
+    autoload -U colors && colors
+    if [ -n "$SSH_CLIENT" ]; then
+        PROMPT="%{$fg_bold[yellow]%}%n@%m%{$fg_bold[blue]%} %1~ %# %{$reset_color%}"
+    elif [ "$USER" = 'root' ]; then
+        PROMPT="%{$fg_bold[red]%}%n@%m%{$fg_bold[blue]%} %1~ %# %{$reset_color%}"
+    else 
+        PROMPT="%{$fg_bold[green]%}%n@%m%{$fg_bold[blue]%} %1~ %# %{$reset_color%}"
+    fi
 fi
 
 ################################################################################
@@ -118,8 +123,6 @@ alias cp='cp --reflink=auto'
 
 alias tmux='tmux a || tmux'
 
-alias live='livestreamer -p mpv'
-
 alias sstop='sudo systemctl stop'
 alias sstart='sudo systemctl start'
 alias srestart='sudo systemctl restart'
@@ -130,12 +133,6 @@ alias sdisable='sudo systemctl disable'
 alias bai='systemctl suspend'
 
 alias gpgcat='gpg -o -'
-
-#alias gz='cd /mnt/zero'
-#alias gza='cd /mnt/zero/Anime'
-#alias gzd='cd /mnt/zero/Downloads'
-#alias gf='cd /mnt/foo'
-#alias gfa='cd /mnt/foo/Anime'
 
 alias gm='cd /mnt/zed/media'
 alias gma='cd /mnt/zed/media/anime'
@@ -149,18 +146,19 @@ alias youtube-dl='youtube-dl --merge-output-format=mkv'
 alias fixkey='ssh-keygen -R $(echo `fc -ln -1` | sed "s|.*@||")'
 
 # Package manager for Arch
-[ -f /usr/bin/yaourt ] && alias yu='yaourt -Syua'
-[ -f /usr/bin/yaourt ] && alias yi='yaourt -S'
-[ -f /usr/bin/yaourt ] && alias yr='yaourt -Rs'
-[ -f /usr/bin/yaourt ] && alias ync='yaourt --noconfirm'
-
-[ -f /usr/bin/pacaur ] && alias yu='pacaur -Syu'
-[ -f /usr/bin/pacaur ] && alias yi='pacaur -S'
-[ -f /usr/bin/pacaur ] && alias yr='pacaur -Rs'
-
+if [ -f /usr/bin/pacaur ]; then
+    alias yu='pacaur -Syu'
+    alias yi='pacaur -S'
+    alias yr='pacaur -Rs'
+elif [ -f /usr/bin/yaourt ]; then
+    alias yu='yaourt -Syua'
+    alias yi='yaourt -S'
+    alias yr='yaourt -Rs'
+elif [ -f /usr/bin/apt ]; then
 # Package manager for Ubuntu/Debian
-[ -f /usr/bin/apt ] && alias yu='sudo apt-get update && sudo apt-get upgrade'
-[ -f /usr/bin/apt ] && alias yi='sudo apt-get install'
-[ -f /usr/bin/apt ] && alias yr='sudo apt-get remove'
+    alias yu='sudo apt-get update && sudo apt-get upgrade'
+    alias yi='sudo apt-get install'
+    alias yr='sudo apt-get remove'
+fi
 
 [ -f /usr/bin/fortune ] && fortune -a -s
