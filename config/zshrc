@@ -130,7 +130,7 @@ alias l='ls -lh'
 alias lla='ls -lAh'
 
 alias rm='rm -I'
-alias rr='rm -r'
+alias rr='rm -Ir'
 
 alias cp='cp --reflink=auto'
 
@@ -143,8 +143,6 @@ alias sstatus='sudo systemctl status'
 alias senable='sudo systemctl enable'
 alias sdisable='sudo systemctl disable'
 
-alias bai='systemctl suspend'
-
 alias gpgcat='gpg -o -'
 
 alias gm='cd /mnt/zed/media'
@@ -152,7 +150,7 @@ alias gma='cd /mnt/zed/media/anime'
 
 alias winboot='sudo efibootmgr -n $(efibootmgr | grep Windows | cut -c 5-8) && reboot'
 
-alias zlist='sudo zfs list -t filesystem,snapshot,volume | grep -v storage\@'
+alias zlist='zfs list -t filesystem,snapshot,volume | grep -v storage\@'
 
 alias youtube-dl='youtube-dl --merge-output-format=mkv'
 
