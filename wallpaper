@@ -10,6 +10,7 @@ shopt -s extglob
 IFS=$'\n'
 
 bold=$(tput bold)
+red=$(tput setaf 1)
 green=$(tput setaf 2)
 blue=$(tput setaf 4)
 white=$(tput setaf 7)
@@ -28,6 +29,10 @@ while true; do
     for (( i = 0; i < $list_num; i++ )); do
         # Next item has a 1080 suffix, skip this one
         if ([ $(($i+1)) -lt $list_num ] && [ "$(basename ${list_orig[$i]%.*})_1080" = "$(basename ${list_orig[$i+1]%.*})" ]); then
+            if [ -e "${enableddir}/$(basename ${list_orig[$i]})" ]; then
+                # 1080 version exists, but base is enabled! Show it.
+                list+=(${list_orig[$i]})
+            fi
             continue
         else
             if ([ $mode = "all" ] || [ $mode = "enabled_only" ]) && [ -e "${enableddir}/$(basename ${list_orig[$i]})" ]; then
@@ -45,10 +50,13 @@ while true; do
     printf "${bold}----(${blue}%s${white})----${normal}\n" "`pwd | awk -F/ '{print $NF}'`"
 
     for file in "${list[@]}"; do
-        if [ -e "${enableddir}/$(basename $file)" ]; then
+        if [ -e "${enableddir}/$(basename $file)" ] && [ "$(basename ${file%.*})_1080" = "$(basename ${list[$f+1]%.*})" ]; then
+            # 1080 version exists, but base is enabled!
+            printf "${bold}%${digits}i. ${red}%s${normal}\n" $((++f)) "!$file"
+        elif [ -e "${enableddir}/$(basename $file)" ]; then
             printf "${bold}%${digits}i. ${green}%s${normal}\n" $((++f)) "✓$file"
         else
-            printf "${bold}%${digits}i. ${blue}%s${normal}\n" $((++f)) "$file"
+            printf "${bold}%${digits}i. ${blue}%s${normal}\n" $((++f)) " $file"
         fi
     done
 
@@ -85,7 +93,7 @@ while true; do
                 cd "$enableddir"
                 ln -s ".$sfile" .
             fi
-            sleep 1
+            sleep 0.25
             ;;
     esac
 done
