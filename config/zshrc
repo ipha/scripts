@@ -43,11 +43,7 @@ compdef '_files -g "*.par2"' par2verify par2repair
 ################################################################################
 # Prompt
 
-if [ -f /usr/lib/python3.6/site-packages/powerline/bindings/zsh/powerline.zsh ]; then
-    source /usr/lib/python3.6/site-packages/powerline/bindings/zsh/powerline.zsh
-elif [ -f /usr/share/powerline/bindings/zsh/powerline.zsh ]; then
-    source /usr/share/powerline/bindings/zsh/powerline.zsh
-else
+function no_powerline {
     autoload -U colors && colors
     if [ -n "$SSH_CLIENT" ]; then
         PROMPT="%{$fg_bold[yellow]%}%n@%m%{$fg_bold[blue]%} %1~ %# %{$reset_color%}"
@@ -56,6 +52,21 @@ else
     else 
         PROMPT="%{$fg_bold[green]%}%n@%m%{$fg_bold[blue]%} %1~ %# %{$reset_color%}"
     fi
+}
+
+if [ "$TERM" = "xterm-256color" ]; then
+    # load powerline
+    if [ -f /usr/lib/python3.6/site-packages/powerline/bindings/zsh/powerline.zsh ]; then
+        source /usr/lib/python3.6/site-packages/powerline/bindings/zsh/powerline.zsh
+    elif [ -f /usr/share/powerline/bindings/zsh/powerline.zsh ]; then
+        source /usr/share/powerline/bindings/zsh/powerline.zsh
+    else
+        # can't find powerline script
+        no_powerline
+    fi
+else
+    # unsupported shell
+    no_powerline
 fi
 
 ################################################################################
