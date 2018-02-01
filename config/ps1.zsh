@@ -9,12 +9,13 @@ B2=31
 F3=252
 B3=240
 
-if [ -n "$SSH_CLIENT" ]; then
-    PS1_1="%F{$F1}%K{$B1} %m %F{$B1}%K{$B2}"
-fi
 
 if [ "$USER" = 'root' ]; then
     B2=160
+fi
+
+if [ -n "$SSH_CLIENT" ]; then
+    PS1_1="%F{$F1}%K{$B1} %m %F{$B1}%K{$B2}"
 fi
 
 PS1_2="%F{$F2}%K{$B2} %n %F{$B2}%K{$B3}"

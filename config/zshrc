@@ -15,6 +15,14 @@ setopt HIST_IGNORE_DUPS
 # setopt correct
 
 ################################################################################
+# Set xterm title
+case $TERM in
+    xterm*)
+        precmd () {print -Pn "\e]0;%~\a"}
+    ;;
+esac
+
+################################################################################
 # Env
 #export SYSTEMD_LESS="FRSMK"
 export EDITOR="nano"
@@ -160,11 +168,13 @@ alias fixkey='ssh-keygen -R $(echo `fc -ln -1` | sed "s|.*@||")'
 
 # Package manager for Arch
 if [ -f /usr/bin/pacaur ]; then
-    alias yu='pacaur -Syu'
+    alias yu='pacaur -Syu --ignoregroup ck-haswell'
+    alias yuk='pacaur -Syu'
     alias yi='pacaur -S'
     alias yr='pacaur -Rs'
 elif [ -f /usr/bin/yaourt ]; then
-    alias yu='yaourt -Syua'
+    alias yu='yaourt -Syua --ignoregroup ck-haswell'
+    alias yuk='yaourt -Syua'
     alias yi='yaourt -S'
     alias yr='yaourt -Rs'
 elif [ -f /usr/bin/apt ]; then
