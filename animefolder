@@ -19,14 +19,13 @@ getimage() {
     # Check for exact match
     if echo "$html" | grep -q "<strong>$name</strong>"; then
         echo "Exact name found"
-        image=$(echo "$html" | grep -B 10 "<strong>$name</strong>" | grep 100x140 | \
+        image=$(echo "$html" | grep -B 10 "<strong>$name</strong>" | grep 100x140 | head -n1 | \
             sed 's|.*https://|https://|' | sed 's|?.*||' | sed 's|/r/100x140||')
     else
         echo "Using first search result"
         image=$(echo "$html" | grep 100x140 | grep -v Special | grep -v OVA | head -n1 | \
             sed 's|.*https://|https://|' | sed 's|?.*||' | sed 's|/r/100x140||')
     fi
-    # echo "$image"
 
     convert "$image" .folder.png
 
