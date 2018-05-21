@@ -167,14 +167,16 @@ alias youtube-dl='youtube-dl --merge-output-format=mkv'
 alias fixkey='ssh-keygen -R $(echo `fc -ln -1` | sed "s|.*@||")'
 
 # Package manager for Arch
-if [ -f /usr/bin/pacaur ]; then
-    alias yu='pacaur -Syu --ignoregroup ck-haswell'
-    alias yuk='pacaur -Syu'
+if [ -f /usr/bin/yay ]; then
+    alias yu='yay -Syu'
+    alias yi='yay -S'
+    alias yr='yay -Rs'
+elif [ -f /usr/bin/pacaur ]; then
+    alias yu='pacaur -Syu'
     alias yi='pacaur -S'
     alias yr='pacaur -Rs'
 elif [ -f /usr/bin/yaourt ]; then
-    alias yu='yaourt -Syua --ignoregroup ck-haswell'
-    alias yuk='yaourt -Syua'
+    alias yu='yaourt -Syua'
     alias yi='yaourt -S'
     alias yr='yaourt -Rs'
 elif [ -f /usr/bin/apt ]; then
