@@ -17,6 +17,7 @@ profiles=()
 
 [ -d google-chrome ]  && profiles+=("google-chrome")
 [ -d chromium ]       && profiles+=("chromium")
+[ -d mozilla ]        && profiles+=("mozilla")
 
 if [ ${#profiles[@]} -eq 0 ]; then
     echo "No profiles found" 1>&2
