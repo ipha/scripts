@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python3
 # Version 0.2 2009.01.25
 # Copyright (c) 2009, Taoufik El Aoumari
 # Released under the GPL license http://www.gnu.org/licenses/gpl-3.0.txt
@@ -10,10 +10,10 @@ import zlib
 import os
 
 
-c_null = "\x1b[00;00m"
-c_red = "\x1b[31;01m"
+c_null  = "\x1b[00;00m"
+c_red   = "\x1b[31;01m"
 c_green = "\x1b[32;01m"
-p_reset = "\x08"*8
+p_reset = "\x08" * 8
 
 
 def crc32_checksum(filename):
@@ -26,7 +26,7 @@ def crc32_checksum(filename):
         while True:
             data = file.read(buff_size)
             done += buff_size
-            sys.stdout.write("%7d" % (done*100/size) + "%" + p_reset)
+            sys.stdout.write("%7d" % (done * 100 / size) + "%" + p_reset)
             if not data:
                 break
             crc = zlib.crc32(data, crc)
@@ -38,8 +38,9 @@ def crc32_checksum(filename):
     sys.stdout.write(p_reset)
     file.close()
     if crc < 0:
-        crc &= 2**32-1
+        crc &= 2**32 - 1
     return "%.8X" % (crc)
+
 
 for file in sys.argv[1:]:
     try:
