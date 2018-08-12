@@ -2,6 +2,7 @@
 
 # Close chrome nicely
 pgrep chromium && wmctrl -c "chromium"
+pgrep chrome   && wmctrl -c "chrome"
 
 sleep .5
 
