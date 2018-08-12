@@ -1,11 +1,12 @@
 #!/bin/bash
 
-CACHE_EXCLUDE=".*/\(borg\|thumbnails\|pacaur\|ccache\)"
+CACHE_EXCLUDE=".*/\(borg\|thumbnails\|pacaur\|ccache\|yay\)"
 
 # Kill browsers
 echo "Closing browsers"
 pgrep chromium && pkill --oldest chromium > /dev/null
 pgrep chrome   && pkill --oldest chrome   > /dev/null
+pgrep firefox  && pkill --oldest firefox  > /dev/null
 sleep 1
 
 # Clean downloads folder
