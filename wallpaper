@@ -1,0 +1,118 @@
+#!/usr/bin/env python3
+
+import os
+import glob
+import locale
+from time import sleep
+
+WALLPAPERDIR = "/home/mitch/Pictures/bg"
+ENABLEDDIR   = "/home/mitch/Pictures/bg/__current"
+
+# Ensure consistant sorting
+locale.setlocale(locale.LC_COLLATE, "C")
+
+
+class bcolors:
+    BOLD    = '\033[1m'
+    BLACK   = '\033[30m'
+    RED     = '\033[31m'
+    GREEN   = '\033[32m'
+    YELLOW  = '\033[33m'
+    BLUE    = '\033[34m'
+    MAGENTA = '\033[35m'
+    CYAN    = '\033[36m'
+    WHITE   = '\033[37m'
+    ENDC    = '\033[0m'
+
+
+class Wallpaper:
+    path     = ""
+    basename = ""
+    enabled  = False
+    hidden   = False
+
+    def __init__(self, path):
+        self.path     = path
+        self.dir      = os.path.dirname(path)
+        self.basename = os.path.basename(path)
+        self.filename, self.fileext = os.path.splitext(self.basename)
+
+        if os.path.isfile(os.path.join(ENABLEDDIR, self.basename)):
+            self.enabled = True
+
+        if glob.glob(os.path.join(self.dir, self.filename + "_1080.*")) and not self.enabled:
+            self.hidden = True
+
+    def toggle(self):
+        target = os.path.join(ENABLEDDIR, self.basename)
+        if os.path.isfile(target):
+            os.remove(target)
+            self.enabled = False
+            print("Disabled", self.path)
+        else:
+            os.symlink(os.path.join("..", self.path), target)
+            self.enabled = True
+            print("Enabled", self.path)
+        sleep(0.75)
+
+    def preview(self):
+        os.system("feh -. " + self.path)
+
+    def print_line(self, number, pad):
+        print(bcolors.BOLD,
+              "{0: >{1}}. ".format(number, pad),
+              bcolors.GREEN if self.enabled else bcolors.BLUE,
+              "✓./" if self.enabled else " ./",
+              self.path, bcolors.ENDC, sep="")
+
+    def __lt__(self, other):
+        return locale.strcoll(self.path, other.path) < 0
+
+
+def find_files(path):
+    out = []
+    os.chdir(path)
+    for file in glob.iglob("**/*.*", recursive=True):
+        if "__current" not in file and ".svg" not in file:
+            out.append(Wallpaper(file))
+    return out
+
+
+def make_display_list(wallpapers, mode="all"):
+    out = []
+    for w in wallpapers:
+        if not w.hidden:
+            if mode == "eo" and w.enabled:
+                out.append(w)
+            elif mode == "do" and not w.enabled:
+                out.append(w)
+            elif mode == "all":
+                out.append(w)
+    return sorted(out)
+
+
+wallpapers = find_files(WALLPAPERDIR)
+disp_list  = make_display_list(wallpapers)
+
+while True:
+    for i in range(0, len(disp_list)):
+        disp_list[i].print_line(i + 1, 3)
+
+    try:
+        selection = input("> ")
+        if selection == "all":
+            disp_list = make_display_list(wallpapers, mode="all")
+        elif selection == "eo":
+            disp_list = make_display_list(wallpapers, mode="eo")
+        elif selection == "do":
+            disp_list = make_display_list(wallpapers, mode="do")
+        elif selection == "q":
+            exit(0)
+        elif selection[0] == 'p':
+            disp_list[int(selection[1:]) - 1].preview()
+        elif selection.isdigit():
+            disp_list[int(selection) - 1].toggle()
+    except KeyboardInterrupt:
+        exit(0)
+    except IndexError:
+        pass
