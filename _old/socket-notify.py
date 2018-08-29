@@ -29,5 +29,6 @@ def do_that_socket_thing():
             os.execl("/usr/bin/notify-send", "-t " + str(DURATION), args[0], args[1])
         sock.close()
 
+
 if __name__ == "__main__":
     do_that_socket_thing()

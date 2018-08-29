@@ -4,6 +4,6 @@
 
 for i in "$@"; do
 	ffmpeg -i "$i" -c copy -vn -bsf:a aac_adtstoasc /tmp/tmp.mp4
-	ffmpeg -i "$i" -i /tmp/tmp.mp4 -c copy -map 0:v:0 -map 1:a:0 "$(basename ${i%.*}).mkv"
+	ffmpeg -i "$i" -i /tmp/tmp.mp4 -c copy -map 0:v:0 -map 1:a:0 "$(basename "${i%.*}").mkv"
 	[ -f /tmp/tmp.mp4 ] && rm /tmp/tmp.mp4
 done

@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-if [ $1 == "--help" ]; then
+if [ "$1" == "--help" ]; then
     echo "w2x [noise] [scale] [image]"
     exit 0
 fi
@@ -12,7 +12,7 @@ IMAGE=$3
 
 NOISE_CMD="--noise_level ${NOISE}"
 NOISE_NAME="n${NOISE}_"
-if [ ${NOISE} == "0" ]; then
+if [ "${NOISE}" == "0" ]; then
     METHOD="scale"
     NOISE_CMD=""
     NOISE_NAME=""
@@ -20,11 +20,11 @@ fi
 
 SCALE_CMD="--scale_ratio ${SCALE}"
 SCALE_NAME="x${SCALE}"
-if [ ${SCALE} == "0" ]; then
+if [ "${SCALE}" == "0" ]; then
     METHOD="noise"
     SCALE_CMD=""
 fi
 
 OUT="${IMAGE%.*}_[${NOISE_NAME}${SCALE_NAME}].png"
 
-waifu2x-converter-cpp -p 1 -m ${METHOD} ${NOISE_CMD} ${SCALE_CMD} -i ${IMAGE} -o "${OUT}"
+waifu2x-converter-cpp -p 1 -m ${METHOD} ${NOISE_CMD} ${SCALE_CMD} -i "${IMAGE}" -o "${OUT}"
