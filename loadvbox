@@ -1,5 +1,0 @@
-#!/bin/bash
-modinfo vboxdrv >> /dev/null || sudo vboxbuild
-sudo modprobe vboxdrv
-sudo modprobe vboxnetadp
-sudo modprobe vboxnetflt

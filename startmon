@@ -1,3 +1,0 @@
-#!/bin/bash
-sudo modprobe rt2800pci
-sudo airmon-ng start wlan0
