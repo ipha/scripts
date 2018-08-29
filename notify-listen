@@ -5,7 +5,7 @@ DURATION=30000
 
 while true; do
     echo "start listen"
-    nc -l -p $PORT | while read msg; do
+    nc -l -p $PORT | while read -r msg; do
         echo "$msg"
         notify-send -t $DURATION "${msg%;*}" "${msg#*;}"
     done

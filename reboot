@@ -7,7 +7,7 @@ pgrep chrome   && wmctrl -c "chrome"
 sleep .5
 
 if pgrep steam; then
-	kill -9 $(pgrep steam)
+	kill -9 "$(pgrep steam)"
 fi
 
 if pgrep kdeinit5; then

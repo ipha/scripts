@@ -2,15 +2,10 @@
 
 # 
 # User options
-mediadir="/mnt/zero"
+mediadir="/mnt/zed/media"
 playercmd="mpv"
 playerargs=""
-filetypes="(*.avi|*.mkv|*.flv|*.mp4|*.m4v)"
-
-# 
-# 
-shopt -s extglob
-IFS=$'\n'
+fileregex=".*\(avi\|mkv\|flv\|mp4\|m4v\)"
 
 bold="\033[1m"
 green=$(tput setaf 2)
@@ -22,12 +17,14 @@ cd "$mediadir"
 last=0
 
 while true; do
-	list_dirs=($(ls -vd */ 2> /dev/null | sed 's|/$||'))
-	list_files=($(ls -vdp *$filetypes 2> /dev/null | grep -v "/$"))
+
+	mapfile -t list_dirs  < <(find . -maxdepth 1 -type d -regex "\./[^.].*"  | sed 's|./||' | sort)
+	mapfile -t list_files < <(find . -maxdepth 1 -type f -regex "$fileregex" | sed 's|./||' | sort)
+
 	list_merged=("${list_dirs[@]}" "${list_files[@]}")
-	digits=`echo -n ${#list_merged[@]} | wc -m`
+	digits=$(echo -n ${#list_merged[@]} | wc -m)
 	f=0
-	printf "${bold}----(${blue}%s${white})----${normal}\n" "`pwd | awk -F/ '{print $NF}'`"
+	printf "${bold}----(${blue}%s${white})----${normal}\n" "$(pwd | awk -F/ '{print $NF}')"
 
 	printf "${bold}%${digits}i. ${blue}%s${normal}\n" 0 ".."
 	for dir in "${list_dirs[@]}"; do
@@ -37,11 +34,11 @@ while true; do
 		printf "${bold}%${digits}i. ${green}%s${normal}\n" $((++f)) "$file"
 	done
 	echo -ne "> "
-	read selection
+	read -r selection
 
 	case $selection in
-		"0" | "..")
-			if [ "`pwd`" != "$mediadir" ]; then 
+		"0" | ".." | ".")
+			if [ "$(pwd)" != "$mediadir" ]; then 
 				cd ..
 			fi
 			;;
@@ -53,10 +50,6 @@ while true; do
 			if [ -d "${list_merged[(selection-1)]}" ]; then
 				cd "${list_merged[(selection-1)]}"
 				last=0
-				if [ `ls *$filetypes 2> /dev/null | wc -l` -eq 1 ]; then
-					${playercmd} ${playerargs} *$filetypes
-					cd ..
-				fi
 			else
 				${playercmd} ${playerargs} "${list_merged[(selection-1)]}"
 				last=$selection

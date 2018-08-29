@@ -5,12 +5,8 @@
 musicdir="/home/mitch/Music"
 playercmd="mpv"
 playerargs="--no-video"
-filetypes="(*.mp3|*.flac|*.mp4|*.m4a|*.wma|*.wav)"
+fileregex=".*\(mp3\|flac\|mp4\|m4a\|wma\|wav\)"
 
-# 
-# 
-shopt -s extglob
-IFS=$'\n'
 
 bold=$(tput bold)
 green=$(tput setaf 2)
@@ -21,34 +17,34 @@ normal=$(tput sgr0)
 cd "$musicdir"
 
 play_folder() {
-	files=($(ls -v *$filetypes 2> /dev/null))
-	if [ ! -z $files ]; then
-		for file in ${files[@]}; do
+	mapfile -t files < <(find . -maxdepth 1 -type f -regex "$fileregex" | sed 's|./||' | sort)
+	if [ ${#files[@]} -ne 0 ]; then
+		for file in "${files[@]}"; do
 			printf "${bold}${green}%s\n" "$file"
 		done
-		$playercmd $playerargs ${files[@]}
+		$playercmd $playerargs "${files[@]}"
 	fi
 }
 
 while true; do
-	list=($(ls -vd */ 2> /dev/null | sed 's|/$||'))
-	digits=`echo -n ${#list[@]} | wc -m`
+	mapfile -t list < <(find . -maxdepth 1 -type f -regex "$fileregex" | sed 's|./||' | sort)
+	digits=$(echo -n ${#list[@]} | wc -m)
 	f=0
-	printf "${bold}----(${blue}%s${white})----${normal}\n" "`pwd | awk -F/ '{print $NF}'`"
+	printf "${bold}----(${blue}%s${white})----${normal}\n" "$(pwd | awk -F/ '{print $NF}')"
 
 	printf "${bold}%${digits}i. ${blue}%s${normal}\n" 0 ".."
 	for dir in "${list[@]}"; do
 		printf "${bold}%${digits}i. ${blue}%s${normal}\n" $((++f)) "$dir"
 	done
-	if ls *$filetypes &> /dev/null; then
-		printf "${bold}%${digits}s. ${green}Play all in ${white}%s${normal}\n" "p" $(pwd)
+	if [ ! -z "$(find . -maxdepth 1 -type f -regex "$fileregex")" ]; then
+		printf "${bold}%${digits}s. ${green}Play all in ${white}%s${normal}\n" "p" "$(pwd)"
 	fi
 	echo -ne "> "
-	read selection
+	read -r selection
 
 	case $selection in
 		"0" | "..")
-			if [ "`pwd`" != "$musicdir" ]; then 
+			if [ "$(pwd)" != "$musicdir" ]; then 
 				cd ..
 			fi
 			;;
@@ -57,7 +53,7 @@ while true; do
 			;;
 		*)
 			cd "${list[(selection-1)]}"
-			if [ `find . -maxdepth 1 -type d | wc -l` -eq 1 ]; then
+			if [ "$(find . -maxdepth 1 -type d | wc -l)" -eq 1 ]; then
 				play_folder
 				cd ..
 			fi

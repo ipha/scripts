@@ -17,7 +17,7 @@ compgen -G ~/Downloads/\*.torrent > /dev/null && rm ~/Downloads/*.torrent
 # Clear cache
 echo "Clearing cache"
 find ~/.cache -maxdepth 1 -not -path ~/.cache -not -regex "$CACHE_EXCLUDE" -print0 | xargs -0 rm -r
-[ -f ~/compose-cache/* ] && rm ~/.compose-cache/*
+[ -n "$(ls -A ~/.compose-cache/)" ] && rm ~/.compose-cache/*
 
 # Compact browser databases
 echo "Compacting browser databases"

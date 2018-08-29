@@ -25,11 +25,10 @@ backup_ipod() {
 }
 
 backup_bigdrive() {
-	if `mount | grep -q '/mnt/bigdrive' || mount /mnt/bigdrive 2> /dev/null`; then
+	if mount | grep -q '/mnt/bigdrive' || mount /mnt/bigdrive 2> /dev/null; then
 		echo "doing bigdrive"
 		encfs -i 1 --extpass='gpg -o - --batch /mnt/bigdrive/ginger-key.asc' /mnt/bigdrive/ginger-enc /mnt/bigdrive/ginger
-		if `mount | grep -q '/mnt/bigdrive/ginger'`
-		then
+		if mount | grep -q '/mnt/bigdrive/ginger'; then
 			echo "encfs opened"
 			rsync -rtP --delete --exclude={/.\*,/VirtualBox\ VMs/,/Music/,/Downloads/,/gw2/} ~/ /mnt/bigdrive/ginger/
 			find ~/Music | sort > /mnt/bigdrive/ginger/music-list

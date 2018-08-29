@@ -79,7 +79,7 @@ f.close()
 
 print(key)
 
-server = http.server.HTTPServer(('0.0.0.0    ', PORT), HTTPHandler)
+server = http.server.HTTPServer(('0.0.0.0', PORT), HTTPHandler)
 server.socket = ssl.wrap_socket(server.socket, certfile=ssl_certfile, keyfile=ssl_keyfile, server_side=True)
 print('Started http server')
 server.serve_forever()
