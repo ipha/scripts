@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [ ! -f "$1" ] ; then
+    exit 1
+fi
+
+for file in "$@"; do
+    type=$(file -b "$file" | awk '{ print $1 }')
+    case $type in
+        "gzip")     zcat        "$file";;
+        "bzip2")    bzcat       "$file";;
+        "XZ")       xzcat       "$file";;
+        "lzop")     lzop -dcf   "$file";;
+        "LZ4")      lz4cat      "$file";;
+        "LZMA")     lzcat       "$file";;
+        "PGP")      gpg -d -o - "$file";;
+        *)
+            echo "${file}: unknown type (${type})" >&2
+        ;;
+    esac
+done
