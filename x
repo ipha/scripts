@@ -1,21 +1,25 @@
 #!/bin/bash
 
-if [ -f "$1" ] ; then
+if [ ! -f "$1" ] ; then
+    exit 1
+fi
+
+for file in "$@"; do
 	case $1 in
-		*.tar)		tar xf	"$1";;
-		*.tar.*)	tar xf	"$1";;
-		*.tgz)		tar xf	"$1";;
-		*.bz2)		bunzip2	"$1";;
-		*.gz)		gunzip	"$1";;
-		*.xz)		xz -d	"$1";;
-		*.lz4)		lz4 -d	"$1";;
-		*.lzo)		lzop -d	"$1";;
-		*.zip)		7z x	"$1";;
-		*.rar)		7z x	"$1";;
-		*.7z)		7z x	"$1";;
+		*.tar)		tar xf	"$file";;
+		*.tar.*)	tar xf	"$file";;
+		*.tgz)		tar xf	"$file";;
+		*.bz2)		bunzip2	"$file";;
+		*.gz)		gunzip	"$file";;
+		*.xz)		xz -d	"$file";;
+		*.lz4)		lz4 -d	"$file";;
+		*.lzo)		lzop -d	"$file";;
+		*.zip)		7z x	"$file";;
+		*.rar)		7z x	"$file";;
+		*.7z)		7z x	"$file";;
 		*)
-			echo "WTF is this? Lets try 7zip"
-			7z x "$1"
+			echo "WTF is this? Lets try 7zip" >&2
+			7z x "$file"
 		;;
 	esac
-fi
+done
