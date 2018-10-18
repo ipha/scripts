@@ -20,7 +20,9 @@ setopt HIST_IGNORE_DUPS
 # Set xterm title
 case $TERM in
     xterm*)
-        precmd () {print -Pn "\e]0;%~\a"}
+        precmd () {
+            print -Pn "\e]0;%~\a"
+        }
     ;;
 esac
 
@@ -28,6 +30,7 @@ esac
 # Env
 #export SYSTEMD_LESS="FRSMK"
 export EDITOR="nano"
+export WINEDLLOVERRIDES="winemenubuilder.exe=d"
 
 ################################################################################
 # Set dircolors
@@ -91,6 +94,7 @@ bindkey "\e[F" end-of-line
 ################################################################################
 # Extensions
 for ext in  '/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' \
+            '/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh' \
             '/usr/share/doc/pkgfile/command-not-found.zsh'; do
     [ -f $ext ] && source $ext
 done
@@ -102,14 +106,13 @@ if [ -f /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substrin
     bindkey "^[[A" history-substring-search-up
     bindkey "^[[B" history-substring-search-down
 fi
-
-if [ -f /etc/profile.d/autojump.zsh ]; then
-    source /etc/profile.d/autojump.zsh
+################################################################################
+# SSH Agent
+if [ ! -f /tmp/ssh-agent-${USER}.socket ]; then
+    ssh-agent -a /tmp/ssh-agent-${USER}.socket > /dev/null
 fi
 
-if [ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-    source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-fi
+export SSH_AUTH_SOCK=/tmp/ssh-agent-${USER}.socket
 
 ################################################################################
 # Aliases
@@ -141,8 +144,6 @@ alias sstatus='sudo systemctl status'
 alias senable='sudo systemctl enable'
 alias sdisable='sudo systemctl disable'
 
-alias gpgcat='gpg -o -'
-
 alias gm='cd /mnt/zed/media'
 alias gma='cd /mnt/zed/media/anime'
 
@@ -153,20 +154,6 @@ alias zlist='zfs list -t filesystem,snapshot,volume | grep -v storage\@'
 alias youtube-dl='youtube-dl --merge-output-format=mkv'
 
 alias fixkey='ssh-keygen -R $(echo `fc -ln -1` | sed "s|.*@||")'
-
-alias w2x-1n1x='waifu2x-converter-cpp -p 1 -m noise --noise_level 1 -i'
-alias w2x-2n1x='waifu2x-converter-cpp -p 1 -m noise --noise_level 2 -i'
-alias w2x-3n1x='waifu2x-converter-cpp -p 1 -m noise --noise_level 3 -i'
-
-alias w2x-0n2x='waifu2x-converter-cpp -p 1 -m scale --noise_level 0 --scale_ratio 2.0 -i'
-alias w2x-1n2x='waifu2x-converter-cpp -p 1 -m noise_scale --noise_level 1 --scale_ratio 2.0 -i'
-alias w2x-2n2x='waifu2x-converter-cpp -p 1 -m noise_scale --noise_level 2 --scale_ratio 2.0 -i'
-alias w2x-3n2x='waifu2x-converter-cpp -p 1 -m noise_scale --noise_level 3 --scale_ratio 2.0 -i'
-
-alias w2x-0n4x='waifu2x-converter-cpp -p 1 -m scale --noise_level 0 --scale_ratio 4.0 -i'
-alias w2x-1n4x='waifu2x-converter-cpp -p 1 -m noise_scale --noise_level 1 --scale_ratio 4.0 -i'
-alias w2x-2n4x='waifu2x-converter-cpp -p 1 -m noise_scale --noise_level 2 --scale_ratio 4.0 -i'
-alias w2x-3n4x='waifu2x-converter-cpp -p 1 -m noise_scale --noise_level 3 --scale_ratio 4.0 -i'
 
 # Package manager for Arch
 if [ -f /usr/bin/yay ]; then
@@ -185,3 +172,9 @@ elif [ -f /usr/bin/apt ]; then
 fi
 
 [ -f /usr/bin/fortune ] && fortune -a -s
+
+# blur for  yakuake
+if [[ $(ps --no-header -p $PPID -o comm) =~ '^yakuake$' ]]; then
+    for wid in $(xdotool search --pid $PPID); do
+        xprop -f _KDE_NET_WM_BLUR_BEHIND_REGION 32c -set _KDE_NET_WM_BLUR_BEHIND_REGION 0 -id "$wid"; done
+fi
