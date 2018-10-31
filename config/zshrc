@@ -108,7 +108,8 @@ if [ -f /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substrin
 fi
 ################################################################################
 # SSH Agent
-if [ ! -S /tmp/ssh-agent-${USER}.socket ]; then
+if ! pgrep -U ${USER} ssh-agent > /dev/null; then
+    [ -S /tmp/ssh-agent-${USER}.socket ] && rm /tmp/ssh-agent-${USER}.socket
     ssh-agent -a /tmp/ssh-agent-${USER}.socket > /dev/null
 fi
 
