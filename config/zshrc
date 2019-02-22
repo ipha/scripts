@@ -154,7 +154,7 @@ alias zlist='zfs list -t filesystem,snapshot,volume | grep -v storage\@'
 
 alias youtube-dl='youtube-dl --merge-output-format=mkv'
 
-alias fixkey='ssh-keygen -R $(echo `fc -ln -1` | sed "s|.*@||")'
+alias fixkey='ssh-keygen -R $(echo `fc -ln -1` | sed "s|.* ||" | sed "s|.*@||")'
 
 # Package manager for Arch
 if [ -f /usr/bin/yay ]; then
