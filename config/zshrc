@@ -121,15 +121,23 @@ alias ..='cd ..'
 
 alias sudo='sudo '
 
-alias ls='ls -v --color=auto'
+if [ -f /usr/bin/lsd ]; then
+    ICON="auto"
+    [ $TERM = "xterm-256color" ] && ICON="never"
+    alias ls='lsd --icon=$ICON'
+    alias la='lsd --icon=$ICON -a'
+    alias ll='lsd --icon=$ICON -l'
+    alias lla='lsd --icon=$ICON -la'
+else
+    alias ls = 'ls -v --color=auto '
+    alias la='ls -A'
+    alias ll='ls -lh'
+    alias lla='ls -lAh'
+fi
+
 alias grep='grep --colour=auto'
 alias grepa='grep --color=auto -r'
 alias grepia='grep --color=auto -r -i'
-
-alias la='ls -A'
-alias ll='ls -lh'
-alias l='ls -lh'
-alias lla='ls -lAh'
 
 alias rm='rm -I'
 alias rr='rm -Ir'
