@@ -9,8 +9,9 @@ METHOD="noise_scale"
 NOISE=$1
 SCALE=$2
 IMAGE=$3
+TTA=$4
 
-NOISE_CMD="--noise_level ${NOISE}"
+NOISE_CMD="-noise_level ${NOISE}"
 NOISE_NAME="n${NOISE}_"
 if [ "${NOISE}" == "0" ]; then
     METHOD="scale"
@@ -18,13 +19,18 @@ if [ "${NOISE}" == "0" ]; then
     NOISE_NAME=""
 fi
 
-SCALE_CMD="--scale_ratio ${SCALE}"
+SCALE_CMD="-scale ${SCALE}"
 SCALE_NAME="x${SCALE}"
-if [ "${SCALE}" == "0" ]; then
+if [ "${SCALE}" == "1" ]; then
     METHOD="noise"
     SCALE_CMD=""
 fi
 
+TTA_CMD=""
+if [ "${TTA}" == "1" ]; then
+    TTA_CMD="-tta 1"
+fi
+
 OUT="${IMAGE%.*}_[${NOISE_NAME}${SCALE_NAME}].png"
 
-waifu2x-converter-cpp -p 1 -m ${METHOD} ${NOISE_CMD} ${SCALE_CMD} -i "${IMAGE}" -o "${OUT}"
+waifu2x -m "${METHOD}" "${NOISE_CMD}" "${SCALE_CMD}" "${TTA_CMD}" -i "${IMAGE}" -o "${OUT}"
