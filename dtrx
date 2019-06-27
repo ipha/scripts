@@ -11,7 +11,7 @@ cleanup () {
 FILE=$(readlink -f "$1")
 FILENAME=$(basename "$1")
 DIR=$(dirname "$FILE")
-EXTDIR=$(mktemp -d -p . .dtrx-XXX)
+EXTDIR=$(mktemp -d -p "$PWD" .dtrx-XXX)
 DEST=$PWD
 DESTDIR="${FILENAME%.*}"
 
