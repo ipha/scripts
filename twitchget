@@ -1,6 +1,6 @@
 #!/bin/bash
 
 while true; do
-	streamlink -o "$1_$(date +%Y-%m-%d_%H-%M-%S).ts" "twitch.tv/$1" best
-	sleep 10
+	streamlink --twitch-disable-hosting -o "$1_$(date +%Y-%m-%d_%H-%M-%S).ts" "twitch.tv/$1" best
+	sleep 30
 done
