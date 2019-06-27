@@ -1,0 +1,107 @@
+#!/bin/bash
+
+# glob hidden files
+shopt -s dotglob
+
+cleanup () {
+    [ -d "$EXTDIR" ] && rm -r "$EXTDIR"
+    exit "$1"
+}
+
+FILE=$(readlink -f "$1")
+FILENAME=$(basename "$1")
+DIR=$(dirname "$FILE")
+EXTDIR=$(mktemp -d -p . .dtrx-XXX)
+DEST=$PWD
+DESTDIR="${FILENAME%.*}"
+
+cd "$EXTDIR"
+
+# TODO: make library for dtrx, x, t, qcat
+case $FILE in
+    *.tar)      tar xf      "$FILE";;
+    *.tar.*)    tar xf      "$FILE"
+                DESTDIR="${FILENAME%.tar.*}"
+                ;;
+    *.tgz)      tar xf      "$FILE";;
+    *.bz2)      bzip -dc    "$FILE" > "${FILENAME%.*}";;
+    *.gz)       gzip -dc    "$FILE" > "${FILENAME%.*}";;
+    *.xz)       xz   -dc    "$FILE" > "${FILENAME%.*}";;
+    *.lz4)      lz4  -d     "$FILE"   "${FILENAME%.*}";;
+    *.lzo)      lzop -dp    "$FILE";;
+    *.zstd)     zstd -d     "$FILE" -o "${FILENAME%.*}";;
+    *.zip)      7z x        "$FILE";;
+    *.rar)      7z x        "$FILE";;
+    *.7z)       7z x        "$FILE";;
+    *)
+        echo "WTF is this? Lets try 7zip" >&2
+        7z x "$FILE"
+    ;;
+esac
+
+DIR=(*) # Glob all in extraced dir
+
+if [ "${#DIR[@]}" -eq 1 ]; then
+    echo "single something"
+    NODENAME="${DIR[0]}"
+    # Single directory
+    if [ -d "$NODENAME" ]; then
+        # echo "single dir"
+        if [ "$NODENAME" == "$DESTDIR" ]; then
+            mv -i "$NODENAME" "$DEST"/
+        else
+            echo "$1 contains one directory but its name doesn't match."    
+            echo " Expected: $DESTDIR"
+            echo "   Actual: $NODENAME"
+            echo "You can:"
+            echo " * extract the directory _I_nside a new directory named $DESTDIR"
+            echo " * extract the directory and _R_ename it $DESTDIR"
+            echo " * extract the directory _H_ere"
+            echo -n "What do you want to do?  (i/r/H) "
+            read -r answer
+            case $answer in
+                i|I)
+                    if [ -d "$DEST"/"$DESTDIR" ]; then
+                        echo "$DESTDIR already exists. Aborting!"
+                        cleanup 1
+                    else
+                        mv -iT "$NODENAME" "$DEST"/"$DESTDIR"/"$NODENAME"
+                    fi
+                    ;;
+                r|R)
+                    if [ -d "$DEST"/"$DESTDIR" ]; then
+                        echo "$DESTDIR already exists. Aborting!"
+                        cleanup 1
+                    else
+                        mv -iT "$NODENAME" "$DEST"/"$DESTDIR"
+                    fi
+                    ;;
+                h|H|*)
+                    if [ -d "$DEST"/"$NODENAME" ]; then
+                        echo "$NODENAME already exists. Aborting!"
+                        cleanup 1
+                    else
+                        mv -iT "$NODENAME" "$DEST"/"$NODENAME"
+                    fi
+                    ;;
+            esac
+        fi
+    # Single file?
+    else
+        # echo "single file"
+        mv -i "$NODENAME" "$DEST"/
+    fi
+# Multiple files
+else
+    # echo "multiple files"
+    if [ -d "$DEST"/"$DESTDIR" ]; then
+        echo "$DESTDIR already exists. Aborting!"
+        cleanup 1
+    else
+
+        mv -iT "$EXTDIR" "$DEST"/"$DESTDIR"
+    fi
+fi
+
+# Guess nothing failed
+cleanup 0
