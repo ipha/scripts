@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ "$(hostname)" = "ginger" ] && grep " / " /proc/mounts | grep -q "subvol=/root "; then
+    yay -Syu
+    grep -q "/mnt/btrfs/root-trapped/boot" /proc/mounts || \
+        sudo mount /dev/disk/by-label/trappedEFI /mnt/btrfs/root-trapped/boot
+    sudo systemd-nspawn -q -D /mnt/btrfs/root-trapped --bind /home -u mitch /usr/local/bin/yu
+else
+    yay -Syu
+fi
