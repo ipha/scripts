@@ -7,7 +7,7 @@ sleep 5m
 while true; do
     PCT=$(upower -i "$DEVICE" | grep percentage | awk '{ print $2 }' | sed 's|%||')
     if [ "$PCT" -lt 20 ] && [ "$PCT" -gt 0 ]; then
-        notify-send -t 60000 -i battery-low-symbolic "Change Battery Now" "Battery at $PCT%\n"
+        notify-send -u low -a mousebattery -i battery-low-symbolic "Change Battery Now" "Battery at $PCT%\n"
     fi
-    sleep 45m
+    sleep 90m
 done
