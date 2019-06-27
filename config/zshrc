@@ -2,8 +2,13 @@
 # Path
 typeset -U path
 path=(~/.bin $path[@])
-[ -d /mnt/btrfs/npm/bin ] && path=(/mnt/btrfs/npm/bin $path[@])
+
 [ -d ~/.local/bin ] && path=(~/.local/bin $path[@])
+
+################################################################################
+# Node
+[ -d /mnt/btrfs/npm ]     && export npm_config_prefix=/mnt/btrfs/npm
+[ -d /mnt/btrfs/npm/bin ] && path=(/mnt/btrfs/npm/bin $path[@])
 
 ################################################################################
 # ZSH Opts
@@ -28,9 +33,10 @@ esac
 
 ################################################################################
 # Env
-#export SYSTEMD_LESS="FRSMK"
+export SYSTEMD_LESS="FRSMK"
 export EDITOR="nano"
 export WINEDLLOVERRIDES="winemenubuilder.exe=d"
+export LESS="R"
 
 ################################################################################
 # Set dircolors
@@ -122,14 +128,14 @@ alias ..='cd ..'
 alias sudo='sudo '
 
 if [ -f /usr/bin/lsd ]; then
-    ICON="auto"
-    [ $TERM = "xterm-256color" ] && ICON="never"
+    ICON="never"
+#   [ $TERM = "xterm-256color" ] && ICON="never"
     alias ls='lsd --icon=$ICON'
     alias la='lsd --icon=$ICON -a'
     alias ll='lsd --icon=$ICON -l'
     alias lla='lsd --icon=$ICON -la'
 else
-    alias ls = 'ls -v --color=auto '
+    alias ls='ls -v --color=auto '
     alias la='ls -A'
     alias ll='ls -lh'
     alias lla='ls -lAh'
@@ -156,7 +162,7 @@ alias sdisable='sudo systemctl disable'
 alias gm='cd /mnt/zed/media'
 alias gma='cd /mnt/zed/media/anime'
 
-alias winboot='sudo efibootmgr -n $(efibootmgr | grep Windows | cut -c 5-8) && reboot'
+alias winboot='sudo bootctl set-oneshot auto-windows && reboot'
 
 alias zlist='zfs list -t filesystem,snapshot,volume | grep -v storage\@'
 
@@ -182,7 +188,7 @@ fi
 
 [ -f /usr/bin/fortune ] && fortune -a -s
 
-# blur for  yakuake
+# blur for yakuake
 if [[ $(ps --no-header -p $PPID -o comm) =~ '^yakuake$' ]]; then
     for wid in $(xdotool search --pid $PPID); do
         xprop -f _KDE_NET_WM_BLUR_BEHIND_REGION 32c -set _KDE_NET_WM_BLUR_BEHIND_REGION 0 -id "$wid"; done
