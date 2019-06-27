@@ -13,6 +13,7 @@ for file in "$@"; do
         "lzop")     lzop -dcf   "$file";;
         "LZ4")      lz4cat      "$file";;
         "LZMA")     lzcat       "$file";;
+        "Zstandard")zstdcat     "$file";;
         "PGP")      gpg -d -o - "$file";;
         *)
             echo "${file}: unknown type (${type})" >&2
