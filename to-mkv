@@ -1,5 +1,10 @@
 #!/bin/bash
 
 for FILE in "$@"; do
-    ffmpeg -i "$FILE" -c copy "${FILE%.*}.mkv" && rm "$FILE"
+    ffmpeg -i "$FILE" -c copy "${FILE%.*}.mkv"
+done
+
+for FILE in "$@"; do
+    ls -lh "$FILE" "${FILE%.*}.mkv"
+    rm -i "$FILE"
 done
