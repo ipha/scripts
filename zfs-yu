@@ -1,0 +1,33 @@
+#!/bin/sh
+
+PKGNAME="linux"
+if pacman -Qi linux-lts > /dev/null 2> /dev/null; then
+    PKGNAME="linux-lts"
+fi
+
+if [ "$1" != "--nosync" ]; then
+    sudo pacman -Sy
+fi
+
+installed=$(pacman -Qi ${PKGNAME} | grep Version | awk '{print $NF}')
+repo=$(pacman -Si ${PKGNAME} | grep Version | awk '{print $NF}')
+needed=$(pacman -Si zfs-${PKGNAME} | grep Depends | awk -F= '{print $NF}')
+
+if pacman -Qi zfs-dkms > /dev/null 2> /dev/null; then
+    # DKMS, skip all this
+    yay -Su
+elif [ "$repo" = "$needed" ]; then
+    # All good
+    yay -Su
+elif [ "$installed" = "$needed" ]; then
+    # Installed version is good
+    yay -Su --ignore ${PKGNAME},${PKGNAME}-headers
+else
+    # Grab needed version from archive
+    cd /tmp
+    wget "https://archive.archlinux.org/packages/l/${PKGNAME}/${PKGNAME}-${needed}-x86_64.pkg.tar.xz"
+    wget "https://archive.archlinux.org/packages/l/${PKGNAME}-headers/${PKGNAME}-headers-${needed}-x86_64.pkg.tar.xz"
+    yay -Ud "${PKGNAME}-${needed}-x86_64.pkg.tar.xz" "${PKGNAME}-headers-${needed}-x86_64.pkg.tar.xz"
+    yay -Su --ignore ${PKGNAME},${PKGNAME}-headers
+    rm "${PKGNAME}-${needed}-x86_64.pkg.tar.xz" "${PKGNAME}-headers-${needed}-x86_64.pkg.tar.xz"
+fi

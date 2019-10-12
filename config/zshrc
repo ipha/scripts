@@ -176,7 +176,7 @@ alias fixkey='ssh-keygen -R $(echo `fc -ln -1` | sed "s|.* ||" | sed "s|.*@||")'
 
 # Package manager for Arch
 if [ -f /usr/bin/yay ]; then
-    alias yu='yay -Syu'
+    alias yu='zfs-yu'
     alias yi='yay -S'
     alias yr='yay -Rs'
 elif [ -f /usr/bin/pacman ]; then
