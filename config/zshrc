@@ -25,6 +25,10 @@ setopt HIST_IGNORE_SPACE
 setopt HIST_IGNORE_DUPS
 # setopt correct
 
+DIRSTACKSIZE=8
+setopt autopushd pushdminus pushdsilent pushdtohome
+alias dh='dirs -v'
+
 ################################################################################
 # Set xterm title
 case $TERM in
@@ -53,7 +57,7 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*' rehash true
 
 # case insensitive search
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
 # compdef '_files -g "*.nzb"' nza nzb_sorter
 compdef '_files -g "*.tar *.tar.* *.tgz *.zip *.rar *.7z"' t
@@ -63,10 +67,6 @@ compdef '_files -g "*.par2"' par2verify par2repair
 ################################################################################
 # Prompt
 
-function no_powerline {
-    source ~/.bin/config/ps1.zsh
-}
-
 # load powerline
 [ -f /usr/bin/powerline-daemon ] && (pgrep powerline-daemo > /dev/null || powerline-daemon -q)
 
@@ -74,7 +74,7 @@ if [ -f /usr/share/powerline/bindings/zsh/powerline.zsh ]; then
     source /usr/share/powerline/bindings/zsh/powerline.zsh
 else
     # can't find powerline script
-    no_powerline
+    source ~/.bin/config/ps1.zsh
 fi
 
 ################################################################################
@@ -193,7 +193,8 @@ fi
 [ -f /usr/bin/fortune ] && fortune -a -s
 
 # blur for yakuake
-if [[ $(ps --no-header -p $PPID -o comm) =~ '^yakuake$' ]]; then
-    for wid in $(xdotool search --pid $PPID); do
-        xprop -f _KDE_NET_WM_BLUR_BEHIND_REGION 32c -set _KDE_NET_WM_BLUR_BEHIND_REGION 0 -id "$wid"; done
-fi
+#if [[ $(ps --no-header -p $PPID -o comm) =~ '^yakuake$' ]]; then
+#    for wid in $(xdotool search --pid $PPID); do
+#        xprop -f _KDE_NET_WM_BLUR_BEHIND_REGION 32c -set _KDE_NET_WM_BLUR_BEHIND_REGION 0 -id "$wid"
+#    done
+#fi
