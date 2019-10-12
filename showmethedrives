@@ -1,13 +1,12 @@
 #!/bin/bash
 
 blue='\e[0;34m'
-red='\e[0;31m'
 NC='\e[0m'
 
-sudo btrfs fi show
+sudo btrfs filesystem show
 
 echo -e "${blue}archRoot${NC}"
-btrfs fi df /
+btrfs filesystem df /
 
 echo -e "${blue}zed${NC}"
 zpool list zed

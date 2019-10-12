@@ -3,6 +3,3 @@
 btrfs scrub start /
 
 watch -n 5 "btrfs scrub status -d /"
-
-
-
