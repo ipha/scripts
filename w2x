@@ -1,36 +1,64 @@
 #!/bin/bash
 
-if [ "$1" == "--help" ]; then
-    echo "w2x [noise] [scale] [image]"
-    exit 0
+if [ -f /usr/bin/waifu2x ]; then
+    if [ "$1" == "--help" ]; then
+        echo "w2x [noise] [scale] [image]"
+        exit 0
+    fi
+
+    METHOD="noise_scale"
+    NOISE=$1
+    SCALE=$2
+    IMAGE=$3
+    TTA=1
+
+    NOISE_CMD="-noise_level ${NOISE}"
+    NOISE_NAME="n${NOISE}_"
+    if [ "${NOISE}" == "0" ]; then
+        METHOD="scale"
+        NOISE_CMD=""
+        NOISE_NAME=""
+    fi
+
+    SCALE_CMD="-scale ${SCALE}"
+    SCALE_NAME="x${SCALE}"
+    if [ "${SCALE}" == "1" ]; then
+        METHOD="noise"
+        SCALE_CMD=""
+    fi
+
+    TTA_CMD=""
+    if [ "${TTA}" == "1" ]; then
+        TTA_CMD="-tta 1"
+    fi
+
+    OUT="${IMAGE%.*}_[${NOISE_NAME}${SCALE_NAME}].png"
+
+    waifu2x -m "${METHOD}" "${NOISE_CMD}" "${SCALE_CMD}" "${TTA_CMD}" -i "${IMAGE}" -o "${OUT}"
+
+elif [ -f /usr/bin/waifu2x-ncnn-vulkan ]; then
+    if [ "$1" == "--help" ]; then
+        echo "w2x [noise(-1..2)] [scale(1,2)] [image]"
+        exit 0
+    fi
+
+    NOISE=$1
+    SCALE=$2
+    IMAGE=$3
+
+    NOISE_CMD="-n ${NOISE}"
+
+    if [ "${NOISE}" == "-1" ]; then
+        NOISE_NAME=""
+    else
+        NOISE_NAME="n${NOISE}_"
+    fi
+
+    SCALE_CMD="-s ${SCALE}"
+    SCALE_NAME="x${SCALE}"
+
+    OUT="${IMAGE%.*}_[${NOISE_NAME}${SCALE_NAME}].png"
+    waifu2x-ncnn-vulkan "${NOISE_CMD}" "${SCALE_CMD}" -i "${IMAGE}" -o "${OUT}" -v
+else
+    echo "waifu2x not found"
 fi
-
-METHOD="noise_scale"
-NOISE=$1
-SCALE=$2
-IMAGE=$3
-TTA=$4
-
-NOISE_CMD="-noise_level ${NOISE}"
-NOISE_NAME="n${NOISE}_"
-if [ "${NOISE}" == "0" ]; then
-    METHOD="scale"
-    NOISE_CMD=""
-    NOISE_NAME=""
-fi
-
-SCALE_CMD="-scale ${SCALE}"
-SCALE_NAME="x${SCALE}"
-if [ "${SCALE}" == "1" ]; then
-    METHOD="noise"
-    SCALE_CMD=""
-fi
-
-TTA_CMD=""
-if [ "${TTA}" == "1" ]; then
-    TTA_CMD="-tta 1"
-fi
-
-OUT="${IMAGE%.*}_[${NOISE_NAME}${SCALE_NAME}].png"
-
-waifu2x -m "${METHOD}" "${NOISE_CMD}" "${SCALE_CMD}" "${TTA_CMD}" -i "${IMAGE}" -o "${OUT}"
