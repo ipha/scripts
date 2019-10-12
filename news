@@ -1,0 +1,28 @@
+#!/bin/bash
+shopt -s nullglob
+
+if [ -d ~/.news ]; then
+    cd ~/.news
+else
+    exit 0
+fi
+
+index=1
+files=(*)
+
+if [ "$(basename "$0")" == "ack" ] && [ "$1" == "all" ]; then
+    for file in "${files[@]}"; do
+        rm "$file"
+    done
+    exit 0
+fi
+
+if [ "$(basename "$0")" == "ack" ] && [ -n "$1" ]; then
+    rm "${files[$(($1-1))]}"
+    exec "$0"
+fi
+
+for file in "${files[@]}"; do
+    printf "[%d] %s\n" $index "$file"
+    index=$((index+1))
+done

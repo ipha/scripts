@@ -6,6 +6,10 @@ path=(~/.bin $path[@])
 [ -d ~/.local/bin ] && path=(~/.local/bin $path[@])
 
 ################################################################################
+# News
+~/.bin/news
+
+################################################################################
 # Node
 [ -d /mnt/btrfs/npm ]     && export npm_config_prefix=/mnt/btrfs/npm
 [ -d /mnt/btrfs/npm/bin ] && path=(/mnt/btrfs/npm/bin $path[@])
