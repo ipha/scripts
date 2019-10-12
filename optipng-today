@@ -1,0 +1,2 @@
+#!/bin/sh
+find . -mtime -1 -name "*.png" | parallel -I% --max-args 1 --bar optipng "%"
