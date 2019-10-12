@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# shellcheck source=lib/archive.sh
+source "$(dirname "$0")/lib/archive.sh"
+
 # glob hidden files
 shopt -s dotglob
 
@@ -13,31 +16,14 @@ FILENAME=$(basename "$1")
 DIR=$(dirname "$FILE")
 EXTDIR=$(mktemp -d -p "$PWD" .dtrx-XXX)
 DEST=$PWD
-DESTDIR="${FILENAME%.*}"
 
 cd "$EXTDIR"
 
-# TODO: make library for dtrx, x, t, qcat
 case $FILE in
-    *.tar)      tar xf      "$FILE";;
-    *.tar.*)    tar xf      "$FILE"
-                DESTDIR="${FILENAME%.tar.*}"
-                ;;
-    *.tgz)      tar xf      "$FILE";;
-    *.bz2)      bzip -dc    "$FILE" > "${FILENAME%.*}";;
-    *.gz)       gzip -dc    "$FILE" > "${FILENAME%.*}";;
-    *.xz)       xz   -dc    "$FILE" > "${FILENAME%.*}";;
-    *.lz4)      lz4  -d     "$FILE"   "${FILENAME%.*}";;
-    *.lzo)      lzop -dp    "$FILE";;
-    *.zstd)     zstd -d     "$FILE" -o "${FILENAME%.*}";;
-    *.zip)      7z x        "$FILE";;
-    *.rar)      7z x        "$FILE";;
-    *.7z)       7z x        "$FILE";;
-    *)
-        echo "WTF is this? Lets try 7zip" >&2
-        7z x "$FILE"
-    ;;
+    *.tar.*)    DESTDIR="${FILENAME%.tar.*}";;
+    *)          DESTDIR="${FILENAME%.*}";;
 esac
+archive_extract "$FILE"
 
 DIR=(*) # Glob all in extraced dir
 
