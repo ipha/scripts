@@ -1,5 +1,11 @@
 #!/bin/sh
 
+if ! pacman -Qi zfs-utils > /dev/null 2> /dev/null; then
+    # ZFS not installed, skip
+    yay -Syu
+    exit 0
+fi
+
 PKGNAME="linux"
 if pacman -Qi linux-lts > /dev/null 2> /dev/null; then
     PKGNAME="linux-lts"
