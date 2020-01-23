@@ -11,9 +11,7 @@ if pgrep steam; then
 fi
 
 if pgrep kdeinit5; then
-	DISPLAY=:0 qdbus-qt5 org.kde.ksmserver /KSMServer org.kde.KSMServerInterface.logout 0 1 1
-elif pgrep kdeinit4; then
-	DISPLAY=:0 qdbus-qt4 org.kde.ksmserver /KSMServer org.kde.KSMServerInterface.logout 0 1 1
+	qdbus-qt5 org.kde.ksmserver /KSMServer org.kde.KSMServerInterface.logout 0 1 1
 else
 	sudo /sbin/reboot
 fi
