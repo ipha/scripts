@@ -26,7 +26,7 @@ archive_extract () {
         *.xz)       xz   -dc    "$1" > "${FILENAME%.*}";;
         *.lz4)      lz4  -d     "$1"   "${FILENAME%.*}";;
         *.lzo)      lzop -dp    "$1";;
-        *.zstd)     zstd -d     "$1" -o "${FILENAME%.*}";;
+        *.zst)      zstd -d     "$1" -o "${FILENAME%.*}";;
         *.zip)      7z x        "$1";;
         *.rar)      7z x        "$1";;
         *.7z)       7z x        "$1";;
