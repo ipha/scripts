@@ -27,7 +27,7 @@ play_folder() {
 }
 
 while true; do
-	mapfile -t list < <(find . -maxdepth 1 -type f -regex "$fileregex" | sed 's|./||' | sort)
+	mapfile -t list < <(find . -maxdepth 1 -type d | sed 's|./||' | sort)
 	digits=$(echo -n ${#list[@]} | wc -m)
 	f=0
 	printf "${bold}----(${blue}%s${white})----${normal}\n" "$(pwd | awk -F/ '{print $NF}')"
