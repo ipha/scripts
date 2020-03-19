@@ -1,17 +1,19 @@
 #!/bin/bash
 
-# Close chrome nicely
-pgrep chromium && wmctrl -c "chromium"
-pgrep chrome   && wmctrl -c "chrome"
-
-sleep .5
+# Close browsers nicely
+for x in {0..10}; do
+    pgrep chromium && wmctrl -c "chromium"
+    pgrep chrome   && wmctrl -c "chrome"
+    pgrep firefox  && wmctrl -c "firefox"
+    sleep .05
+done
 
 if pgrep steam; then
-	kill -9 "$(pgrep steam)"
+    kill -9 "$(pgrep steam)"
 fi
 
 if pgrep kdeinit5; then
-	qdbus-qt5 org.kde.ksmserver /KSMServer org.kde.KSMServerInterface.logout 0 1 1
+    qdbus org.kde.ksmserver /KSMServer org.kde.KSMServerInterface.logout 0 1 1
 else
-	sudo /sbin/reboot
+    sudo /sbin/reboot
 fi
