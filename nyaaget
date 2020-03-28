@@ -107,6 +107,8 @@ if __name__ == "__main__":
             page = page + 1
             results = search_pager.next_page()
             continue
+        elif s == "q":
+            break
         elif s == "date":
             page = 1
             search_pager.set_sort(Pager.SORT_MODE.DATE)
