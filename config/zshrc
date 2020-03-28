@@ -6,6 +6,10 @@ path=(~/.bin $path[@])
 [ -d ~/.local/bin ] && path=(~/.local/bin $path[@])
 
 ################################################################################
+# flatpak
+[ -f /var/lib/flatpak/exports/bin/org.gimp.GIMP ] && alias gimp='org.gimp.GIMP'
+
+################################################################################
 # News
 ~/.bin/news
 
@@ -185,3 +189,8 @@ elif [ -f /usr/bin/apt ]; then
 fi
 
 [ -f /usr/bin/fortune ] && fortune -a -s
+
+[ type gimp &> /dev/null ] || alias gimp='gimp-2.99'
+
+# Something in this throws an error code and I haven't been bothered to tack it down yet
+true
