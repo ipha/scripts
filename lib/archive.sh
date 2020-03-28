@@ -9,7 +9,7 @@ archive_list () {
         *.rar)      7z l    "$1";;
         *.7z)       7z l    "$1";;
         *)
-            echo "WTF is this? Lets try 7zip"
+            echo "WTF is this? Lets try 7zip" >&2
             7z l "$1"
         ;;
     esac
