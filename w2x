@@ -1,7 +1,8 @@
 #!/bin/bash
 
+
 if [ -f /usr/bin/waifu2x ]; then
-    if [ "$1" == "--help" ]; then
+    if [ "$1" == "--help" ] || [ "$#" -eq 0 ]; then
         echo "w2x [noise] [scale] [image]"
         exit 0
     fi
@@ -37,7 +38,7 @@ if [ -f /usr/bin/waifu2x ]; then
     waifu2x -m "${METHOD}" "${NOISE_CMD}" "${SCALE_CMD}" "${TTA_CMD}" -i "${IMAGE}" -o "${OUT}"
 
 elif [ -f /usr/bin/waifu2x-ncnn-vulkan ]; then
-    if [ "$1" == "--help" ]; then
+    if [ "$1" == "--help" ] || [ "$#" -eq 0 ]; then
         echo "w2x [noise(-1..2)] [scale(1,2)] [image]"
         exit 0
     fi
