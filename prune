@@ -1,20 +1,10 @@
 #!/bin/bash
 
-borg prune -P home -d 7 -w 3 -m -1 -v -s --list backup:ginger -n
-printf "Prune home? (y/N) "
-read -r -n 1 confirm
-echo
-case $confirm in
-	y|Y) borg prune -P home -d 7 -w 3 -m -1 -v -s --list backup:ginger ;;
-	*) echo home prune skipped ;;
-esac
+if [ "$#" -lt 1 ]; then
+    borg list /mnt/zed/backups/borg | cut -c1-$(stty size </dev/tty | cut -d' ' -f2) # Truncate to term width
+    exit
+fi
 
-#borg prune -P winhome -d 7 -w -1 -m -1 -v -s --list backup:ginger -n
-#printf "Prune winhome? (y/N) "
-#read -n 1 confirm
-#echo
-#case $confirm in
-#	y|Y) borg prune -P winhome -d 7 -w -1 -m -1 -v -s --list backup:ginger ;;
-#	*) echo winhome prune skipped ;;
-#esac
-
+for x in "$@"; do
+    borg delete -pvs /mnt/zed/backups/borg::"$x"
+done

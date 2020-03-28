@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ "$#" -lt 1 ]; then
+    zfs list -t snapshot | grep /home@ | sed 's|@|@ |'
+    exit
+fi
+
+for x in "$@"; do
+    sudo zfs destroy -v zed/backups/home@"$x"
+done
