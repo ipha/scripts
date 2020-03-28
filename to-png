@@ -1,0 +1,25 @@
+#!/bin/bash
+
+LS='ls -lh'
+if [ -f /usr/bin/lsd ]; then
+    LS='lsd --icon=never -lh'
+fi
+
+# Shitty arg parsing
+RM='rm -i'
+case $1 in
+    "--rm")
+        RM="rm"
+        shift
+        ;;
+esac
+
+for FILE in "$@"; do
+    convert "$FILE" -o "${FILE%.*}.png"
+    touch -r "$FILE" "${FILE%.*}.webp"
+done
+
+for FILE in "$@"; do
+    ${LS} "$FILE" "${FILE%.*}.png"
+    ${RM} "$FILE"
+done
