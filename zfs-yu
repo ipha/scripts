@@ -22,6 +22,8 @@ needed=$(pacman -Si zfs-${PKGNAME} | grep Depends | awk -F= '{print $NF}')
 if pacman -Qi zfs-dkms > /dev/null 2> /dev/null; then
     # DKMS, skip all this
     yay -Su
+elif pacman -Qi zfs-dkms-git > /dev/null 2> /dev/null; then
+    yay -Su
 elif [ "$repo" = "$needed" ]; then
     # All good
     yay -Su
@@ -31,9 +33,9 @@ elif [ "$installed" = "$needed" ]; then
 else
     # Grab needed version from archive
     cd /tmp
-    wget "https://archive.archlinux.org/packages/l/${PKGNAME}/${PKGNAME}-${needed}-x86_64.pkg.tar.xz"
-    wget "https://archive.archlinux.org/packages/l/${PKGNAME}-headers/${PKGNAME}-headers-${needed}-x86_64.pkg.tar.xz"
-    yay -Ud "${PKGNAME}-${needed}-x86_64.pkg.tar.xz" "${PKGNAME}-headers-${needed}-x86_64.pkg.tar.xz"
+    wget "https://archive.archlinux.org/packages/l/${PKGNAME}/${PKGNAME}-${needed}-x86_64.pkg.tar.zst"
+    wget "https://archive.archlinux.org/packages/l/${PKGNAME}-headers/${PKGNAME}-headers-${needed}-x86_64.pkg.tar.zst"
+    yay -Ud "${PKGNAME}-${needed}-x86_64.pkg.tar.zst" "${PKGNAME}-headers-${needed}-x86_64.pkg.tar.zst"
     yay -Su --ignore ${PKGNAME},${PKGNAME}-headers
-    rm "${PKGNAME}-${needed}-x86_64.pkg.tar.xz" "${PKGNAME}-headers-${needed}-x86_64.pkg.tar.xz"
+    rm "${PKGNAME}-${needed}-x86_64.pkg.tar.zst" "${PKGNAME}-headers-${needed}-x86_64.pkg.tar.zst"
 fi
