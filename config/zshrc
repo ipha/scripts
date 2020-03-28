@@ -27,7 +27,6 @@ setopt HIST_IGNORE_DUPS
 
 DIRSTACKSIZE=8
 setopt autopushd pushdminus pushdsilent pushdtohome
-alias dh='dirs -v'
 
 ################################################################################
 # Set xterm title
@@ -59,10 +58,8 @@ zstyle ':completion:*' rehash true
 # case insensitive search
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
-# compdef '_files -g "*.nzb"' nza nzb_sorter
 compdef '_files -g "*.tar *.tar.* *.tgz *.zip *.rar *.7z"' t
 compdef '_files -g "*.tar *.tar.* *.tgz *.bz2 *.gz *.xz *.lz4 *.lzo *.zip *.rar *.7z"' x
-compdef '_files -g "*.par2"' par2verify par2repair
 
 ################################################################################
 # Prompt
@@ -76,9 +73,6 @@ else
     # can't find powerline script
     source ~/.bin/config/ps1.zsh
 fi
-
-################################################################################
-# Prompt
 
 ################################################################################
 # Key binds
@@ -191,10 +185,3 @@ elif [ -f /usr/bin/apt ]; then
 fi
 
 [ -f /usr/bin/fortune ] && fortune -a -s
-
-# blur for yakuake
-#if [[ $(ps --no-header -p $PPID -o comm) =~ '^yakuake$' ]]; then
-#    for wid in $(xdotool search --pid $PPID); do
-#        xprop -f _KDE_NET_WM_BLUR_BEHIND_REGION 32c -set _KDE_NET_WM_BLUR_BEHIND_REGION 0 -id "$wid"
-#    done
-#fi
