@@ -1,11 +1,14 @@
 #!/bin/bash
 
+export DISPLAY=:0
+
 # Close browsers nicely
 for x in {0..10}; do
     pgrep chromium && wmctrl -c "chromium"
     pgrep chrome   && wmctrl -c "chrome"
     pgrep firefox  && wmctrl -c "firefox"
-    sleep .05
+    sleep .1
+    pgrep chromium\|chrome\|firefox || break
 done
 
 if pgrep steam; then
@@ -17,3 +20,7 @@ if pgrep kdeinit5; then
 else
     sudo /sbin/reboot
 fi
+
+# Catch if kde hangs on shutdown
+sleep 20
+sudo /sbin/reboot
