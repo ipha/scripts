@@ -168,8 +168,9 @@ alias sstatus='sudo systemctl status'
 alias senable='sudo systemctl enable'
 alias sdisable='sudo systemctl disable'
 
+alias gt='cd ~/Downloads/torrent'
 alias gm='cd /mnt/zed/media'
-alias gma='cd /mnt/zed/media/anime'
+alias ga='cd /mnt/zed/media/anime'
 
 alias winboot='sudo bootctl set-oneshot auto-windows && reboot'
 
