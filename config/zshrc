@@ -62,8 +62,15 @@ zstyle ':completion:*' rehash true
 # case insensitive search
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
+# blacklist
+zstyle ':completion:*' ignored-patterns 'animate'
+
+# custom completions
 compdef '_files -g "*.tar *.tar.* *.tgz *.zip *.rar *.7z"' t
-compdef '_files -g "*.tar *.tar.* *.tgz *.bz2 *.gz *.xz *.lz4 *.lzo *.zip *.rar *.7z"' x
+compdef '_files -g "*.tar *.tar.* *.tgz *.bz2 *.gz *.xz *.lz4 *.lzo *.zst *.zip *.rar *.7z"' x
+compdef '_files -g "*.zip *.ugoira"' ug
+compdef '_files -g "*.png"' to-webp
+
 
 ################################################################################
 # Prompt
