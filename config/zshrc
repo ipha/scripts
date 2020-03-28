@@ -179,9 +179,9 @@ elif [ -f /usr/bin/pacman ]; then
     alias yr='pacman -Rs'
 elif [ -f /usr/bin/apt ]; then
 # Package manager for Ubuntu/Debian
-    alias yu='sudo apt-get update && sudo apt-get upgrade'
-    alias yi='sudo apt-get install'
-    alias yr='sudo apt-get remove'
+    alias yu='sudo apt update && sudo apt upgrade'
+    alias yi='sudo apt install'
+    alias yr='sudo apt remove'
 fi
 
 [ -f /usr/bin/fortune ] && fortune -a -s
