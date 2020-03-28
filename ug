@@ -1,0 +1,10 @@
+#!/bin/sh
+
+FILE=$(readlink -f "$1")
+
+if unzip -l "$FILE" | grep -q '\.jpg'; then
+    # TODO: Detect framerate
+    ffmpeg -framerate 10 -i "$FILE" -c:v mjpeg -c copy  -f matroska -| mpv -loop -
+else
+    echo "TODO: non-jpg ugoira"
+fi
