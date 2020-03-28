@@ -17,8 +17,8 @@ path=(~/.bin $path[@])
 ################################################################################
 # ZSH Opts
 export HISTFILE=~/.zsh_history
-export HISTSIZE=4000
-export SAVEHIST=2000
+export HISTSIZE=400000
+export SAVEHIST=200000
 
 setopt INC_APPEND_HISTORY
 setopt HIST_IGNORE_SPACE
