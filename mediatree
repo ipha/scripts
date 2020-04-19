@@ -15,70 +15,70 @@ normal=$(tput sgr0)
 
 # Running in music mode
 if [ "$(basename "$0")" == "musictree" ]; then
-	mediadir="/mnt/zed/media/music"
-	playerargs="--no-video"
-	fileregex=".*\(mp3\|flac\|mp4\|m4a\|wma\|wav\)"
+    mediadir="/mnt/zed/media/music"
+    playerargs="--no-video"
+    fileregex=".*\(mp3\|flac\|mp4\|m4a\|wma\|wav\)"
 fi
 
 # Override start dir
 if [ "$#" -eq 1 ]; then
-	mediadir="$1"
+    mediadir="$1"
 fi
 
 cd "$mediadir"
 last=0
 
 play_folder() {
-	mapfile -t files < <(find . -maxdepth 1 -type f -regex "$fileregex" | sed 's|./||' | sort)
-	if [ ${#files[@]} -ne 0 ]; then
-		for file in "${files[@]}"; do
-			printf "${bold}${green}%s\n" "$file"
-		done
-		$playercmd $playerargs "${files[@]}"
-	fi
+    mapfile -t files < <(find . -maxdepth 1 -type f -regex "$fileregex" | sed 's|./||' | sort)
+    if [ ${#files[@]} -ne 0 ]; then
+        for file in "${files[@]}"; do
+            printf "${bold}${green}%s\n" "$file"
+        done
+        $playercmd $playerargs "${files[@]}"
+    fi
 }
 
 while true; do
 
-	mapfile -t list_dirs  < <(find . -maxdepth 1 -type d -regex "\./[^.].*"  | sed 's|./||' | sort)
-	mapfile -t list_files < <(find . -maxdepth 1 -type f -regex "$fileregex" | sed 's|./||' | sort)
+    mapfile -t list_dirs  < <(find . -maxdepth 1 -type d -regex "\./[^.].*"  | sed 's|./||' | sort)
+    mapfile -t list_files < <(find . -maxdepth 1 -type f -regex "$fileregex" | sed 's|./||' | sort)
 
-	list_merged=("${list_dirs[@]}" "${list_files[@]}")
-	digits=$(echo -n ${#list_merged[@]} | wc -m)
-	f=0
-	printf "${bold}----(${blue}%s${white})----${normal}\n" "$(pwd | awk -F/ '{print $NF}')"
+    list_merged=("${list_dirs[@]}" "${list_files[@]}")
+    digits=$(echo -n ${#list_merged[@]} | wc -m)
+    f=0
+    printf "${bold}----(${blue}%s${white})----${normal}\n" "$(pwd | awk -F/ '{print $NF}')"
 
-	printf "${bold}%${digits}i. ${blue}%s${normal}\n" 0 ".."
-	for dir in "${list_dirs[@]}"; do
-		printf "${bold}%${digits}i. ${blue}%s${normal}\n" $((++f)) "$dir"
-	done
-	for file in "${list_files[@]}"; do
-		printf "${bold}%${digits}i. ${green}%s${normal}\n" $((++f)) "$file"
-	done
-	echo -ne "> "
-	read -r selection
+    printf "${bold}%${digits}i. ${blue}%s${normal}\n" 0 ".."
+    for dir in "${list_dirs[@]}"; do
+        printf "${bold}%${digits}i. ${blue}%s${normal}\n" $((++f)) "$dir"
+    done
+    for file in "${list_files[@]}"; do
+        printf "${bold}%${digits}i. ${green}%s${normal}\n" $((++f)) "$file"
+    done
+    echo -ne "> "
+    read -r selection
 
-	case $selection in
-		"0" | ".." | ".")
-			if [ "$(pwd)" != "$mediadir" ]; then 
-				cd ..
-			fi
-			;;
-		"p")
-			play_folder
-			;;
-		*)
-			if [ "$selection" == "n" ]; then
-				selection=$last
-				((selection++))
-			fi
-			if [ -d "${list_merged[(selection-1)]}" ]; then
-				cd "${list_merged[(selection-1)]}"
-				last=0
-			else
-				${playercmd} ${playerargs} "${list_merged[(selection-1)]}"
-				last=$selection
-			fi
-			;;
-	esac
+    case $selection in
+        "0" | ".." | ".")
+            if [ "$(pwd)" != "$mediadir" ]; then 
+                cd ..
+            fi
+            ;;
+        "p")
+            play_folder
+            ;;
+        *)
+            if [ "$selection" == "n" ]; then
+                selection=$last
+                ((selection++))
+            fi
+            if [ -d "${list_merged[(selection-1)]}" ]; then
+                cd "${list_merged[(selection-1)]}"
+                last=0
+            else
+                ${playercmd} ${playerargs} "${list_merged[(selection-1)]}"
+                last=$selection
+            fi
+            ;;
+    esac
 done
