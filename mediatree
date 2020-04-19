@@ -5,7 +5,7 @@
 mediadir="/mnt/zed/media"
 playercmd="mpv"
 playerargs=""
-fileregex=".*\(avi\|mkv\|flv\|mp4\|m4v\)"
+fileregex=".*\(avi\|mkv\|flv\|mp4\|m4v\|mp3\|flac\|mp4\|m4a\|wma\|wav\)"
 
 bold="\033[1m"
 green=$(tput setaf 2)
@@ -13,8 +13,30 @@ blue=$(tput setaf 4)
 white=$(tput setaf 7)
 normal=$(tput sgr0)
 
+# Running in music mode
+if [ "$(basename "$0")" == "musictree" ]; then
+	mediadir="/mnt/zed/media/music"
+	playerargs="--no-video"
+	fileregex=".*\(mp3\|flac\|mp4\|m4a\|wma\|wav\)"
+fi
+
+# Override start dir
+if [ "$#" -eq 1 ]; then
+	mediadir="$1"
+fi
+
 cd "$mediadir"
 last=0
+
+play_folder() {
+	mapfile -t files < <(find . -maxdepth 1 -type f -regex "$fileregex" | sed 's|./||' | sort)
+	if [ ${#files[@]} -ne 0 ]; then
+		for file in "${files[@]}"; do
+			printf "${bold}${green}%s\n" "$file"
+		done
+		$playercmd $playerargs "${files[@]}"
+	fi
+}
 
 while true; do
 
@@ -41,6 +63,9 @@ while true; do
 			if [ "$(pwd)" != "$mediadir" ]; then 
 				cd ..
 			fi
+			;;
+		"p")
+			play_folder
 			;;
 		*)
 			if [ "$selection" == "n" ]; then
