@@ -8,6 +8,7 @@ path=(~/.bin $path[@])
 ################################################################################
 # flatpak
 [ -f /var/lib/flatpak/exports/bin/org.gimp.GIMP ] && alias gimp='org.gimp.GIMP'
+[ -f /var/lib/flatpak/exports/bin/com.valvesoftware.Steam ] && alias steam='com.valvesoftware.Steam'
 
 ################################################################################
 # News
@@ -48,6 +49,7 @@ export SYSTEMD_LESS="FRSMK"
 export EDITOR="nano"
 export WINEDLLOVERRIDES="winemenubuilder.exe=d"
 export LESS="R"
+export CHROOT=/mnt/btrfs/archbuild
 
 ################################################################################
 # Set dircolors
@@ -68,7 +70,7 @@ zstyle ':completion:*' ignored-patterns 'animate'
 # custom completions
 compdef '_files -g "*.tar *.tar.* *.tgz *.zip *.rar *.7z"' t
 compdef '_files -g "*.tar *.tar.* *.tgz *.bz2 *.gz *.xz *.lz4 *.lzo *.zst *.zip *.rar *.7z"' x
-compdef '_files -g "*.zip *.ugoira"' ug
+compdef '_files -g "*.zip *.ugoira *.mkv"' ug
 compdef '_files -g "*.png"' to-webp
 
 
@@ -123,12 +125,14 @@ if [ -f /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substrin
 fi
 ################################################################################
 # SSH Agent
-if ! pgrep -U ${USER} ssh-agent > /dev/null; then
-    [ -S /tmp/ssh-agent-${USER}.socket ] && rm /tmp/ssh-agent-${USER}.socket
-    ssh-agent -a /tmp/ssh-agent-${USER}.socket > /dev/null
-fi
+if [ -f /usr/bin/ssh-agent ]; then
+    if ! pgrep -U ${USER} ssh-agent > /dev/null; then
+        [ -S /tmp/ssh-agent-${USER}.socket ] && rm /tmp/ssh-agent-${USER}.socket
+        ssh-agent -a /tmp/ssh-agent-${USER}.socket > /dev/null
+    fi
 
-export SSH_AUTH_SOCK=/tmp/ssh-agent-${USER}.socket
+    export SSH_AUTH_SOCK=/tmp/ssh-agent-${USER}.socket
+fi
 
 ################################################################################
 # Aliases
@@ -172,13 +176,15 @@ alias gt='cd ~/Downloads/torrent'
 alias gm='cd /mnt/zed/media'
 alias ga='cd /mnt/zed/media/anime'
 
-alias winboot='sudo bootctl set-oneshot auto-windows && reboot'
+alias winboot='sudo efibootmgr -n $(efibootmgr | grep Windows | cut -c 5-8) && reboot'
 
 alias zlist='zfs list -t filesystem,snapshot,volume | grep -v storage\@'
 
 alias youtube-dl='youtube-dl --merge-output-format=mkv'
 
 alias fixkey='ssh-keygen -R $(echo `fc -ln -1` | sed "s|.* ||" | sed "s|.*@||")'
+
+alias gpu='sudo watch "cat /sys/kernel/debug/dri/0/amdgpu_pm_info | grep GFX\ Clocks -A20"'
 
 # Package manager for Arch
 if [ -f /usr/bin/yay ]; then
@@ -197,8 +203,6 @@ elif [ -f /usr/bin/apt ]; then
 fi
 
 [ -f /usr/bin/fortune ] && fortune -a -s
-
-[ type gimp &> /dev/null ] || alias gimp='gimp-2.99'
 
 # Something in this throws an error code and I haven't been bothered to tack it down yet
 true
