@@ -78,10 +78,14 @@ compdef '_files -g "*.png"' to-webp
 # Prompt
 
 # load powerline
-[ -f /usr/bin/powerline-daemon ] && (pgrep powerline-daemo > /dev/null || powerline-daemon -q)
+if command -v powerline-daemon &> /dev/null; then
+    pgrep powerline-daemo > /dev/null || powerline-daemon -q
+fi
 
 if [ -f /usr/share/powerline/bindings/zsh/powerline.zsh ]; then
     source /usr/share/powerline/bindings/zsh/powerline.zsh
+elif [ -f ~/.local/lib/python3.8/site-packages/powerline/bindings/zsh/powerline.zsh ]; then
+    source ~/.local/lib/python3.8/site-packages/powerline/bindings/zsh/powerline.zsh
 else
     # can't find powerline script
     source ~/.bin/config/ps1.zsh
