@@ -200,6 +200,11 @@ elif [ -f /usr/bin/apt ]; then
     alias yu='sudo apt update && sudo apt upgrade'
     alias yi='sudo apt install'
     alias yr='sudo apt remove'
+elif [ -f /sbin/apk ]; then
+# Package manager for alpine
+    alias yu='sudo apk update && sudo apk upgrade'
+    alias yi='sudo apk add'
+    alias yr='sudo apk del'
 fi
 
 [ -f /usr/bin/fortune ] && fortune -a -s
