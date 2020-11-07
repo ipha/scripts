@@ -1,0 +1,11 @@
+#!/bin/bash
+
+for dir in "$@"; do
+    for f in "$dir"/*; do 
+        echo "file '$f'" >> "$dir".list
+    done
+
+    ffmpeg -f concat -safe 0 -i "$dir".list -c copy "$dir".mkv
+
+    rm "$dir".list
+done
