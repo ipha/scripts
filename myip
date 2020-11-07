@@ -1,0 +1,6 @@
+#!/bin/sh
+
+curl -4 https://diagnostic.opendns.com/myip
+echo
+curl -6 https://diagnostic.opendns.com/myip
+echo
