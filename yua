@@ -10,17 +10,16 @@ if [ "$(hostname)" = "ginger" ] && grep " / " /proc/mounts | grep -q "subvol=/ro
     echo
     echo -e "${blue}>>${NC} Updating Trapped ${blue}<<${NC}"
 
-    grep -q "/mnt/btrfs/root-trapped/boot" /proc/mounts || \
-        sudo mount /dev/disk/by-label/trappedEFI /mnt/btrfs/root-trapped/boot
+    grep -q "/mnt/btrfs/trapped/boot" /proc/mounts || \
+        sudo mount /dev/disk/by-label/trappedEFI /mnt/btrfs/trapped/boot
     sudo systemd-nspawn -q \
-        -D /mnt/btrfs/root-trapped \
+        -D /mnt/btrfs/trapped \
         --resolv-conf=bind-host \
         --bind /home \
         --bind /var/lib/pacman/sync \
-        --bind /var/cache/pacman \
-        --bind /home \
+        --bind /var/cache/pacman/pkg \
         -u mitch \
         /home/mitch/.bin/zfs-yu --nosync
 else
-    yay -Syu
+    zfs-yu
 fi
