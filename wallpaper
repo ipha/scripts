@@ -46,6 +46,9 @@ class Wallpaper:
         if ("_orig" in self.filename) and not self.enabled:
             self.hidden = True
 
+        if ("_hide" in self.filename):
+            self.hidden = True
+
     def toggle(self):
         target = os.path.join(ENABLEDDIR, self.basename)
         if os.path.isfile(target):
