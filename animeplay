@@ -37,6 +37,8 @@ function postprocess {
     if [ -d "${destdir}"/"${name}" ]; then 
         echo "dest found"
         mv "$1" "${destdir}"/"${name}"
+        # Reset last to account for moved file
+        ((last--))
     else
         echo -ne "Target ${destdir}/${name} not found. Make it? (y/N) "
         read -r selection
@@ -44,12 +46,13 @@ function postprocess {
             y|Y)
                 mkdir "${destdir}"/"${name}"
                 mv "$1" "${destdir}"/"${name}"
+                # Reset last to account for moved file
+                ((last--))
             ;;
         esac
     fi
 
-    # Reset last to account for moved file
-    ((last--))
+
 }
 
 # shellcheck source=mediatree

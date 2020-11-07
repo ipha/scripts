@@ -45,9 +45,9 @@ play_folder() {
 }
 
 process_selection() {
-    if [ "$selection" == "n" ]; then
-        selection=$last
-        ((selection++))
+    # numbers only from here on
+    if ! [[ "$selection" =~ ^[0-9]+$ ]]; then
+        return
     fi
     if [ -d "${list_merged[(selection-1)]}" ]; then
         cd "${list_merged[(selection-1)]}"
@@ -123,6 +123,11 @@ while true; do
             ;;
         ".")
             play_folder
+            ;;
+        # special case for next file. use 'N' to filter by dir
+        "n")
+            selection=$((last + 1))
+            process_selection
             ;;
         # Set dir filter to start with lower/upper char
         [[:alpha:]])
