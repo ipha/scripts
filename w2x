@@ -59,7 +59,7 @@ elif [ -f /usr/bin/waifu2x-ncnn-vulkan ]; then
     SCALE_NAME="x${SCALE}"
 
     OUT="${IMAGE%.*}_[${NOISE_NAME}${SCALE_NAME}].png"
-    waifu2x-ncnn-vulkan "${NOISE_CMD}" "${SCALE_CMD}" -i "${IMAGE}" -o "${OUT}" -v
+    waifu2x-ncnn-vulkan -x "${NOISE_CMD}" "${SCALE_CMD}" -i "${IMAGE}" -o "${OUT}" -v
 else
     echo "waifu2x not found"
 fi
