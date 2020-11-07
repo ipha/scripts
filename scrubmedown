@@ -1,5 +1,6 @@
 #!/bin/sh
 
 btrfs scrub start /
+btrfs scrub start /mnt/storage
 
-watch -n 5 "btrfs scrub status -d /"
+watch -n 5 "btrfs scrub status -d /; echo; btrfs scrub status -d /mnt/storage"
