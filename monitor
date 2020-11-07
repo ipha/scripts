@@ -1,0 +1,64 @@
+#!/bin/bash
+
+case $# in
+    0) # 0 args, no interface, no command
+        IFACE="wifi0"
+        CMD=""
+    ;;
+    1) # 1 arg: ambiguous
+        # 1 arg: interface, no command
+        if [[ $1 == wifi* ]] || [[ $1 == wlp* ]]; then
+            IFACE="$1"
+            CMD=""
+        # 1 arg: no interface, command
+        else
+            IFACE="wifi0"
+            CMD="$1"
+        fi
+    ;;
+    2) # 2 args: interface, command
+        IFACE="$1"
+        CMD="$2"
+    ;;
+    *) # wtf, bail
+        echo "Invalid arguments"
+        exit 1
+    ;;
+esac
+
+# Bail if interface doesn't exist
+if ! ip link show "$IFACE" > /dev/null; then
+    exit 1
+fi
+
+case $CMD in
+    "on")
+        sudo ip link set "$IFACE" down
+        sudo iw dev "$IFACE" set type monitor
+        sudo ip link set "$IFACE" up
+        ;;
+    "off")
+        sudo ip link set "$IFACE" down
+        sudo iw dev "$IFACE" set type managed
+        sudo ip link set "$IFACE" up
+    ;;
+    "up")
+        sudo ip link set "$IFACE" up
+    ;;
+    "down")
+        sudo ip link set "$IFACE" down
+    ;;
+esac
+
+echo -n "$IFACE: "
+if ip link show "$IFACE" | grep 'UP' -q; then
+    echo -n "interface is up, "
+else
+    echo -n "interface is down, "
+fi
+
+if ip link show "$IFACE" | grep 'radiotap' -q; then
+    echo "in monitor mode."
+else
+    echo "not in monitor mode."
+fi
