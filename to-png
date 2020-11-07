@@ -15,7 +15,7 @@ case $1 in
 esac
 
 for FILE in "$@"; do
-    convert "$FILE" -o "${FILE%.*}.png"
+    convert "$FILE" "${FILE%.*}.png"
     touch -r "$FILE" "${FILE%.*}.webp"
 done
 
