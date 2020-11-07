@@ -20,11 +20,30 @@ case "$1" in
 		sudo cryptsetup close backup
 		;;
 	"rsync")
-		rsync -Pa --delete --delete-excluded \
-			--exclude=media/movies \
-			--exclude=media/tv \
-			--exclude=working/android/sdk \
-			/mnt/zed/ /mnt/backup/
+		if [ -e /dev/disk/by-uuid/67b8a324-6891-4d3a-a76c-bf814b0ecff1 ]; then
+			rsync -Pa --delete --delete-excluded \
+				--exclude=media/movies \
+				--exclude=media/tv \
+				--exclude=working/android/sdk \
+				--exclude=misc/androidsdk \
+				--exclude=misc/vr \
+				--exclude="media/anime/*/\[HorribleSubs\]*" \
+				--exclude="media/anime/*/*/\[HorribleSubs\]*" \
+				--exclude=media/torrent \
+				--exclude=backups/borg \
+				/mnt/zed/ /mnt/backup/
+		else
+			rsync -Pa --delete --delete-excluded \
+				--exclude=media/movies \
+				--exclude=media/tv \
+				--exclude=working/android/sdk \
+				--exclude=misc/androidsdk \
+				--exclude=misc/vr \
+				--exclude="media/anime/*/\[HorribleSubs\]*" \
+				--exclude="media/anime/*/*/\[HorribleSubs\]*" \
+				--exclude=media/torrent \
+				/mnt/zed/ /mnt/backup/
+		fi
 		;;
 esac
 
