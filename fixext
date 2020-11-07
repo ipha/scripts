@@ -1,0 +1,16 @@
+#!/bin/bash
+
+for file in *; do
+    if [ -f "$file" ]; then
+        base="${file%.*}"
+        ext="${file##*.}"
+        if [ "$base" == "$ext" ]; then
+            if file "$file" | grep -q 'JPEG'; then
+                echo "Fixing $file"
+                mv "$file" "${file}.jpg"
+            else
+                echo "Unhandled: $(file "$file")"
+            fi
+        fi
+    fi
+done
