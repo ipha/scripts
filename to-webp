@@ -15,7 +15,12 @@ case $1 in
 esac
 
 for FILE in "$@"; do
-    cwebp -lossless -z 9 -mt "$FILE" -o "${FILE%.*}.webp"
+    if [ "${FILE##*.}" == "gif" ]; then
+        ffmpeg -i "$FILE" -c:v libwebp -lossless 1 -loop 0 -compression_level 6 -quality 100 "${FILE%.*}.webp"
+        # cwebp -lossless -z 9 -mt "$FILE" -o "${FILE%.*}.webp"
+    else
+        cwebp -lossless -z 9 -mt "$FILE" -o "${FILE%.*}.webp"
+    fi
     touch -r "$FILE" "${FILE%.*}.webp"
 done
 
