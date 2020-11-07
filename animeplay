@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# 
+# User options
+mediadir="/home/mitch/Downloads/torrent/_anime"
+destdir="/mnt/zed/media/anime/0 In Progress"
+
+function postprocess {
+    if [ "$(pwd)" != "$mediadir" ]; then
+        # Not in root media dir don't move anything
+        return
+    fi
+
+    # Remove from transmission
+    if transmission-remote -l | grep -q -F "$1"; then
+        id=$(transmission-remote -l | grep -F "$1" | awk '{ print $1 }')
+        transmission-remote -t "$id" -r
+    fi
+
+    # regex in bash is hard... lets just not
+    if echo "$1" | grep -q "HorribleSubs"; then
+        name=$(echo "$1" | sed 's|\[HorribleSubs\] ||' | sed 's| - [[:digit:]]\+ .\+||')
+    elif echo "$1" | grep -q "Commie"; then
+        name=$(echo "$1" | sed 's|\[Commie\] ||' | sed 's| - [[:digit:]]\+ .\+||')
+    elif echo "$1" | grep -q "PAS"; then
+        name=$(echo "$1" | sed 's|\[PAS\] ||' | sed 's| - [[:digit:]]\+ .\+||')
+    elif echo "$1" | grep -q "GJM"; then
+        name=$(echo "$1" | sed 's|\[GJM\] ||' | sed 's| - [[:digit:]]\+ .\+||')
+    elif echo "$1" | grep -q "Asenshi"; then
+        name=$(echo "$1" | sed 's|\[Asenshi\] ||' | sed 's| - [[:digit:]]\+ .\+||')
+    elif echo "$1" | grep -q "Judas"; then
+        name=$(echo "$1" | sed 's|\[Judas\] ||' | sed 's| - [[:digit:]]\+ .\+||')
+    elif echo "$1" | grep -q "SubsPlease"; then
+        name=$(echo "$1" | sed 's|\[SubsPlease\] ||' | sed 's| - [[:digit:]]\+ .\+||')
+    fi
+
+    if [ -d "${destdir}"/"${name}" ]; then 
+        echo "dest found"
+        mv "$1" "${destdir}"/"${name}"
+    else
+        echo -ne "Target ${destdir}/${name} not found. Make it? (y/N) "
+        read -r selection
+        case $selection in
+            y|Y)
+                mkdir "${destdir}"/"${name}"
+                mv "$1" "${destdir}"/"${name}"
+            ;;
+        esac
+    fi
+
+    # Reset last to account for moved file
+    ((last--))
+}
+
+# shellcheck source=mediatree
+source "$(dirname "$0")/mediatree" "${mediadir}"

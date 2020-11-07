@@ -6,6 +6,7 @@ mediadir="/mnt/zed/media"
 playercmd="mpv"
 playerargs=""
 fileregex=".*\(avi\|mkv\|flv\|mp4\|m4v\|mp3\|flac\|mp4\|m4a\|wma\|wav\)"
+dirfilter=""
 
 bold="\033[1m"
 green=$(tput setaf 2)
@@ -18,6 +19,11 @@ if [ "$(basename "$0")" == "musictree" ]; then
     mediadir="/mnt/zed/media/music"
     playerargs="--no-video"
     fileregex=".*\(mp3\|flac\|mp4\|m4a\|wma\|wav\)"
+fi
+
+# Running in anime mode
+if [ "$(basename "$0")" == "animetree" ]; then
+    mediadir="/mnt/zed/media/anime"
 fi
 
 # Override start dir
@@ -38,47 +44,99 @@ play_folder() {
     fi
 }
 
-while true; do
+process_selection() {
+    if [ "$selection" == "n" ]; then
+        selection=$last
+        ((selection++))
+    fi
+    if [ -d "${list_merged[(selection-1)]}" ]; then
+        cd "${list_merged[(selection-1)]}"
+        last=0
+    else
+        echo "Playing: ${list_merged[(selection-1)]}"
+        ${playercmd} ${playerargs} "${list_merged[(selection-1)]}"
+        last=$selection
+        # Post process if available
+        if type -t postprocess > /dev/null; then
+            postprocess "${list_merged[(selection-1)]}"
+        fi
+    fi
+}
 
-    mapfile -t list_dirs  < <(find . -maxdepth 1 -type d -regex "\./[^.].*"  | sed 's|./||' | sort)
+while true; do
+    f=0
+
+    mapfile -t list_dirs  < <(find . -maxdepth 1 -type d -regex "\./${dirfilter}[^.].*"  | sed 's|./||' | sort)
     mapfile -t list_files < <(find . -maxdepth 1 -type f -regex "$fileregex" | sed 's|./||' | sort)
 
-    list_merged=("${list_dirs[@]}" "${list_files[@]}")
+    # dirfilter is single use
+    dirfilter=""
+
     digits=$(echo -n ${#list_merged[@]} | wc -m)
-    f=0
+
+    # Title
     printf "${bold}----(${blue}%s${white})----${normal}\n" "$(pwd | awk -F/ '{print $NF}')"
 
+    # Determint dir/media mode and sort lists
+    if [ ${#list_dirs[@]} -gt ${#list_files[@]} ]; then
+        # More dirs than files. Show dirs first.
+        MODE="DIR"
+        list_merged=("${list_dirs[@]}" "${list_files[@]}")
+    else
+        # More files than dirs. Probably a content folder. Show files first.
+        MODE="MEDIA"
+        list_merged=("${list_files[@]}" "${list_dirs[@]}")
+    fi
+
+    # Calc padding
+    digits=$(echo -n ${#list_merged[@]} | wc -m)
+    # ..
     printf "${bold}%${digits}i. ${blue}%s${normal}\n" 0 ".."
-    for dir in "${list_dirs[@]}"; do
-        printf "${bold}%${digits}i. ${blue}%s${normal}\n" $((++f)) "$dir"
-    done
-    for file in "${list_files[@]}"; do
-        printf "${bold}%${digits}i. ${green}%s${normal}\n" $((++f)) "$file"
-    done
+
+    # Print entries. Dirs first in DIR mode, else media first.
+    if [[ $MODE == "DIR" ]]; then
+        for dir in "${list_dirs[@]}"; do
+            printf "${bold}%${digits}i. ${blue}%s${normal}\n" $((++f)) "$dir"
+        done
+        for file in "${list_files[@]}"; do
+            printf "${bold}%${digits}i. ${green}%s${normal}\n" $((++f)) "$file"
+        done
+    else
+        for file in "${list_files[@]}"; do
+            printf "${bold}%${digits}i. ${green}%s${normal}\n" $((++f)) "$file"
+        done
+        for dir in "${list_dirs[@]}"; do
+            printf "${bold}%${digits}i. ${blue}%s${normal}\n" $((++f)) "$dir"
+        done
+    fi
+
     echo -ne "> "
     read -r selection
+    # hack. make this global for use in process_selection function
+    export selection
 
     case $selection in
-        "0" | ".." | ".")
+        "0" | "..")
             if [ "$(pwd)" != "$mediadir" ]; then 
                 cd ..
             fi
             ;;
-        "p")
+        ".")
             play_folder
             ;;
-        *)
-            if [ "$selection" == "n" ]; then
-                selection=$last
-                ((selection++))
-            fi
-            if [ -d "${list_merged[(selection-1)]}" ]; then
-                cd "${list_merged[(selection-1)]}"
-                last=0
+        # Set dir filter to start with lower/upper char
+        [[:alpha:]])
+            # Only in DIR mode
+            if [[ $MODE == "DIR" ]]; then
+                # bashism: ,,==tolower ^^==toupper
+                dirfilter="[${selection,,}${selection^^}]"
             else
-                ${playercmd} ${playerargs} "${list_merged[(selection-1)]}"
-                last=$selection
+                process_selection
             fi
+            ;;
+        *)
+            process_selection
             ;;
     esac
 done
+q
