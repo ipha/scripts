@@ -1,0 +1,87 @@
+#!/bin/bash
+
+
+DEV="/dev/disk/by-id/usb-Generic-_USB3.0_CRW_-SD_201506301013-0:1"
+[ -e /dev/mmcblk0 ] && DEV="/dev/mmcblk0"
+[ -e /dev/mmcblk1 ] && DEV="/dev/mmcblk1"
+
+function unmount {
+    if grep -q "/mnt/pi" /proc/mounts; then
+        sudo umount -R /mnt/pi || exit
+        sync
+    fi
+}
+
+function boot1 {
+    sudo sfdisk -f $DEV << EOF
+label: dos
+label-id: 0x33572158
+device: /dev/disk/by-id/usb-Generic-_USB3.0_CRW_-SD_201506301013-0:1
+unit: sectors
+sector-size: 512
+
+start=        2048, size=      524288, type=c, bootable
+start=      526336, size=      524288, type=c
+start=     1050624, size=   249296896, type=5
+start=     1052672, size=    33554432, type=83
+start=    34609152, size=    33554432, type=83
+start=    68165632, size=   180084736, type=83
+EOF
+}
+
+function boot2 {
+    sudo sfdisk -f $DEV << EOF
+label: dos
+label-id: 0x33572158
+device: /dev/disk/by-id/usb-Generic-_USB3.0_CRW_-SD_201506301013-0:1
+unit: sectors
+sector-size: 512
+
+start=      526336, size=      524288, type=c, bootable
+start=        2048, size=      524288, type=c
+start=     1050624, size=   249296896, type=5
+start=     1052672, size=    33554432, type=83
+start=    34609152, size=    33554432, type=83
+start=    68165632, size=   180084736, type=83
+EOF
+}
+
+case $1 in
+    "m" | "mount")
+        if sudo sfdisk -l $DEV | grep \* | grep -q 2048; then
+            echo "Mounting system 1"
+            sudo mount /dev/disk/by-label/piRoot1 /mnt/pi
+            sudo mount /dev/disk/by-label/piBoot1 /mnt/pi/boot
+            sudo mount /dev/disk/by-label/piStorage /mnt/pi/mnt/storage
+        elif sudo sfdisk -l $DEV | grep \* | grep -q 526336; then
+            echo "Mounting system 2"
+            sudo mount /dev/disk/by-label/piRoot2 /mnt/pi
+            sudo mount /dev/disk/by-label/piBoot2 /mnt/pi/boot
+            sudo mount /dev/disk/by-label/piStorage /mnt/pi/mnt/storage
+        fi
+        ;;
+    "u" | "umount")
+        unmount
+        ;;
+    "p")
+        sudo fdisk -l $DEV
+        ;;
+    "fdisk")
+        unmount
+        sudo fdisk $DEV
+        sudo partprobe
+        ;;
+    "nspawn")
+        sudo systemd-nspawn -D /mnt/pi
+        ;;
+    "boot1")
+        unmount
+        boot1
+        sudo partprobe
+        ;;
+    "boot2")
+        unmount
+        boot2
+        sudo partprobe
+        ;;
+esac
