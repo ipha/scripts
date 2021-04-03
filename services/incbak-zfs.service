@@ -1,0 +1,6 @@
+[Unit]
+Description=Incremantal backup for zfs
+
+[Service]
+Type=oneshot
+ExecStart=/mnt/btrfs/incbak-zfs

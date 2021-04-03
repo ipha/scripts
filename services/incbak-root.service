@@ -1,0 +1,6 @@
+[Unit]
+Description=Incremantal backup for root
+
+[Service]
+Type=oneshot
+ExecStart=/mnt/btrfs/incbak-root

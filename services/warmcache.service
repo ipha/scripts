@@ -1,0 +1,7 @@
+[Unit]
+Description=Warm disk cache
+
+[Service]
+IOSchedulingClass=idle
+Type=oneshot
+ExecStart=/home/mitch/.bin/warmcache

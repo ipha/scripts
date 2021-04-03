@@ -1,0 +1,7 @@
+[Unit]
+Description=Incremantal backup for borg
+
+[Service]
+User=mitch
+Type=oneshot
+ExecStart=/mnt/btrfs/incbak-borg

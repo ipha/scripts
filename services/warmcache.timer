@@ -1,0 +1,9 @@
+[Unit]
+Description=Warm disk cache
+
+[Timer]
+OnBootSec=120
+
+[Install]
+WantedBy=timers.target
+
