@@ -1,0 +1,3 @@
+#!/bin/bash
+
+find . -name "*.png" | parallel -j 14 -I% --max-args 1 --bar to-webp --rm  "%"
