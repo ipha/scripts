@@ -97,11 +97,11 @@ if __name__ == "__main__":
             # print(result_left)
             # print(result_right)
             print("{1:{0}.{0}}{2}".format(columns-len(result_right), result_left, result_right))
-        # try:
-        s = input('--> ')
-        print(s)
-        # except:
-        #   break
+        try:
+            s = input('--> ')
+            print(s)
+        except KeyboardInterrupt:
+            exit()
 
         if s == "":
             page = page + 1
