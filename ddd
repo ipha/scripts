@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if [ "$#" -eq 1 ]; then
+    dd of="$1" bs=4M iflag=fullblock oflag=direct status=progress
+    sync
+elif [ "$#" -eq 2 ]; then
+    dd if="$1" of="$2" bs=4M iflag=fullblock oflag=direct status=progress
+    sync
+else
+    echo "You should know better than that"
+fi
