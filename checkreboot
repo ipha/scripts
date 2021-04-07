@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ ! -d /usr/lib/modules/$(uname -r) ]; then
+    echo "Reboot needed"
+    echo "  > Running :" $(uname -r)
+    echo "  > Instaled:" $(ls -1 /usr/lib/modules)
+
+    if [ "$1" == "-r" ]; then
+        echo "Rebooting now"
+        sudo /bin/reboot
+    fi
+fi
+
