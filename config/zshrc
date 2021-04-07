@@ -78,9 +78,9 @@ compdef '_files -g "*.png"' to-webp
 # Prompt
 
 # load powerline
-if command -v powerline-daemon &> /dev/null; then
-    pgrep powerline-daemo > /dev/null || powerline-daemon -q
-fi
+#if command -v powerline-daemon &> /dev/null; then
+#    pgrep powerline-daemo > /dev/null || powerline-daemon -q
+#fi
 
 if [ -f /usr/share/powerline/bindings/zsh/powerline.zsh ]; then
     source /usr/share/powerline/bindings/zsh/powerline.zsh
@@ -134,8 +134,7 @@ if [ -f /usr/bin/ssh-agent ]; then
         [ -S /tmp/ssh-agent-${USER}.socket ] && rm /tmp/ssh-agent-${USER}.socket
         ssh-agent -a /tmp/ssh-agent-${USER}.socket > /dev/null
     fi
-
-    export SSH_AUTH_SOCK=/tmp/ssh-agent-${USER}.socket
+    [ -S /tmp/ssh-agent-${USER}.socket ] && export SSH_AUTH_SOCK=/tmp/ssh-agent-${USER}.socket
 fi
 
 ################################################################################
@@ -189,6 +188,15 @@ alias youtube-dl='youtube-dl --merge-output-format=mkv'
 alias fixkey='ssh-keygen -R $(echo `fc -ln -1` | sed "s|.* ||" | sed "s|.*@||")'
 
 alias gpu='sudo watch "cat /sys/kernel/debug/dri/0/amdgpu_pm_info | grep GFX\ Clocks -A20"'
+
+alias mt='mediatree'
+alias at='animetree'
+alias ap='animeplay'
+
+alias chroot-update='sudo arch-nspawn $CHROOT/root pacman -Syu'
+alias chroot-build='makechrootpkg -c -r $CHROOT'
+
+alias ip='ip -c'
 
 # Package manager for Arch
 if [ -f /usr/bin/yay ]; then
