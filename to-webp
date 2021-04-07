@@ -26,5 +26,9 @@ done
 
 for FILE in "$@"; do
     ${LS} "$FILE" "${FILE%.*}.webp"
-    ${RM} "$FILE"
+    if webpinfo -quiet "${FILE%.*}.webp"; then
+        ${RM} "$FILE"
+    else
+        echo "Invalid webp file! Not deleting"
+    fi
 done
