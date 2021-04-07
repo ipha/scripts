@@ -1,0 +1,41 @@
+#!/bin/bash
+
+make_sandbox() {
+    sudo btrfs subvolume snapshot /mnt/btrfs/root /mnt/btrfs/sandbox
+    sudo sed -i 's|ginger|sandbox|' /mnt/btrfs/sandbox/etc/hostname
+
+    sudo mkdir /mnt/btrfs/sandbox/home/mitch
+    sudo chown mitch:mitch /mnt/btrfs/sandbox/home/mitch
+
+    sudo cp -a /home/mitch/.bin /mnt/btrfs/sandbox/home/mitch/
+    sudo cp -a /home/mitch/.zshrc /mnt/btrfs/sandbox/home/mitch/
+    sudo cp -a /home/mitch/.zsh_history /mnt/btrfs/sandbox/home/mitch/
+
+    # powerline breaks something I haven't cared enough to fix yet
+    sudo systemd-nspawn -q -D /mnt/btrfs/sandbox bash -c 'yes | pacman -Rs powerline'
+}
+
+if [ -d /mnt/btrfs/sandbox ]; then
+    echo -n "Sandbox already exists. Delete it? (y/N) "
+    read -r answer
+    case $answer in
+        y|Y)
+            echo "Refreshing sandbox."
+            sudo btrfs subvolume delete /mnt/btrfs/sandbox
+            make_sandbox
+            ;;
+        *)
+            echo "Reconnecting to sandbox."
+            ;;
+    esac
+else
+    make_sandbox
+fi
+
+sudo systemd-nspawn -q \
+    -D /mnt/btrfs/sandbox \
+    --resolv-conf=bind-host \
+    --chdir /home/mitch \
+    -E SHELL="$SHELL" \
+    -u mitch \
+    zsh
