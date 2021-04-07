@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# SSD Thumbnails
+echo "(1/4)"
+find /home/mitch/.thumbnails/ -type f -print0 | xargs -0 cat | pv > /dev/null
+
+# ZFS anime dir thumbs
+echo "(2/4)"
+find /mnt/zed/media/anime -name ".directory" -print0 | xargs -0 cat | pv > /dev/null
+echo "(3/4)"
+find /mnt/zed/media/anime -name ".folder.png" -print0 | xargs -0 cat | pv > /dev/null
+
+# ZFS dir tree
+echo "(4/4)"
+find /mnt/zed | pv > /dev/null
