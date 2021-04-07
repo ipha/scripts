@@ -35,7 +35,7 @@ function postprocess {
     fi
 
     if [ -d "${destdir}"/"${name}" ]; then 
-        echo "dest found"
+        # echo "dest found"
         mv "$1" "${destdir}"/"${name}"
         # Reset last to account for moved file
         ((last--))
