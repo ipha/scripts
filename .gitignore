@@ -1,7 +1,4 @@
-tcprelay.py
-usbmux.py
 *.pyc
-cameras
 .vscode/settings.json
 madokami*
 transmission-post
