@@ -18,8 +18,11 @@ if [ "$(hostname)" = "ginger" ] && grep " / " /proc/mounts | grep -q "subvol=/ro
         --bind /home \
         --bind /var/cache/pacman/pkg \
         -u mitch \
-        /home/mitch/.bin/zfs-yu --nosync
+        /home/mitch/.bin/zfs-yu
 
+
+    echo
+    echo -e "${blue}>>${NC} Updating CHROOT ${blue}<<${NC}"
     sudo arch-nspawn "$CHROOT"/root pacman -Syu
 else
     zfs-yu

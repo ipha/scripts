@@ -15,16 +15,22 @@ if [ "$1" != "--nosync" ]; then
     sudo pacman -Sy
 fi
 
+
+# DKMS, skip all this
+if pacman -Qi zfs-dkms > /dev/null 2> /dev/null; then
+    yay -Su
+    exit
+elif pacman -Qi zfs-dkms-git > /dev/null 2> /dev/null; then
+    yay -Su
+    exit
+fi
+
+
 installed=$(pacman -Qi ${PKGNAME} | grep Version | awk '{print $NF}')
 repo=$(pacman -Si ${PKGNAME} | grep Version | awk '{print $NF}')
 needed=$(pacman -Si zfs-${PKGNAME} | grep Depends | awk -F= '{print $NF}')
 
-if pacman -Qi zfs-dkms > /dev/null 2> /dev/null; then
-    # DKMS, skip all this
-    yay -Su
-elif pacman -Qi zfs-dkms-git > /dev/null 2> /dev/null; then
-    yay -Su
-elif [ "$repo" = "$needed" ]; then
+if [ "$repo" = "$needed" ]; then
     # All good
     yay -Su
 elif [ "$installed" = "$needed" ]; then
