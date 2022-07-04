@@ -22,9 +22,10 @@ path=(~/.bin $path[@])
 ################################################################################
 # ZSH Opts
 export HISTFILE=~/.zsh_history
-export HISTSIZE=400000
-export SAVEHIST=200000
+export HISTSIZE=100000
+export SAVEHIST=50000
 
+setopt EXTENDED_HISTORY
 setopt INC_APPEND_HISTORY
 setopt HIST_IGNORE_SPACE
 setopt HIST_IGNORE_DUPS
@@ -50,6 +51,7 @@ export EDITOR="nano"
 export WINEDLLOVERRIDES="winemenubuilder.exe=d"
 export LESS="R"
 export CHROOT=/mnt/btrfs/archbuild
+export GCC_COLORS=always
 
 ################################################################################
 # Set dircolors
@@ -176,14 +178,20 @@ alias senable='sudo systemctl enable'
 alias sdisable='sudo systemctl disable'
 
 alias gt='cd ~/Downloads/torrent'
+alias gta='cd ~/Downloads/torrent/_anime'
+alias gtt='cd ~/Downloads/torrent/_tv'
+alias gtm='cd ~/Downloads/torrent/_movie'
 alias gm='cd /mnt/zed/media'
-alias ga='cd /mnt/zed/media/anime'
+alias gma='cd /mnt/zed/media/anime'
+alias gmt='cd /mnt/zed/media/tv'
+alias gmm='cd /mnt/zed/media/movies'
 
 alias winboot='sudo efibootmgr -n $(efibootmgr | grep Windows | cut -c 5-8) && reboot'
 
 alias zlist='zfs list -t filesystem,snapshot,volume | grep -v storage\@'
 
 alias youtube-dl='youtube-dl --merge-output-format=mkv'
+alias yt-dlp='yt-dlp --merge-output-format=mkv'
 
 alias fixkey='ssh-keygen -R $(echo `fc -ln -1` | sed "s|.* ||" | sed "s|.*@||")'
 
@@ -197,6 +205,8 @@ alias chroot-update='sudo arch-nspawn $CHROOT/root pacman -Syu'
 alias chroot-build='makechrootpkg -c -r $CHROOT'
 
 alias ip='ip -c'
+
+alias a2c='aria2c -x5 -s5'
 
 # Package manager for Arch
 if [ -f /usr/bin/yay ]; then
@@ -219,7 +229,14 @@ elif [ -f /sbin/apk ]; then
     alias yr='sudo apk del'
 fi
 
+# gimp shortcut
+if [ ! -f /usr/bin/gimp ] && [ -f /usr/bin/gimp-2.99 ]; then
+    alias gimp='gimp-2.99'
+fi
+
 [ -f /usr/bin/fortune ] && fortune -a -s
+
+#zpool status -x
 
 # Something in this throws an error code and I haven't been bothered to tack it down yet
 true
