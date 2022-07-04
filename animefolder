@@ -12,6 +12,10 @@ getimage() {
         name=$(pwd | awk -F/ '{ print $(NF-1) " " $(NF) }')
     fi
 
+    if [[ $name == S[0-9] ]]; then
+        name=$(pwd | awk -F/ '{ print $(NF-1) " " $(NF) }')
+    fi
+
     html=$(curl -s -G --data-urlencode "q=$name" https://myanimelist.net/anime.php)
 
     echo "$name"
