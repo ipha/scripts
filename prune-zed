@@ -8,3 +8,9 @@ fi
 for x in "$@"; do
     sudo zfs destroy -v zed/backups/home@"$x"
 done
+
+if zpool list | grep -q zedbak; then
+    for x in "$@"; do
+        sudo zfs destroy -v zedbak/backups/home@"$x"
+    done
+fi
