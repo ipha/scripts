@@ -18,20 +18,16 @@ function postprocess {
     fi
 
     # regex in bash is hard... lets just not
-    if echo "$1" | grep -q "HorribleSubs"; then
-        name=$(echo "$1" | sed 's|\[HorribleSubs\] ||' | sed 's| - [[:digit:]v\.]\+ .\+||')
-    elif echo "$1" | grep -q "Commie"; then
-        name=$(echo "$1" | sed 's|\[Commie\] ||' | sed 's| - [[:digit:]v\.]\+ .\+||')
-    elif echo "$1" | grep -q "PAS"; then
-        name=$(echo "$1" | sed 's|\[PAS\] ||' | sed 's| - [[:digit:]v\.]\+ .\+||')
-    elif echo "$1" | grep -q "GJM"; then
-        name=$(echo "$1" | sed 's|\[GJM\] ||' | sed 's| - [[:digit:]v\.]\+ .\+||')
-    elif echo "$1" | grep -q "Asenshi"; then
-        name=$(echo "$1" | sed 's|\[Asenshi\] ||' | sed 's| - [[:digit:]v\.]\+ .\+||')
-    elif echo "$1" | grep -q "Judas"; then
-        name=$(echo "$1" | sed 's|\[Judas\] ||' | sed 's| - [[:digit:]v\.]\+ .\+||')
-    elif echo "$1" | grep -q "SubsPlease"; then
-        name=$(echo "$1" | sed 's|\[SubsPlease\] ||' | sed 's| - [[:digit:]v\.]\+ .\+||')
+    # Strip group
+    name1=$(echo "$1" | sed 's|\[\S*\] ||')
+    # Strip episode
+    name2=$(echo "$name1" | sed 's| - [[:digit:]v\.]\+ .\+||')
+    if [ "$name1" = "$name2" ]; then
+        # No episode number found. Movie or OVA?
+        name=""
+    else
+        # Title extracted
+        name="$name2"
     fi
 
     if [ -d "${destdir}"/"${name}" ]; then 
