@@ -12,6 +12,10 @@ case $1 in
         RM="rm"
         shift
         ;;
+    "--norm")
+        RM="true"
+        shift
+        ;;
 esac
 
 # Enable/disable multi-treading based on ENV
@@ -26,7 +30,7 @@ for FILE in "$@"; do
         ffmpeg -i "$FILE" -c:v libwebp -lossless 1 -loop 0 -compression_level 6 -quality 100 "${FILE%.*}.webp"
         # cwebp -lossless -z 9 -mt "$FILE" -o "${FILE%.*}.webp"
     else
-        cwebp -lossless -z 9 "${MT_ARG}" "$FILE" -o "${FILE%.*}.webp"
+        cwebp -lossless -z 9 "${MT_ARG}" "$FILE" -o "${FILE%.*}.webp" 2>&1
     fi
     touch -r "$FILE" "${FILE%.*}.webp"
 done
