@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export LC_COLLATE="C"
+
 # 
 # User options
 mediadir="/mnt/zed/media"
@@ -78,8 +80,9 @@ while true; do
     printf "${bold}----(${blue}%s${white})----${normal}\n" "$(pwd | awk -F/ '{print $NF}')"
 
     # Determint dir/media mode and sort lists
-    if [ ${#list_dirs[@]} -gt ${#list_files[@]} ]; then
-        # More dirs than files. Show dirs first.
+    # if [ ${#list_dirs[@]} -gt ${#list_files[@]} ]; then
+    if [ ${#list_dirs[@]} -gt 3 ]; then
+        # More than a few dirs. Show dirs first.
         MODE="DIR"
         list_merged=("${list_dirs[@]}" "${list_files[@]}")
     else
@@ -144,4 +147,3 @@ while true; do
             ;;
     esac
 done
-q
