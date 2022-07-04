@@ -1,6 +1,9 @@
 #!/bin/sh
 
-curl -4 https://diagnostic.opendns.com/myip
-echo
-curl -6 https://diagnostic.opendns.com/myip
-echo
+curl -4 https://am.i.mullvad.net/ip
+#echo
+curl -6 https://am.i.mullvad.net/ip
+#echo
+if ip a | grep 10.0.1.99 -q; then
+    curl --interface 10.0.1.99  https://am.i.mullvad.net/connected
+fi
