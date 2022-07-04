@@ -3,19 +3,19 @@
 export DISPLAY=:0
 
 # Close browsers nicely
-for x in {0..10}; do
-    pgrep chromium && wmctrl -c "chromium"
-    pgrep chrome   && wmctrl -c "chrome"
-    pgrep firefox  && wmctrl -c "firefox"
-    sleep .1
-    pgrep chromium\|chrome\|firefox || break
-done
+# for x in {0..10}; do
+#     pgrep chromium && wmctrl -c "chromium"
+#     pgrep chrome   && wmctrl -c "chrome"
+#     pgrep firefox  && wmctrl -c "firefox"
+#     sleep .1
+#     pgrep chromium\|chrome\|firefox || break
+# done
 
 if pgrep steam; then
     kill -9 "$(pgrep steam)"
 fi
 
-if pgrep kdeinit5; then
+if pgrep plasma; then
     qdbus org.kde.ksmserver /KSMServer org.kde.KSMServerInterface.logout 0 1 1
 else
     sudo /sbin/reboot
