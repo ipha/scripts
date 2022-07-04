@@ -1,0 +1,10 @@
+#!/bin/bash
+
+rm *.log
+rm *.pkg.tar.zst
+
+if [ "$1" == "all" ]; then
+    rm -r pkg
+    rm -r src -f
+    rm *.tar.*
+fi

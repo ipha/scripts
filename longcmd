@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [ ! -f go.sh ]; then
+    echo -e "#!/bin/bash\n" > go.sh
+    chmod +x go.sh
+fi
+code go.sh

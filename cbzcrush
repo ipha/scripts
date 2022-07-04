@@ -1,0 +1,25 @@
+#!/bin/bash
+
+NCPU=$(grep -c ^processor /proc/cpuinfo)
+NPROC=$(((NCPU / 2)-1))
+
+WORKINGDIR=$(mktemp -d)
+CBZ=$(readlink -f "$1")
+
+cd "$WORKINGDIR"
+unzip "$CBZ" > /dev/null
+BEFORE=$(ls -lh "$CBZ")
+
+find . -name '*.png' | \
+    nice parallel -j "${NPROC}" -I% --max-args 1 --bar to-webp --rm "%" > /dev/null
+
+find . \( -iname '*.jpeg' -or -iname '*.jpg' \) | \
+    nice parallel -j "${NPROC}" -I% --max-args 1 --bar jpegoptim "%" > /dev/null
+
+rm "$CBZ"
+zip -0 "$CBZ" -- * > /dev/null
+
+echo "$BEFORE"
+ls -lh "$CBZ"
+
+rm -r "$WORKINGDIR"

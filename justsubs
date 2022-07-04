@@ -1,0 +1,7 @@
+#!/bin/bash
+
+FILE=$(mktemp)
+
+ffmpeg -i "$1" -map s:1 -c copy "$FILE".ass
+
+code "$FILE".ass

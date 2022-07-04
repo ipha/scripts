@@ -1,0 +1,10 @@
+#!/bin/bash
+
+DISKS=$(find /dev/disk/by-id -name "ata-*" | grep -v part | sort)
+
+for disk in $DISKS; do
+    echo "$disk"
+    sudo smartctl -a $disk | grep Pre-fail
+    sleep 1
+    echo ""
+done

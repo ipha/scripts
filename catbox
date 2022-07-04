@@ -1,0 +1,10 @@
+#!/bin/bash
+
+
+RESP=$(curl -F "reqtype=fileupload" -F "fileToUpload=@$1" https://catbox.moe/user/api.php)
+
+echo "$RESP"
+
+if [ -n "$DISPLAY" ]; then
+    echo "$RESP" | xclip -i
+fi
