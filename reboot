@@ -2,6 +2,11 @@
 
 export DISPLAY=:0
 
+SUDO=''
+if (( $EUID != 0 )); then
+    SUDO='sudo'
+fi
+
 # Close browsers nicely
 # for x in {0..10}; do
 #     pgrep chromium && wmctrl -c "chromium"
@@ -18,9 +23,9 @@ fi
 if pgrep plasma; then
     qdbus org.kde.ksmserver /KSMServer org.kde.KSMServerInterface.logout 0 1 1
 else
-    sudo /sbin/reboot
+    $SUDO /sbin/reboot
 fi
 
 # Catch if kde hangs on shutdown
 sleep 20
-sudo /sbin/reboot
+$SUDO /sbin/reboot
