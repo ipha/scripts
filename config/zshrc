@@ -139,6 +139,27 @@ if [ -f /usr/bin/ssh-agent ]; then
     [ -S /tmp/ssh-agent-${USER}.socket ] && export SSH_AUTH_SOCK=/tmp/ssh-agent-${USER}.socket
 fi
 
+
+################################################################################
+# Temp VENV
+venv_create () {
+    VENVDIR=$(mktemp -p /tmp -d venv-XXXXX)
+    python3 -m venv $VENVDIR
+    source $VENVDIR/bin/activate
+    python3 -m pip install --upgrade pip
+}
+
+venv_destroy () {
+    if [ ! -z $VENVDIR ]; then
+        deactivate
+        rm -rf $VENVDIR
+        unset $VENVDIR
+    fi
+}
+
+alias venvme='venv_create'
+trap venv_destroy EXIT
+
 ################################################################################
 # Aliases
 alias ..='cd ..'
@@ -227,6 +248,10 @@ elif [ -f /sbin/apk ]; then
     alias yu='sudo apk update && sudo apk upgrade'
     alias yi='sudo apk add'
     alias yr='sudo apk del'
+elif [ -f /usr/bin/dnf ]; then
+    alias yu='sudo dnf upgrade'
+    alias yi='sudo dnf install'
+    alias yr='sudo apk remove'
 fi
 
 # gimp shortcut
