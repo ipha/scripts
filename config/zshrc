@@ -229,8 +229,10 @@ alias ip='ip -c'
 
 alias a2c='aria2c -x5 -s5'
 
-alias sssh='ssh -o HostkeyAlgorithms=+ssh-rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -oKexAlgorithms=+diffie-hellman-group14-sha1'
-alias sscp='scp -o HostkeyAlgorithms=+ssh-rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -oKexAlgorithms=+diffie-hellman-group14-sha1'
+alias sssh='ssh -o HostkeyAlgorithms=+ssh-rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -oKexAlgorithms=+diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1'
+alias sscp='scp -o HostkeyAlgorithms=+ssh-rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -oKexAlgorithms=+diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1'
+
+alias mounts='mount | grep -v "/sys" | grep -v "/dev" | grep -v "/proc" | column -t | sort -k 2 | cut -c1-$(tput cols)'
 
 # Package manager for Arch
 if [ -f /usr/bin/yay ]; then
