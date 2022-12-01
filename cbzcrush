@@ -3,6 +3,12 @@
 NCPU=$(grep -c ^processor /proc/cpuinfo)
 NPROC=$(((NCPU / 2)-1))
 
+COMMAND="optipng"
+if [ "$1" == "--webp" ]; then
+    COMMAND="to-webp --rm"
+    shift
+fi
+
 WORKINGDIR=$(mktemp -d)
 CBZ=$(readlink -f "$1")
 
@@ -11,7 +17,7 @@ unzip "$CBZ" > /dev/null
 BEFORE=$(ls -lh "$CBZ")
 
 find . -name '*.png' | \
-    nice parallel -j "${NPROC}" -I% --max-args 1 --bar to-webp --rm "%" > /dev/null
+    nice parallel -j "${NPROC}" -I% --max-args 1 --bar ${COMMAND} "%" > /dev/null
 
 find . \( -iname '*.jpeg' -or -iname '*.jpg' \) | \
     nice parallel -j "${NPROC}" -I% --max-args 1 --bar jpegoptim "%" > /dev/null
