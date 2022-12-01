@@ -1,8 +1,0 @@
-[Unit]
-Description=Madokami rss check
-
-[Service]
-User=mitch
-Type=oneshot
-ExecStart=/home/mitch/.bin/madokami-rss
-
