@@ -2,6 +2,7 @@
 
 for FILE in "$@"; do
     ffmpeg -i "$FILE" -c copy "${FILE%.*}.mkv"
+    touch -r "$FILE" "${FILE%.*}.mkv"
 done
 
 for FILE in "$@"; do
