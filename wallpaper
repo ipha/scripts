@@ -30,6 +30,8 @@ class Wallpaper:
     basename = ""
     enabled  = False
     hidden   = False
+    upgrade  = False
+    old      = False
 
     def __init__(self, path):
         self.path     = path
@@ -43,11 +45,27 @@ class Wallpaper:
         if glob.glob(os.path.join(self.dir, self.filename + "_1080.*")) and not self.enabled:
             self.hidden = True
 
+        if glob.glob(os.path.join(self.dir, self.filename + "_1440.*")) and not self.enabled:
+            self.hidden = True
+
+        if ("_1080" in self.filename) and glob.glob(os.path.join(self.dir, self.filename.replace("_1080", "_1440.*"))):
+            if self.enabled:
+                self.upgrade = True
+            else:
+                self.hidden = True
+
         if ("_orig" in self.filename) and not self.enabled:
             self.hidden = True
 
         if ("_hide" in self.filename):
             self.hidden = True
+
+        if ("old" in self.dir):
+            print(self.dir)
+            self.old = True
+            if not self.enabled:
+                self.hidden = True
+
 
     def toggle(self):
         target = os.path.join(ENABLEDDIR, self.basename)
@@ -59,12 +77,13 @@ class Wallpaper:
             os.symlink(os.path.join("..", self.path), target)
             self.enabled = True
             print("Enabled", self.path)
-        sleep(0.75)
+        sleep(0.25)
 
     def print_line(self, number, pad):
         print(bcolors.BOLD,
               "{0: >{1}}. ".format(number, pad),
               bcolors.GREEN if self.enabled else bcolors.BLUE,
+              bcolors.MAGENTA if self.upgrade else "",
               "✓./" if self.enabled else " ./",
               self.path, bcolors.ENDC, sep="")
 
@@ -76,7 +95,7 @@ def find_files(path):
     out = []
     os.chdir(path)
     for file in glob.iglob("**/*.*", recursive=True):
-        if "__current" not in file and ".svg" not in file:
+        if "__current" not in file and ".svg" not in file and ".tar" not in file:
             out.append(Wallpaper(file))
     return out
 
@@ -84,13 +103,14 @@ def find_files(path):
 def make_display_list(wallpapers, mode="all"):
     out = []
     for w in wallpapers:
-        if not w.hidden:
-            if mode == "eo" and w.enabled:
-                out.append(w)
-            elif mode == "do" and not w.enabled:
-                out.append(w)
-            elif mode == "all":
-                out.append(w)
+        if mode == "eo" and not w.hidden and w.enabled:
+            out.append(w)
+        elif mode == "do" and not w.hidden and not w.enabled:
+            out.append(w)
+        elif mode == "all" and not w.hidden:
+            out.append(w)
+        elif mode == "old" and w.old and not w.hidden:
+            out.append(w)
     return sorted(out)
 
 
@@ -117,6 +137,8 @@ if __name__ == "__main__":
                 disp_list = make_display_list(wallpapers, mode="eo")
             elif selection == "do":
                 disp_list = make_display_list(wallpapers, mode="do")
+            elif selection == "old":
+                disp_list = make_display_list(wallpapers, mode="old")
             elif selection == "q":
                 exit(0)
             elif selection == "pa":
