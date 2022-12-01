@@ -8,16 +8,9 @@ sudo btrfs filesystem show
 echo -e "${blue}archRoot${NC}"
 btrfs filesystem df /
 
-echo -e "${blue}archStorage${NC}"
-btrfs filesystem df /mnt/storage
-
-if grep -q /mnt/backup\ btrfs /proc/mounts; then
-	echo -e "${blue}notRed${NC}"
-	btrfs filesystem df /mnt/backup
-fi
-
-echo -e "${blue}zed${NC}"
-zpool list zed
+echo
+echo -e "${blue}zfs${NC}"
+zpool list
 echo ""
 zfs list -r zed
 
