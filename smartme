@@ -1,10 +1,10 @@
 #!/bin/bash
 
-DISKS=$(find /dev/disk/by-id -name "ata-*" | grep -v part | sort)
+DISKS=$(find /dev/disk/by-id | grep 'ata-' | grep -v 'wwn\|eui\|part' | sort)
 
 for disk in $DISKS; do
     echo "$disk"
-    sudo smartctl -a $disk | grep Pre-fail
+    sudo smartctl -a "$disk" | grep 'Pre-fail\|Pending\|Uncorrectable'
     sleep 1
     echo ""
 done
