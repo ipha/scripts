@@ -5,25 +5,26 @@ red='\e[0;31m'
 NC='\e[0m'
 
 if [ "$(hostname)" = "ginger" ] && grep " / " /proc/mounts | grep -q "subvol=/root "; then
-    /home/mitch/.bin/zfs-yu
+    yay -Syu
 
-    echo
-    echo -e "${blue}>>${NC} Updating Trapped ${blue}<<${NC}"
-    sudo cp -r /var/lib/pacman/sync/ /mnt/btrfs/trapped/var/lib/pacman/
-    grep -q "/mnt/btrfs/trapped/boot" /proc/mounts || \
-        sudo mount /dev/disk/by-label/trappedEFI /mnt/btrfs/trapped/boot
-    sudo systemd-nspawn -q \
-        -D /mnt/btrfs/trapped \
-        --resolv-conf=bind-host \
-        --bind /home \
-        --bind /var/cache/pacman/pkg \
-        -u mitch \
-        /home/mitch/.bin/zfs-yu
-
+    #echo
+    #echo -e "${blue}>>${NC} Updating Trapped ${blue}<<${NC}"
+    #sudo cp -r /var/lib/pacman/sync/ /mnt/btrfs/trapped/var/lib/pacman/
+    #grep -q "/mnt/btrfs/trapped/boot" /proc/mounts || \
+    #    sudo mount /dev/disk/by-label/trappedEFI /mnt/btrfs/trapped/boot
+    #sudo systemd-nspawn -q \
+    #    -D /mnt/btrfs/trapped \
+    #    --resolv-conf=bind-host \
+    #    --bind /home \
+    #    --bind /var/cache/pacman/pkg \
+    #    -u mitch \
+    #    /home/mitch/.bin/zfs-yu
+    #sudo umount /mnt/btrfs/trapped/boot
 
     echo
     echo -e "${blue}>>${NC} Updating CHROOT ${blue}<<${NC}"
+    sudo cp -r /var/lib/pacman/sync/ "$CHROOT"/root/var/lib/pacman/
     sudo arch-nspawn "$CHROOT"/root pacman -Syu
 else
-    zfs-yu
+    yay -Syu
 fi
