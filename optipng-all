@@ -1,2 +1,11 @@
 #!/bin/sh
-find . -name "*.png" | parallel -I% --max-args 1 --bar optipng "%"
+
+
+NCPU=$(grep -c ^processor /proc/cpuinfo)
+
+# Save 1 thread for system
+NPROC=$(((NCPU)-1))
+# min  2 threads
+NPROC=$((NPROC>2 ? NPROC : 2))
+
+find . -name "*.png" | nice parallel -j "${NPROC}" -I% --max-args 1 --bar optipng "%" '2>&1' > /dev/null
