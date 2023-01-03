@@ -1,0 +1,8 @@
+#!/bin/bash
+
+echo "Sink:"
+echo -n "   "
+pactl list sinks       | grep Sample | cut -d: -f2
+echo "Inputs:"
+echo -n "   "
+pactl list sink-inputs | grep Sample | cut -d: -f2
