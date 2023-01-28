@@ -25,7 +25,6 @@ export HISTFILE=~/.zsh_history
 export HISTSIZE=100000
 export SAVEHIST=50000
 
-setopt EXTENDED_HISTORY
 setopt INC_APPEND_HISTORY
 setopt HIST_IGNORE_SPACE
 setopt HIST_IGNORE_DUPS
@@ -55,7 +54,7 @@ export GCC_COLORS=always
 
 ################################################################################
 # Set dircolors
-eval $(dircolors)
+eval $(dircolors -b)
 
 ################################################################################
 # Completion
@@ -79,17 +78,12 @@ compdef '_files -g "*.png"' to-webp
 ################################################################################
 # Prompt
 
-# load powerline
-#if command -v powerline-daemon &> /dev/null; then
-#    pgrep powerline-daemo > /dev/null || powerline-daemon -q
-#fi
-
-if [ -f /usr/share/powerline/bindings/zsh/powerline.zsh ]; then
-    source /usr/share/powerline/bindings/zsh/powerline.zsh
-elif [ -f ~/.local/lib/python3.8/site-packages/powerline/bindings/zsh/powerline.zsh ]; then
-    source ~/.local/lib/python3.8/site-packages/powerline/bindings/zsh/powerline.zsh
+if [ -f /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme ]; then
+    source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
+    # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+    [ -f ~/.p10k.zsh ] && source ~/.p10k.zsh
 else
-    # can't find powerline script
+    # can't find p10k script
     source ~/.bin/config/ps1.zsh
 fi
 
@@ -184,6 +178,8 @@ alias grep='grep --colour=auto'
 alias grepa='grep --color=auto -r'
 alias grepia='grep --color=auto -r -i'
 
+alias diff='diff --color=auto'
+
 alias rm='rm -I'
 alias rr='rm -Ir'
 
@@ -225,7 +221,7 @@ alias ap='animeplay'
 alias chroot-update='sudo arch-nspawn $CHROOT/root pacman -Syu'
 alias chroot-build='makechrootpkg -c -r $CHROOT'
 
-alias ip='ip -c'
+alias ip='ip -color=auto'
 
 alias a2c='aria2c -x5 -s5'
 
@@ -257,6 +253,10 @@ elif [ -f /usr/bin/dnf ]; then
     alias yu='sudo dnf upgrade'
     alias yi='sudo dnf install'
     alias yr='sudo apk remove'
+elif [ -f /usr/bin/emerge ]; then
+    alias yu='sudo emerge --sync && sudo emerge -uDNav world'
+    alias yi='sudo emerge -av'
+    alias yr='sudo emerge -av --depclean'
 fi
 
 # gimp shortcut
