@@ -1,27 +1,18 @@
 #!/bin/bash
 
-export DISPLAY=:0
-
 SUDO=''
-if (( $EUID != 0 )); then
+if (( EUID != 0 )); then
     SUDO='sudo'
 fi
 
-# Close browsers nicely
-# for x in {0..10}; do
-#     pgrep chromium && wmctrl -c "chromium"
-#     pgrep chrome   && wmctrl -c "chrome"
-#     pgrep firefox  && wmctrl -c "firefox"
-#     sleep .1
-#     pgrep chromium\|chrome\|firefox || break
-# done
-
-if pgrep steam; then
-    kill -9 "$(pgrep steam)"
+# testing. maybe fix keyboard on reboots?
+if [ "$HOSTNAME" = "ginger" ]; then
+    BUS=$(grep 0356 /sys/bus/usb/devices/*/idProduct | cut -d'/' -f 6 | cut -d'.' -f 1)
+    echo "$BUS" | $SUDO tee /sys/bus/usb/drivers/usb/unbind > /dev/null
 fi
 
 if pgrep plasma; then
-    qdbus org.kde.ksmserver /KSMServer org.kde.KSMServerInterface.logout 0 1 1
+    qdbus org.kde.Shutdown /Shutdown logoutAndReboot
 else
     $SUDO /sbin/reboot
 fi
