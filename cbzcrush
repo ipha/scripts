@@ -1,7 +1,10 @@
 #!/bin/bash
 
 NCPU=$(grep -c ^processor /proc/cpuinfo)
-NPROC=$(((NCPU / 2)-1))
+# Save 1 thread for system
+NPROC=$(((NCPU)-1))
+# min  2 threads
+NPROC=$((NPROC>2 ? NPROC : 2))
 
 COMMAND="optipng"
 if [ "$1" == "--webp" ]; then
@@ -19,8 +22,10 @@ BEFORE=$(ls -lh "$CBZ")
 find . -name '*.png' | \
     nice parallel -j "${NPROC}" -I% --max-args 1 --bar ${COMMAND} "%" > /dev/null
 
-find . \( -iname '*.jpeg' -or -iname '*.jpg' \) | \
-    nice parallel -j "${NPROC}" -I% --max-args 1 --bar jpegoptim "%" > /dev/null
+if command -v jpegoptim; then
+    find . \( -iname '*.jpeg' -or -iname '*.jpg' \) | \
+        nice parallel -j "${NPROC}" -I% --max-args 1 --bar jpegoptim "%" > /dev/null
+fi
 
 rm "$CBZ"
 zip -0 "$CBZ" -- * > /dev/null
