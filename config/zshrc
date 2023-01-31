@@ -78,12 +78,20 @@ compdef '_files -g "*.png"' to-webp
 ################################################################################
 # Prompt
 
+# arch
 if [ -f /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme ]; then
     source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
-    # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-    [ -f ~/.p10k.zsh ] && source ~/.p10k.zsh
+    [ -f ~/.bin/config/p10k.zsh ] && source ~/.bin/config/p10k.zsh
+# alpine
+elif [ -f /usr/share/zsh/plugins/powerlevel10k/powerlevel10k.zsh-theme ]; then
+    source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
+    [ -f ~/.bin/config/p10k.zsh ] && source ~/.bin/config/p10k.zsh
+# local git
+elif [ -f ~/powerlevel10k/powerlevel10k.zsh-theme ]; then
+    source ~/powerlevel10k/powerlevel10k.zsh-theme
+    [ -f ~/.bin/config/p10k.zsh ] && source ~/.bin/config/p10k.zsh
+# can't find p10k script
 else
-    # can't find p10k script
     source ~/.bin/config/ps1.zsh
 fi
 
