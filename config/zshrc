@@ -84,7 +84,7 @@ if [ -f /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme ]; then
     [ -f ~/.bin/config/p10k.zsh ] && source ~/.bin/config/p10k.zsh
 # alpine
 elif [ -f /usr/share/zsh/plugins/powerlevel10k/powerlevel10k.zsh-theme ]; then
-    source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
+    source /usr/share/zsh/plugins/powerlevel10k/powerlevel10k.zsh-theme
     [ -f ~/.bin/config/p10k.zsh ] && source ~/.bin/config/p10k.zsh
 # local git
 elif [ -f ~/powerlevel10k/powerlevel10k.zsh-theme ]; then
