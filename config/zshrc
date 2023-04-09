@@ -148,7 +148,7 @@ venv_create () {
     VENVDIR=$(mktemp -p /tmp -d venv-XXXXX)
     python3 -m venv "$VENVDIR"
     source "$VENVDIR"/bin/activate
-    python3 -m pip install --upgrade pip
+    python3 -m pip install --upgrade pip wheel
 }
 
 venv_destroy () {
@@ -238,9 +238,15 @@ alias sscp='scp -o HostkeyAlgorithms=+ssh-rsa -o StrictHostKeyChecking=no -o Use
 
 alias mounts='mount | grep -v "/sys" | grep -v "/dev" | grep -v "/proc" | column -t | sort -k 2 | cut -c1-$(tput cols)'
 
+alias ports='sudo lsof -i -n -P | grep LISTEN | grep -v "127\.0\.0"'
+
 # Package manager for Arch
-if [ -f /usr/bin/yay ]; then
-    alias yu='zfs-yu'
+if [ -f /usr/bin/paru ]; then
+    alias yu='paru -Syu'
+    alias yi='paru -S'
+    alias yr='paru -Rs'
+elif [ -f /usr/bin/yay ]; then
+    alias yu='yay -Syu'
     alias yi='yay -S'
     alias yr='yay -Rs'
 elif [ -f /usr/bin/pacman ]; then
