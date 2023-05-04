@@ -1,0 +1,14 @@
+#!/bin/bash
+
+OUTDIR=$(mktemp -p . -d)
+
+for FILE in "$@"; do
+    SRT="${FILE%.*}.srt"
+    ffmpeg -i "${FILE}" -i "${SRT}" -metadata:s:s:0 language=en -metadata:s:a:0 language=en -c copy "${OUTDIR}/${FILE%.*}.mkv"
+    rm "${FILE}"
+    rm "${SRT}"
+    mkvmerge -o "${FILE%.*}.mkv" "${OUTDIR}/${FILE%.*}.mkv"
+    rm "${OUTDIR}/${FILE%.*}.mkv"
+done
+
+rmdir "${OUTDIR}"

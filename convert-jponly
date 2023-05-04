@@ -1,0 +1,54 @@
+#!/bin/bash
+
+[ ! -d out ] && mkdir out
+
+case $1 in
+    "--auto")
+        MODE="auto"
+        shift
+        ;;
+esac
+
+audio_default=$(ffmpeg -i "$1" 2>&1 | grep "(jpn): Audio" | cut -d':' -f 2 | cut -d '(' -f 1)
+
+# here be dragons
+sub_default=$(ffmpeg -i "$1" 2>&1 | \
+    grep -A 2 --group-separator='~' "(eng): Subtitle" | \
+    tr '~' '\0' | \
+    grep -z -v Signs | grep -z -v Songs| \
+    grep -a "(eng): Subtitle" | \
+    cut -d':' -f 2 | cut -d'(' -f 1 | \
+    tr '\n' ',' | sed 's|,$|\n|')
+
+echo -n "$sub_default" | od -x
+
+if [ "$MODE" == "auto" ]; then
+    audio=$audio_default
+    sub=$sub_default
+    if [ -z "$audio" ] || [ -z "$sub" ]; then
+        echo "Auto mode failed, exiting"
+        exit 1
+    fi
+else
+    ffmpeg -i "$1" 2>&1 | grep -A2 Stream
+
+    echo -ne "JPN audio track(${audio_default}): "
+    read -r audio
+    [ -z "$audio" ] && audio=$audio_default
+
+    echo -ne "ENG sub track(${sub_default}): "
+    read -r sub
+    [ -z "$sub" ] && sub=$sub_default
+fi
+
+# for multiple sub tracks
+subflag="-map 0:${sub//,/ -map 0:}"
+
+ffmpeg -i "$1" -c copy \
+    -map 0:v -map 0:$audio $subflag -map 0:d? -map 0:t? \
+    -disposition:s:0 default -disposition:a:0 default -metadata:s:s:0 language=en -metadata:s:a:0 language=jpn \
+    out/tmp.mkv
+
+# mkvmerge makes smaller files somehow?
+mkvmerge -o out/"$1" out/tmp.mkv
+rm out/tmp.mkv

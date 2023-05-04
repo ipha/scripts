@@ -1,0 +1,5 @@
+#!/bin/bash
+
+VERSION=$(curl -s https://aus1.torproject.org/torbrowser/update_3/release/Linux_x86_64-gcc3/x/ALL/download/release.xml | tr ' ' '\n' | grep appVersion | cut -d\" -f 2)
+echo "${VERSION}"
+curl "https://dist.torproject.org/torbrowser/${VERSION}/tor-browser-linux64-${VERSION}_ALL.tar.xz" | tar -xJ

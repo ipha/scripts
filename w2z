@@ -1,0 +1,16 @@
+#!/bin/bash
+
+
+if [ "$1" == "--help" ] || [ "$#" -eq 0 ]; then
+    echo "w2z [scale(2,3,4)] [image]"
+    exit 0
+fi
+
+SCALE=$1
+IMAGE=$2
+
+SCALE_CMD="-s ${SCALE}"
+SCALE_NAME="x${SCALE}"
+
+OUT="${IMAGE%.*}_[${SCALE_NAME}].png"
+realesrgan-ncnn-vulkan -n realesrgan-x4plus-anime -x "${NOISE_CMD}" "${SCALE_CMD}" -i "${IMAGE}" -o "${OUT}" -v

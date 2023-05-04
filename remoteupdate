@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if ! ssh-add -l > /dev/null; then
+    ssh-add
+fi
+
+tmux \
+    new-session  'ssh -t vps "paru -Syu --devel"' \; \
+    split-window 'ssh -t armitage "paru -Syu --devel"' \; \
+    split-window -h 'ssh -t zero "paru -Syu --devel"' \; \
+    select-pane -t 0 \; \
+    split-window -h 'ssh -t pi "paru -Syu --devel"' \;
