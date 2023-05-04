@@ -5,23 +5,28 @@
 mediadir="/home/mitch/Downloads/torrent/_anime"
 destdir="/mnt/zed/media/anime/0 In Progress"
 
+function deleteTorrent {
+    SERVER="https://ginger.ipha.pw:8080"
+    INFO="$(curl -s ${SERVER}/api/v2/torrents/info | sed 's|},|},\n|g' | grep -F "$1")"
+    if [[ "${INFO}" =~ \"hash\":\"([^\"]*?)\", ]]; then
+        HASH="${BASH_REMATCH[1]}"
+        curl -s -X POST -d "hashes=${HASH}&deleteFiles=false" ${SERVER}/api/v2/torrents/delete
+    fi
+}
+
 function postprocess {
     if [ "$(pwd)" != "$mediadir" ]; then
         # Not in root media dir don't move anything
         return
     fi
 
-    # Remove from transmission
-    if transmission-remote -l | grep -q -F "$1"; then
-        id=$(transmission-remote -l | grep -F "$1" | awk '{ print $1 }')
-        transmission-remote -t "$id" -r
-    fi
+    deleteTorrent "$1"
 
     # regex in bash is hard... lets just not
     # Strip group
     name1=$(echo "$1" | sed 's|\[\S*\] ||')
     # Strip episode
-    name2=$(echo "$name1" | sed 's| - [[:digit:]v\.]\+ .\+||')
+    name2=$(echo "$name1" | sed 's| - S\?[[:digit:]]\+.*\..*$||')
     if [ "$name1" = "$name2" ]; then
         # No episode number found. Movie or OVA?
         name=""
