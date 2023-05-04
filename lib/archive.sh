@@ -2,12 +2,12 @@
 
 archive_list () {
     case $1 in
-        *.tar)      tar tf  "$1";;
-        *.tar.*)    tar tf  "$1";;
-        *.tgz)      tar tf  "$1";;
-        *.zip)      7z l    "$1";;
-        *.rar)      7z l    "$1";;
-        *.7z)       7z l    "$1";;
+        *.tar)      tar tf   "$1";;
+        *.tar.*)    tar tf   "$1";;
+        *.tgz)      tar tf   "$1";;
+        *.zip)      unzip -l "$1";;
+        *.rar)      7z l     "$1";;
+        *.7z)       7z l     "$1";;
         *)
             echo "WTF is this? Lets try 7zip" >&2
             7z l "$1"
@@ -27,7 +27,7 @@ archive_extract () {
         *.lz4)      lz4  -d     "$1"   "${FILENAME%.*}";;
         *.lzo)      lzop -dp    "$1";;
         *.zst)      zstd -d     "$1" -o "${FILENAME%.*}";;
-        *.zip)      7z x        "$1";;
+        *.zip)      unzip       "$1";;
         *.rar)      7z x        "$1";;
         *.7z)       7z x        "$1";;
         *)
