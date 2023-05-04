@@ -3,6 +3,8 @@ Description=Incremantal backup for borg
 
 [Timer]
 OnCalendar=*-*-* 03:30:00
+WakeSystem=true
+Persistent=false
 
 [Install]
 WantedBy=timers.target
