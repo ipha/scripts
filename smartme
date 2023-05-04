@@ -4,7 +4,6 @@ DISKS=$(find /dev/disk/by-id | grep 'ata-' | grep -v 'wwn\|eui\|part' | sort)
 
 for disk in $DISKS; do
     echo "$disk"
-    sudo smartctl -a "$disk" | grep 'Pre-fail\|Pending\|Uncorrectable'
-    sleep 1
+    sudo smartctl -a "$disk" | grep 'Pre-fail\|Old_age' | grep 'Pre-fail\|Pending\|Uncorrectable\|Error' | grep -v " 0$"
     echo ""
 done
