@@ -1,0 +1,4 @@
+#!/bin/bash
+IP="10.0.1.12"
+PORT=$(nmap -T5 -sT "${IP}" -p30000-49999 | grep "tcp open" | cut -d/ -f1)
+adb connect "${IP}:${PORT}"

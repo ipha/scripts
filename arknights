@@ -1,0 +1,4 @@
+#!/bin/bash
+
+adb shell 'monkey -p com.YoStarEN.Arknights -c android.intent.category.LAUNCHER 1'
+scrcpy --video-codec=h265 -b 20M -S -w -m 2560
