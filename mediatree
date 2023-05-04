@@ -37,7 +37,7 @@ cd "$mediadir"
 last=0
 
 play_folder() {
-    mapfile -t files < <(find . -maxdepth 1 -type f -regex "$fileregex" | sed 's|./||' | sort)
+    mapfile -t files < <(find . -maxdepth 1 -type f -regex "$fileregex" | sed 's|./||' | sort --ignore-case)
     if [ ${#files[@]} -ne 0 ]; then
         for file in "${files[@]}"; do
             printf "${bold}${green}%s\n" "$file"
@@ -68,8 +68,8 @@ process_selection() {
 while true; do
     f=0
 
-    mapfile -t list_dirs  < <(find . -maxdepth 1 -type d -regex "\./${dirfilter}[^.].*"  | sed 's|./||' | sort)
-    mapfile -t list_files < <(find . -maxdepth 1 -type f -regex "$fileregex" | sed 's|./||' | sort)
+    mapfile -t list_dirs  < <(find . -maxdepth 1 -type d -regex "\./${dirfilter}[^.].*"  | sed 's|./||' | sort --ignore-case)
+    mapfile -t list_files < <(find . -maxdepth 1 -type f -regex "$fileregex" | sed 's|./||' | sort --ignore-case)
 
     # dirfilter is single use
     dirfilter=""
@@ -79,8 +79,7 @@ while true; do
     # Title
     printf "${bold}----(${blue}%s${white})----${normal}\n" "$(pwd | awk -F/ '{print $NF}')"
 
-    # Determint dir/media mode and sort lists
-    # if [ ${#list_dirs[@]} -gt ${#list_files[@]} ]; then
+    # Determine dir/media mode and sort lists
     if [ ${#list_dirs[@]} -gt 3 ]; then
         # More than a few dirs. Show dirs first.
         MODE="DIR"
