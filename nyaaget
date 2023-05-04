@@ -4,12 +4,23 @@ import feedparser
 import sys
 import os
 
-search_url = "https://nyaa.si/?page=rss&q={0}&sort={1}&offset={2}"
-add_command = "transmission-remote localhost -a '{0}' > /dev/null"
+from urllib.parse import urlencode
+
+search_url = "https://nyaa.si/?page=rss&"
+add_command = "qbittorrent-nox '{0}' > /dev/null"
 
 
-def get_search(search, sort=1, page=1):
-    feed = feedparser.parse(search_url.format(search, sort, page))
+def get_search(search, sort=1, page=1, user=None):
+    args={
+        'q': search,
+        'sort': sort,
+        'offset': page
+    }
+    if user:
+        args['u'] = user
+
+    url = search_url + urlencode(args)
+    feed = feedparser.parse(url)
     result = list()
     for entry in feed['entries']:
         title   = entry['title']
@@ -33,6 +44,7 @@ class Pager:
     page = 1
     sort = 1
     search = ""
+    user = None
     results_buf = []
 
     class SORT_MODE:
@@ -47,12 +59,14 @@ class Pager:
         self.results_buf = []
 
     def __refill(self):
-        self.results_buf.extend(get_search(self.search, self.sort, self.page))
+        self.results_buf.extend(get_search(self.search, self.sort, self.page, self.user))
         self.page = self.page + 1
 
-    def set_search(self, search, sort=0):
+    def set_search(self, search, user=None, sort=0):
         self.__reset()
         self.search = search
+        if user:
+            self.user = user
         if sort:
             self.sort = sort
 
@@ -75,11 +89,17 @@ def add_magnet(magnet):
 if __name__ == "__main__":
     page = 1
     search = ""
+    user = ""
     search_pager = Pager(20)
 
     if len(sys.argv) > 1:
-        search = " ".join(sys.argv[1:])
-        search_pager.set_search(search)
+        if sys.argv[1] == "--user":
+            user = sys.argv[2]
+            search = " ".join(sys.argv[3:])
+            search_pager.set_search(search, user=user)
+        else:
+            search = " ".join(sys.argv[1:])
+            search_pager.set_search(search)
 
     results = search_pager.next_page()
     while True:
