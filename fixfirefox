@@ -1,0 +1,11 @@
+#!/bin/sh
+
+wget -O /tmp/firefox.tar.zst https://archlinux.org/packages/community/x86_64/firefox-developer-edition/download/
+
+sudo tar xf /tmp/firefox.tar.zst --transform='s|usr/share|/usr/local/share|' -C / usr/share
+sudo sed -i 's|/usr/lib/firefox-developer-edition/firefox|/usr/local/bin/firefox|' /usr/local/share/applications/firefoxdeveloperedition.desktop
+sudo sed -i 's| --class="firefoxdeveloperedition"||' /usr/local/share/applications/firefoxdeveloperedition.desktop
+sudo sed -i 's|StartupWMClass=firefoxdeveloperedition|StartupWMClass=firefox-aurora|' /usr/local/share/applications/firefoxdeveloperedition.desktop
+sudo /usr/bin/update-desktop-database
+
+rm /tmp/firefox.tar.zst

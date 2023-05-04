@@ -1,0 +1,28 @@
+#!/bin/bash
+
+VERSION=$(grep "^Version=" /opt/firefox/application.ini | cut -d= -f2)
+BUILDID=$(grep "^BuildID=" /opt/firefox/application.ini | cut -d= -f2)
+
+CHANNEL="release"
+if grep -q Developer /opt/firefox/application.ini; then
+    CHANNEL="aurora"
+fi
+
+URL="https://aus5.mozilla.org/update/6/Firefox/${VERSION}/${BUILDID}/Linux_x86_64-gcc3/en-US/${CHANNEL}/foo/foo/default/default/update.xml?force=1"
+
+XML=$(curl -s "$URL")
+
+if echo "$XML" | grep -q "partial"; then
+    MAR=$(echo "$XML" | grep "partial" | tr ' ' '\n' | grep URL | cut -d\" -f 2)
+elif echo "$XML" | grep -q "complete"; then
+    MAR=$(echo "$XML" | grep "complete" | tr ' ' '\n' | grep URL | cut -d\" -f 2)
+else
+    echo "no update"
+    exit 0
+fi
+echo "update available"
+echo "$MAR"
+mkdir -p /opt/firefox/updates/cli
+wget -O /opt/firefox/updates/cli/update.mar "$MAR"
+/opt/firefox/updater /opt/firefox/updates/cli /opt/firefox /opt/firefox
+
