@@ -3,6 +3,7 @@
 typeset -U path
 path=(~/.bin $path[@])
 
+[ -d ~/.bin/nosync ] && path=(~/.bin/nosync $path[@])
 [ -d ~/.local/bin ] && path=(~/.local/bin $path[@])
 
 ################################################################################

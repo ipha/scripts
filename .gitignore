@@ -1,5 +1,3 @@
 *.pyc
 .vscode/settings.json
-madokami*
-transmission-post
-qbit-post
+nosync/
