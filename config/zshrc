@@ -221,7 +221,7 @@ alias yt-dlp='yt-dlp --merge-output-format=mkv'
 
 alias fixkey='ssh-keygen -R $(echo `fc -ln -1` | sed "s|.* ||" | sed "s|.*@||")'
 
-alias gpu='sudo watch "cat /sys/kernel/debug/dri/0/amdgpu_pm_info | grep GFX\ Clocks -A20"'
+alias gpu='sudo watch "cat /sys/kernel/debug/dri/1/amdgpu_pm_info | grep GFX\ Clocks -A20"'
 
 alias mt='mediatree'
 alias at='animetree'
