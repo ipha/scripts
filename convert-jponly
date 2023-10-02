@@ -13,14 +13,26 @@ audio_default=$(ffmpeg -i "$1" 2>&1 | grep "(jpn): Audio" | cut -d':' -f 2 | cut
 
 # here be dragons
 sub_default=$(ffmpeg -i "$1" 2>&1 | \
-    grep -A 2 --group-separator='~' "(eng): Subtitle" | \
+    grep -A 2 --group-separator='~' "(\(eng\|enm\)): Subtitle" | \
     tr '~' '\0' | \
-    grep -z -v Signs | grep -z -v Songs| \
-    grep -a "(eng): Subtitle" | \
+    grep -z -v Signs | grep -z -v Songs | grep -z -v S\&S | \
+    grep -a "(\(eng\|enm\)): Subtitle" | \
     cut -d':' -f 2 | cut -d'(' -f 1 | \
     tr '\n' ',' | sed 's|,$|\n|')
 
 echo -n "$sub_default" | od -x
+
+if [ -z "$sub_default" ]; then
+    echo "no eng subs found. checking if file uses broken language tags"
+    sub_default=$(ffmpeg -i "$1" 2>&1 | \
+        grep -A 2 --group-separator='~' "(jpn): Subtitle" | \
+        tr '~' '\0' | \
+        grep -z -v Signs | grep -z -v Songs | grep -z -v S\&S | \
+        grep -a "(jpn): Subtitle" | \
+        cut -d':' -f 2 | cut -d'(' -f 1 | \
+        tr '\n' ',' | sed 's|,$|\n|')
+fi
+
 
 if [ "$MODE" == "auto" ]; then
     audio=$audio_default
@@ -30,7 +42,7 @@ if [ "$MODE" == "auto" ]; then
         exit 1
     fi
 else
-    ffmpeg -i "$1" 2>&1 | grep -A2 Stream
+    ffmpeg -i "$1" 2>&1 | grep -A2 '\(Video\|Audio\|Subtitle\)'
 
     echo -ne "JPN audio track(${audio_default}): "
     read -r audio
