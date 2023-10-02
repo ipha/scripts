@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if [ "$1" == "--force" ]; then
+    shift
+else
+    if (($(rclone lsf b2pub:ipha-public/"$1" | wc -l) != 0 )); then
+        echo "file already exists, not overwriting"
+        exit 1
+    fi
+fi
+
+rclone copy "$1" b2pub:ipha-public/
+echo "https://public.ipha.pw/$1" | sed 's| |%20|'
+
+if [ -f /usr/bin/wl-copy ]; then
+    echo "https://public.ipha.pw/$1" | sed 's| |%20|' | wl-copy
+    echo "is in clipboard"
+fi
