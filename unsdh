@@ -1,0 +1,29 @@
+#!/bin/bash
+
+
+
+if (($(ffmpeg -i "$1" 2>&1 | grep -c "(eng): Subtitle") != 1)); then
+    echo "Wrong number of eng sub tracks. Bailing."
+    exit 1
+fi
+
+if fffmpeg -i "$1" 2>&1 | grep "(eng): Subtitle" | grep -q -v "subrip"; then
+    echo "Sub isn't SRT. Bailing."
+    exit 1
+fi
+
+ffmpeg -i "$1" -map 0:s:m:language:eng tmp.srt
+
+# fix weird line endings
+dos2unix tmp.srt
+
+# clean srt
+sed 's|\[.*\]||' tmp.srt | awk '{$1=$1;print}' | sed 's|^[ ]*-[ ]*$||g' > tmp2.srt
+
+# fix empty entries
+ffmpeg -i tmp2.srt tmp3.srt
+
+mkdir -p out
+ffmpeg -i "$1" -i tmp3.srt -c copy -map 0:v -map 0:a -map 1 -disposition:s:0 default -metadata:s:s:0 language=en out/"$1"
+
+rm tmp.srt tmp2.srt tmp3.srt
