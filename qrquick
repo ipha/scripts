@@ -2,6 +2,10 @@
 
 FILE=$(mktemp)
 nano ${FILE}
-cat ${FILE} | qrencode -t ansiutf8
+if command -v convert > /dev/null; then
+    cat ${FILE} | qrencode -t png -o - | convert - sixel:-
+else
+    cat ${FILE} | qrencode -t ansiutf8
+fi
 rm ${FILE}
 
