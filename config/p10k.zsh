@@ -34,7 +34,7 @@
     context
     user
     dir                     # current directory
-    vcs                     # git status
+    #vcs                     # git status
     # prompt_char           # prompt symbol
   )
 
