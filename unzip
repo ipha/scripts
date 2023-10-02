@@ -1,4 +1,8 @@
 #!/bin/bash
 
-ENC=$(zipdetect "${@: -1}")
-/usr/bin/unzip -O "$ENC" "$@"
+if /usr/bin/unzip --help | grep -q -- "-O"; then 
+    ENC=$(zipdetect "${@: -1}")
+    /usr/bin/unzip -O "$ENC" "$@"
+else
+    /usr/bin/unzip "$@"
+fi
