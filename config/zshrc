@@ -75,27 +75,6 @@ compdef '_files -g "*.tar *.tar.* *.tgz *.bz2 *.gz *.xz *.lz4 *.lzo *.zst *.zip 
 compdef '_files -g "*.zip *.ugoira *.mkv"' ug
 compdef '_files -g "*.png"' to-webp
 
-
-################################################################################
-# Prompt
-
-# arch
-if [ -f /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme ]; then
-    source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
-    [ -f ~/.bin/config/p10k.zsh ] && source ~/.bin/config/p10k.zsh
-# alpine
-elif [ -f /usr/share/zsh/plugins/powerlevel10k/powerlevel10k.zsh-theme ]; then
-    source /usr/share/zsh/plugins/powerlevel10k/powerlevel10k.zsh-theme
-    [ -f ~/.bin/config/p10k.zsh ] && source ~/.bin/config/p10k.zsh
-# local git
-elif [ -f ~/powerlevel10k/powerlevel10k.zsh-theme ]; then
-    source ~/powerlevel10k/powerlevel10k.zsh-theme
-    [ -f ~/.bin/config/p10k.zsh ] && source ~/.bin/config/p10k.zsh
-# can't find p10k script
-else
-    source ~/.bin/config/ps1.zsh
-fi
-
 ################################################################################
 # Key binds
 bindkey "\e[1~" beginning-of-line
@@ -119,19 +98,34 @@ bindkey "\e[F" end-of-line
 
 ################################################################################
 # Extensions
-for ext in  '/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' \
-            '/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh' \
-            '/usr/share/doc/pkgfile/command-not-found.zsh'; do
-    [ -f $ext ] && source $ext
-done
 
-if [ -f /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh ]; then
-    source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+# extensions rely on git
+if (( $+commands[git] )); then
+    # Download Znap, if it's not there yet.
+    [[ -r ~/.zshplugins/znap/znap.zsh ]] ||
+        git clone --depth 1 -- https://github.com/marlonrichert/zsh-snap.git ~/.zshplugins/znap
+    source ~/.zshplugins/znap/znap.zsh  # Start Znap
 
-    # bind UP and DOWN arrow keys
-    bindkey "^[[A" history-substring-search-up
-    bindkey "^[[B" history-substring-search-down
+    znap source zsh-users/zsh-syntax-highlighting
+    znap source zsh-users/zsh-autosuggestions
+    znap source zsh-users/zsh-history-substring-search
+
+    bindkey '^[[A' history-substring-search-up
+    bindkey '^[[B' history-substring-search-down
 fi
+
+[ -f /usr/share/doc/pkgfile/command-not-found.zsh ] && source /usr/share/doc/pkgfile/command-not-found.zsh
+
+################################################################################
+# Prompt
+
+if (( $+commands[git] )); then
+    znap source romkatv/powerlevel10k
+    [ -f ~/.bin/config/p10k.zsh ] && source ~/.bin/config/p10k.zsh
+else
+    source ~/.bin/config/ps1.zsh
+fi
+
 ################################################################################
 # SSH Agent
 if [ -f /usr/bin/ssh-agent ]; then
