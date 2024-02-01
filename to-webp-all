@@ -8,5 +8,5 @@ NPROC=$(((NCPU / 2)-1))
 # min  2 threads
 NPROC=$((NPROC>2 ? NPROC : 2))
 
-find . -name "*.png" | nice parallel -j "${NPROC}" -I% --max-args 1 --bar to-webp --rm  "%" > /dev/null
-find . -name "*.tif" | nice parallel -j "${NPROC}" -I% --max-args 1 --bar to-webp --rm  "%" > /dev/null
+find . -iname "*.png" | nice parallel -j "${NPROC}" -I% --max-args 1 --bar to-webp --rm  "%" > /dev/null
+find . -iname "*.tif" | nice parallel -j "${NPROC}" -I% --max-args 1 --bar to-webp --rm  "%" > /dev/null
