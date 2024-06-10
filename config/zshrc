@@ -119,7 +119,10 @@ fi
 ################################################################################
 # Prompt
 
-if (( $+commands[git] )); then
+if (( $+commands[starship] )); then
+    export STARSHIP_CONFIG=~/.bin/config/starship.toml
+    eval "$(starship init zsh)"
+elif (( $+commands[git] )); then
     znap source romkatv/powerlevel10k
     [ -f ~/.bin/config/p10k.zsh ] && source ~/.bin/config/p10k.zsh
 else
@@ -210,8 +213,7 @@ alias winboot='sudo efibootmgr -n $(efibootmgr | grep Windows | cut -c 5-8) && r
 
 alias zlist='zfs list -t filesystem,snapshot,volume | grep -v storage\@'
 
-alias youtube-dl='youtube-dl --merge-output-format=mkv'
-alias yt-dlp='yt-dlp --merge-output-format=mkv'
+alias yt-dlp='yt-dlp --embed-subs --embed-metadata --merge-output-format=mkv'
 
 alias fixkey='ssh-keygen -R $(echo `fc -ln -1` | sed "s|.* ||" | sed "s|.*@||")'
 
@@ -234,6 +236,8 @@ alias sscp='scp -o HostkeyAlgorithms=+ssh-rsa -o StrictHostKeyChecking=no -o Use
 alias mounts='mount | grep -v "/sys" | grep -v "/dev" | grep -v "/proc" | column -t | sort -k 2 | cut -c1-$(tput cols)'
 
 alias ports='sudo lsof -i -n -P | grep LISTEN | grep -v "127\.0\.0"'
+
+alias gd='gallery-dl'
 
 # Package manager for Arch
 if [ -f /usr/bin/paru ]; then
