@@ -122,9 +122,9 @@ fi
 if (( $+commands[starship] )); then
     export STARSHIP_CONFIG=~/.bin/config/starship.toml
     eval "$(starship init zsh)"
-elif (( $+commands[git] )); then
-    znap source romkatv/powerlevel10k
-    [ -f ~/.bin/config/p10k.zsh ] && source ~/.bin/config/p10k.zsh
+#elif (( $+commands[git] )); then
+#    znap source romkatv/powerlevel10k
+#    [ -f ~/.bin/config/p10k.zsh ] && source ~/.bin/config/p10k.zsh
 else
     source ~/.bin/config/ps1.zsh
 fi
