@@ -5,7 +5,7 @@ if (( EUID != 0 )); then
     SUDO='sudo'
 fi
 
-if pgrep plasma && [ -f /usr/bin/qdbus6] ; then
+if pgrep plasma && [ -f /usr/bin/qdbus6 ] ; then
     qdbus6 org.kde.Shutdown /Shutdown logoutAndReboot
 else
     $SUDO /sbin/reboot
