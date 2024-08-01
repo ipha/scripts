@@ -26,4 +26,4 @@ SEG2="%K{$C2} %~ %F{$C2}%K{$C3}%f%k"
 SEG3="%K{$C3}%F{$C3}%K{$C4}%f%k"
 SEG4="%K{$C4}%F{$C4}%k%f%k"
 
-PROMPT="${SEG0}${SEG1}${SEG2}${SEG3}${SEG4}"
+PROMPT="${SEG0}${SEG1}${SEG2}${SEG3}${SEG4} "
