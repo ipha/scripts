@@ -274,7 +274,7 @@ elif [ -f /usr/bin/emerge ]; then
 elif [ -f /usr/bin/zypper ]; then
     alias yu='sudo zypper up'
     alias yi='sudo zypper in'
-    alias yr='sudo zypper rm'
+    alias yr='sudo zypper rm -u'
 fi
 
 # gimp shortcut
