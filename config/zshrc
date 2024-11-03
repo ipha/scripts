@@ -137,6 +137,7 @@ if [ -f /usr/bin/ssh-agent ]; then
         ssh-agent -a /tmp/ssh-agent-${USER}.socket > /dev/null
     fi
     [ -S /tmp/ssh-agent-${USER}.socket ] && export SSH_AUTH_SOCK=/tmp/ssh-agent-${USER}.socket
+    [ -S "$XDG_RUNTIME_DIR/ssh-agent.socket" ] && export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 fi
 
 
@@ -270,6 +271,10 @@ elif [ -f /usr/bin/emerge ]; then
     alias yu='sudo emerge --sync && sudo emerge -uDNav world'
     alias yi='sudo emerge -av'
     alias yr='sudo emerge -av --depclean'
+elif [ -f /usr/bin/zypper ]; then
+    alias yu='sudo zypper up'
+    alias yi='sudo zypper in'
+    alias yr='sudo zypper rm'
 fi
 
 # gimp shortcut
