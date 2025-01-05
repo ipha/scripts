@@ -8,15 +8,19 @@ sudo btrfs filesystem show
 echo -e "${blue}archRoot${NC}"
 btrfs filesystem df /
 
-echo
-echo -e "${blue}zfs${NC}"
-zpool list
-echo ""
-zfs list -r zed
 
-if zpool list backup > /dev/null 2>&1; then
-	echo -e "${blue}backup${NC}"
-	zpool list backup
+if [ -f /usr/bin/zpool ]; then 
+
+	echo
+	echo -e "${blue}zfs${NC}"
+	zpool list
 	echo ""
-	zfs list -r backup
+	zfs list -r zed
+
+	if zpool list backup > /dev/null 2>&1; then
+		echo -e "${blue}backup${NC}"
+		zpool list backup
+		echo ""
+		zfs list -r backup
+	fi
 fi
